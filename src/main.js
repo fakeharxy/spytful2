@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var board = new Board();
+    var board = new Board(6, 6);
     var canvas = $("#canvas")[0];
     var ctx = canvas.getContext("2d");
     var w = $("#canvas").width();
