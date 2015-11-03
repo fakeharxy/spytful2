@@ -41,6 +41,7 @@ function Board(width, height) {
     }
     ctx.closePath();
     ctx.stroke();
+    ctx.fill();
   }
 
   function hex_corner(centre, hexSize, i) {
