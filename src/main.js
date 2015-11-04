@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var board = new Board(6, 6);
+
     var canvas = $("#canvas")[0];
     var ctx = canvas.getContext("2d");
     var w = $("#canvas").width();
@@ -13,6 +13,8 @@ $(document).ready(function(){
     ctx.shadowColor= "rgba(100,100,100,.5)"
     ctx.shadowOffsetX = 4;
     ctx.shadowOffsetY = 2;
-    
+
+    var board = Object.create(Board);
+    board.buildBoard(6,6);
     board.drawBoard(ctx);
 });
