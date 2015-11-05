@@ -19,12 +19,20 @@ describe("Board", function() {
       expect(board.calculateHexCentreY(1,2)).toBe(102.5);
   });
 
-  it("board should return a Hex for a coordinate", function() {
-      expect(Hex.isPrototypeOf(board.getHex(1,2))).toEqual(true);
+  it("#getHexAt should return a Hex for a valid coordinate", function() {
+      expect(Hex.isPrototypeOf(board.getHexAt(1,2))).toBe(true);
+  });
+
+  it("#getHexAt should return undefined for an invalid coordinate", function() {
+      expect(board.getHexAt(99,99)).toBe(undefined);
   });
 
   it("board should return the same Hex for the same coordinate", function() {
-      expect(board.getHex(1,2) === board.getHex(1,2)).toBe(true);
+      expect(board.getHexAt(1,2) === board.getHexAt(1,2)).toBe(true);
   });
 
+  it("#buildBoard should calculate all corner coordinates and store them in the Hexes", function() {
+      expect(board.getHexAt(1,2).corners.length).toBe(6);
+  });
+  
 });

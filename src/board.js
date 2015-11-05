@@ -3,8 +3,10 @@ var Board = {
   firstHexX: 50,
   firstHexY: 50,
   offset: 5,
-  //width: 0,
-  //height: 0,
+
+  width: undefined,
+  height: undefined,
+
   buildBoard: function (width, height) {
     this.width = width;
     this.height = height;
@@ -12,10 +14,16 @@ var Board = {
     for (var j = 0; j < this.height; j++) {
       this.hexArray[j] = [];
       for (var i = 0; i < this.width; i++) {
-        // var centre = {};
-        // centre.x = this.calculateHexCentreX(i, j);
-        // centre.y = this.calculateHexCentreY(j);
-        this.hexArray[j][i] = Object.create(Hex);
+        var newHex = Object.create(Hex);
+    		newHex.colourCode = Math.floor(Math.random() * Hex.colourMap.length);
+    		newHex.centre = { x: this.calculateHexCentreX(i, j),
+					                y: this.calculateHexCentreY(j) };
+        var corners = [];
+    		for (var c = 0; c < 6; c++) {
+    			corners[c] = this.calculateHexCorner(newHex.centre, c);
+    		}
+	      newHex.corners = corners;
+	      this.hexArray[j][i] = newHex;
       }
     }
   },
@@ -23,16 +31,15 @@ var Board = {
   drawBoard: function (ctx) {
     for (var j = 0; j < this.height; j++) {
       for (var i = 0; i < this.width; i++) {
-        var centre = {};
-        centre.x = this.calculateHexCentreX(i, j);
-        centre.y = this.calculateHexCentreY(j);
-        this.drawHex(centre, this.hexSize, ctx);
+        this.hexArray[j][i].draw(ctx);
       }
     }
   },
 
-  getHex: function(x, y) {
-    return this.hexArray[y][x];
+  getHexAt: function (x, y) {
+    if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+      return this.hexArray[y][x];
+    }
   },
 
   calculateHexCentreY: function (j) {
@@ -47,25 +54,12 @@ var Board = {
     return x;
   },
 
-  drawHex: function (centre, hexSize, ctx) {
-    var firstPoint = this.hex_corner(centre, hexSize, 0);
-    ctx.beginPath();
-    ctx.moveTo(firstPoint.x, firstPoint.y);
-    for (var i = 1; i <= 5; i++) {
-      var nextPoint = this.hex_corner(centre, hexSize, i);
-      ctx.lineTo(nextPoint.x, nextPoint.y);
-    }
-    ctx.closePath();
-    ctx.stroke();
-    ctx.fill();
-  },
-
-  hex_corner: function(centre, hexSize, i) {
+  calculateHexCorner: function (centre, i) {
     var point = {};
     var angle_deg = 60 * i + 30;
     var angle_rad = Math.PI / 180 * angle_deg;
-    point.x = centre.x + hexSize * Math.cos(angle_rad);
-    point.y = centre.y + hexSize * Math.sin(angle_rad);
+    point.x = centre.x + this.hexSize * Math.cos(angle_rad);
+    point.y = centre.y + this.hexSize * Math.sin(angle_rad);
     return point;
   }
 }
