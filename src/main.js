@@ -17,4 +17,5 @@ $(document).ready(function(){
     var board = Object.create(Board);
     board.buildBoard(6,6);
     board.drawBoard(ctx);
+
 });
