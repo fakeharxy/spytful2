@@ -10,7 +10,7 @@ $(document).ready(function(){
     ctx.strokeStyle = "black";
     ctx.strokeRect(0, 0, w, h);
 
-    ctx.shadowColor= "rgba(100,100,100,.5)"
+    ctx.shadowColor= "rgba(100,100,100,.5)";
     ctx.shadowOffsetX = 4;
     ctx.shadowOffsetY = 2;
 
