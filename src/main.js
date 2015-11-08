@@ -15,7 +15,7 @@ $(document).ready(function(){
     ctx.shadowOffsetY = 2;
 
     var board = Object.create(Board);
-    board.buildBoard(6,6);
+    board.buildBoard(10,10);
     board.drawBoard(ctx);
 
 });
