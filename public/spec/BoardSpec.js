@@ -34,5 +34,9 @@ describe("Board", function() {
   it("#buildBoard should calculate all corner coordinates and store them in the Hexes", function() {
       expect(board.getHexAt(1,2).corners.length).toBe(6);
   });
+
+  it("should create a hexArray of hex objects", function() {
+      expect(board.hexArray.length).toBe(3);
+  });
   
 });
