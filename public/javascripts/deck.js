@@ -1,16 +1,19 @@
 var Deck = {
     cardArray : [],
     deckSizeMultiple : 3,
-    
+
     buildDeck: function (hexArray) {
-        for (var i=0 ; i < hexArray.length ; i++) {
-            for (j=0 ; j < deckSizeMultiple ; j++) {
-                var card = Object.create(Card);
-                card.colourCode = hexArray[i].colourCode;
-                card.regionName = hexArray[i].regionName;
-                cardArray.push(card);
-            }
+      this.cardArray=[];
+      for (var j=0 ; j < hexArray.length ; j++) {
+        for (var i=0 ; i < hexArray[j].length; i++) {
+          for (var n=0 ; n < this.deckSizeMultiple ; n++) {
+            var card = Object.create(Card);
+            card.colourCode = hexArray[j][i].colourCode;
+            card.regionName = hexArray[j][i].regionName;
+            this.cardArray.push(card);
+          }
         }
+      }
     }
 };
 

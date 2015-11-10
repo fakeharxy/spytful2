@@ -14,4 +14,6 @@ $(document).ready(function(){
     board.buildBoard(10,10);
     board.drawBoard(ctx);
 
+    var deck = Object.create(Deck);
+    deck.buildDeck(board.hexArray);
 });

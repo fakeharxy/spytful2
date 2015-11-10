@@ -11,21 +11,27 @@ var Hex = {
     "#BF94E4"	 ],
 
     draw: function (ctx) {
-        ctx.shadowColor= "rgba(100,100,100,.5)";
-        ctx.shadowOffsetX = 4;
+        ctx.shadowColor= "rgba(100,100,100,.7)";
+        ctx.shadowOffsetX = 3;
         ctx.shadowOffsetY = 2;
-
+        ctx.lineWidth = 2;
         ctx.fillStyle = Hex.colourMap[this.colourCode];
+
         ctx.beginPath();
-        ctx.moveTo(this.corners[0].x, this.corners[0].y);
-        for (var i = 1; i <= 5; i++) {
-            ctx.lineTo(this.corners[i].x, this.corners[i].y);
+        for (var i = 0; i < this.corners.length; i++) {
+          var pt = this.corners[i];
+          if (i == 0) {
+            ctx.moveTo(pt[0], pt[1]);
+          } else {
+            ctx.lineTo(pt[0], pt[1]);
+          }
+          ctx.quadraticCurveTo(pt[2], pt[3], pt[4], pt[5]);
         }
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
         ctx.shadowColor = "transparent";
-        ctx.strokeText(this.regionName, this.corners[2].x, this.corners[2].y);
+        ctx.strokeText(this.regionName, this.corners[2].x, this.corners[2].y); //fix!!
     },
 
     setValidColour: function () {

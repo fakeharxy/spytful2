@@ -1,5 +1,6 @@
 var Board = {
     hexSize: 30,
+    hexRoundingRadius: 4,
     firstHexX: 50,
     firstHexY: 50,
     offset: 5,
@@ -20,7 +21,7 @@ var Board = {
                 for (var c = 0; c < 6; c++) {
                     corners[c] = this.calculateHexCorner(newHex.centre, c);
                 }
-                newHex.corners = corners;
+                newHex.corners = this.getRoundedPoints(corners, this.hexRoundingRadius);
                 this.hexArray[j][i] = newHex;
             }
         }
@@ -64,12 +65,41 @@ var Board = {
     },
 
     calculateHexCorner: function (centre, i) {
-        var point = {};
+        var point = [];
         var angle_deg = 60 * i + 30;
         var angle_rad = Math.PI / 180 * angle_deg;
-        point.x = centre.x + this.hexSize * Math.cos(angle_rad);
-        point.y = centre.y + this.hexSize * Math.sin(angle_rad);
+        point[0] = centre.x + this.hexSize * Math.cos(angle_rad);
+        point[1] = centre.y + this.hexSize * Math.sin(angle_rad);
         return point;
+    },
+
+    getRoundedPoints: function(pts, radius) {
+      var i1, i2, i3, p1, p2, p3, prevPt, nextPt,
+          len = pts.length,
+          res = new Array(len);
+      for (i2 = 0; i2 < len; i2++) {
+        i1 = i2-1;
+        i3 = i2+1;
+        if (i1 < 0) {
+          i1 = len - 1;
+        }
+        if (i3 == len) {
+          i3 = 0;
+        }
+        p1 = pts[i1];
+        p2 = pts[i2];
+        p3 = pts[i3];
+        prevPt = this.getRoundedPoint(p1[0], p1[1], p2[0], p2[1], radius, false);
+        nextPt = this.getRoundedPoint(p2[0], p2[1], p3[0], p3[1], radius, true);
+        res[i2] = [prevPt[0], prevPt[1], p2[0], p2[1], nextPt[0], nextPt[1]];
+      }
+      return res;
+    },
+
+    getRoundedPoint: function(x1, y1, x2, y2, radius, first) {
+      var total = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)),
+          idx = first ? radius / total : (total - radius) / total;
+      return [x1 + (idx * (x2 - x1)), y1 + (idx * (y2 - y1))];
     },
 
     isValidCoordinate: function (x,y) {
