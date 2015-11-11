@@ -25,34 +25,30 @@ var Hex = {
         ctx.closePath();
         
         ctx.lineWidth = 2;
-		
+		ctx.shadowColor= "rgba(100,100,100,.7)";
+		ctx.shadowOffsetX = 3;
+		ctx.shadowOffsetY = 2;
 		ctx.stroke();
+		ctx.fillStyle = Hex.colourMap[this.colourCode];
+		ctx.fill();
+		
 		
 		//for water, draw the background image
 		if (this.colourCode==0) {
 			ctx.save();
-			ctx.clip(); // clip to whatever path is on the context
-
-			//var imgHeight = Board.hexSize * 2 / img.width * img.height;
-			//if (imgHeight < h){
-			//	ctx.fillStyle = '#000';
-			//	ctx.fill();
-			//}
+			ctx.clip(); // clip to the hex path on the context
 			ctx.drawImage(ctx.imageCache[0],this.corners[3][0] - Math.random() * Board.hexSize, this.corners[4][1] - Math.random() * Board.hexSize, Board.hexSize * 3, Board.hexSize * 3);
 			ctx.restore();
 			
 			
-		//otherwise fill with colour and write the name
+		//otherwise write the region name
 		} else {
-			ctx.shadowColor= "rgba(100,100,100,.7)";
-			ctx.shadowOffsetX = 3;
-			ctx.shadowOffsetY = 2;
-			ctx.fillStyle = Hex.colourMap[this.colourCode];
-			ctx.fill();
 			ctx.shadowColor = "transparent";
 			ctx.lineWidth = 1;
 			ctx.textBaseline = 'top';
-			ctx.strokeText(" " + this.regionName, this.corners[3][0], this.corners[3][1]);
+			ctx.font = '8pt Arial';
+			ctx.fillStyle = "#000"
+			ctx.fillText(" " + this.regionName, this.corners[3][0], this.corners[3][1]);
 		}
 	},
 	
