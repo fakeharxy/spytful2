@@ -12,7 +12,18 @@ $(document).ready(function(){
 
     var board = Object.create(Board);
     board.buildBoard(10,10);
-    board.drawBoard(ctx);
+    
+	var img = new Image;
+	img.onload = function() {
+		board.drawBoard(ctx);
+	};
+	img.onerror = function() {
+		console.log("image not loaded");
+	};
+	img.src = "images/water.gif";
+	ctx.imageCache = [];
+	ctx.imageCache[0] = img;
+	
 
     var deck = Object.create(Deck);
     deck.buildDeck(board.hexArray);

@@ -11,15 +11,10 @@ var Hex = {
     "#BF94E4"	 ],
 
     draw: function (ctx) {
-        ctx.shadowColor= "rgba(100,100,100,.7)";
-        ctx.shadowOffsetX = 3;
-        ctx.shadowOffsetY = 2;
-        ctx.lineWidth = 2;
-        ctx.fillStyle = Hex.colourMap[this.colourCode];
-
+      
         ctx.beginPath();
-        for (var i = 0; i < this.corners.length; i++) {
-          var pt = this.corners[i];
+        for (var i = 0; i < this.drawPoints.length; i++) {
+          var pt = this.drawPoints[i];
           if (i == 0) {
             ctx.moveTo(pt[0], pt[1]);
           } else {
@@ -28,11 +23,35 @@ var Hex = {
           ctx.quadraticCurveTo(pt[2], pt[3], pt[4], pt[5]);
         }
         ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
-        ctx.shadowColor = "transparent";
-        ctx.strokeText(this.regionName, this.corners[2].x, this.corners[2].y); //fix!!
-    },
+        
+        ctx.lineWidth = 2;
+		ctx.shadowColor= "rgba(100,100,100,.7)";
+		ctx.shadowOffsetX = 3;
+		ctx.shadowOffsetY = 2;
+		ctx.stroke();
+		ctx.fillStyle = Hex.colourMap[this.colourCode];
+		ctx.fill();
+		
+		
+		//for water, draw the background image
+		if (this.colourCode==0) {
+			ctx.save();
+			ctx.clip(); // clip to the hex path on the context
+			ctx.drawImage(ctx.imageCache[0],this.corners[3][0] - Math.random() * Board.hexSize, this.corners[4][1] - Math.random() * Board.hexSize, Board.hexSize * 3, Board.hexSize * 3);
+			ctx.restore();
+			
+			
+		//otherwise write the region name
+		} else {
+			ctx.shadowColor = "transparent";
+			ctx.lineWidth = 1;
+			ctx.textBaseline = 'top';
+			ctx.font = '8pt Arial';
+			ctx.fillStyle = "#000"
+			ctx.fillText(" " + this.regionName, this.corners[3][0], this.corners[3][1]);
+		}
+	},
+	
 
     setValidColour: function () {
         //find invalid colours based on neighbours

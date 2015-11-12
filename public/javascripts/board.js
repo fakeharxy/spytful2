@@ -21,7 +21,8 @@ var Board = {
                 for (var c = 0; c < 6; c++) {
                     corners[c] = this.calculateHexCorner(newHex.centre, c);
                 }
-                newHex.corners = this.getRoundedPoints(corners, this.hexRoundingRadius);
+                newHex.corners = corners;
+				newHex.drawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
                 this.hexArray[j][i] = newHex;
             }
         }
