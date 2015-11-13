@@ -14,10 +14,12 @@ var Deck = {
       for (var j=0 ; j < hexArray.length ; j++) {
         for (var i=0 ; i < hexArray[j].length; i++) {
           for (var n=0 ; n < this.deckSizeMultiple ; n++) {
-            var card = Object.create(Card);
-            card.colourCode = hexArray[j][i].colourCode;
-            card.regionName = hexArray[j][i].regionName;
-            this.cardArray.push(card);
+			if (hexArray[j][i].colourCode!=0) {
+				var card = Object.create(Card);
+				card.colourCode = hexArray[j][i].colourCode;
+				card.regionName = hexArray[j][i].regionName;
+				this.cardArray.push(card);
+			}
           }
         }
       }
@@ -44,7 +46,7 @@ var Deck = {
 				var adjX = Math.random() * wobble - wobble / 2;
 				var adjY = Math.random() * wobble - wobble / 2;
 				var rotate = Math.random() * rotation - rotation / 2;
-				this.cardArray[i].draw(ctx, xHeap + adjX, y + adjY, rotate, true);
+				this.cardArray[i].draw(ctx, xHeap + adjX, y + adjY, rotate, false);
 			}
 		}
 	}
@@ -76,6 +78,14 @@ var Card = {
 		ctx.fillStyle = faceUp ? Hex.colourMap[this.colourCode] : "#FFF";
 		ctx.fill();
 		
+		//write region name
+		//if (faceUp) {
+			ctx.font = '8pt Arial';
+			ctx.fillStyle = "#000"
+			ctx.textBaseline = 'center';
+			ctx.textAlign = 'center';
+			ctx.fillText(faceUp ? this.regionName : "LOGO", Deck.cardWidth/2, Deck.cardHeight/2);
+		//}
 		ctx.restore();
 	}
 };
