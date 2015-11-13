@@ -27,4 +27,6 @@ $(document).ready(function(){
 
     var deck = Object.create(Deck);
     deck.buildDeck(board.hexArray);
+	
+	deck.draw(ctx, 700, 50);
 });

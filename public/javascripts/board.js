@@ -14,7 +14,7 @@ var Board = {
             this.hexArray[j] = [];
             for (var i = 0; i < this.width; i++) {
                 var newHex = Object.create(Hex);
-                newHex.regionName = String.fromCharCode(65+i,65+j);
+                newHex.regionName = String.fromCharCode(65+j,65+i);
                 newHex.centre = { x: this.calculateHexCentreX(i, j),
                                   y: this.calculateHexCentreY(j) };
                 var corners = [];
