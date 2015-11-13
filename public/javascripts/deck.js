@@ -21,8 +21,14 @@ var Deck = {
           }
         }
       }
+      this.shuffle(this.cardArray);
     },
-	
+
+    shuffle: function(o){
+        for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+        return o;
+    },
+    
 	draw: function (ctx, x, y) {
 		//draw top two cards then all the rest in a heap
 		var spacing = 20;
