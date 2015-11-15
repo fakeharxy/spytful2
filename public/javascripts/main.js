@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     var canvas = $("#canvas")[0];
-    var ctx = canvas.getContext("2d");
+    ctx = canvas.getContext("2d");
     var w = $("#canvas").width();
     var h = $("#canvas").height();
 
@@ -10,12 +10,10 @@ $(document).ready(function(){
     ctx.strokeStyle = "black";
     ctx.strokeRect(0, 0, w, h);
 
-    var board = Object.create(Board);
-    board.buildBoard(10,10);
-    
 	var img = new Image;
 	img.onload = function() {
-		board.drawBoard(ctx);
+        setup(); 
+        draw();
 	};
 	img.onerror = function() {
 		console.log("image not loaded");
@@ -24,9 +22,23 @@ $(document).ready(function(){
 	ctx.imageCache = [];
 	ctx.imageCache[0] = img;
 	
-
-    var deck = Object.create(Deck);
-    deck.buildDeck(board.hexArray);
 	
-	deck.draw(ctx, 700, 50);
 });
+
+var board;
+var deck;
+var ctx;
+
+function setup() {
+    board = Object.create(Board);
+    board.buildBoard(10,10);
+    deck = Object.create(Deck);
+    deck.buildDeck(board.hexArray);
+    deck.shuffle(deck.cardArray);
+    deck.deal(deck.cardPool, 2);
+};
+
+function draw() {
+	deck.draw(ctx, 700, 50);
+    board.drawBoard(ctx);
+};

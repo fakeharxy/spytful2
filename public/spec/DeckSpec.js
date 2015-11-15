@@ -30,5 +30,12 @@ describe("Deck", function() {
     expect(board.hexArray[0][0].regionName).toEqual(deck.cardArray[0].regionName);
   });
 
-
+  it("After setup, the cardPool should have two cards", function(){
+      deck.deal(deck.cardPool, 2);
+      expect(deck.cardPool.length).toEqual(2);
+  });
+  it("After setup, the cardPool should contain cards", function(){
+      deck.deal(deck.cardPool, 2);
+      expect(Card.isPrototypeOf(deck.cardPool[0])).toEqual(true);
+  });
 })
