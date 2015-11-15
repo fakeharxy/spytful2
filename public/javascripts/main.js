@@ -21,7 +21,6 @@ $(document).ready(function(){
 	ctx.imageCache[0] = img;
 
   var butAction = $("#butAction")[0];
-  console.log(butAction);
   butAction.onclick = actionFunction;
 });
 

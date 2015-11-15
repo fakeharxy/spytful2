@@ -54,7 +54,7 @@ var Deck = {
 
         //draw deck
         var xHeap = x + 2*(Deck.cardWidth + Deck.cardSpacing);
-        for (var i=0;i<this.cardArray.length;i++) {
+        for (var i=this.cardArray.length-1;i>=0;i--) {
             this.cardArray[i].draw(ctx, xHeap, y, false);
         }
     }
