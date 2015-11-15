@@ -4,6 +4,7 @@ var Deck = {
     cardWidth: 60,
     cardHeight: 100,
     cardRoundingRadius: 10,
+    cardSpacing: 20,
     drawPoints: [],
 
     deal: function (dealLocation, dealNumber){
@@ -37,7 +38,6 @@ var Deck = {
 
     draw: function (ctx, x, y) {
         //draw top two cards then all the rest in a heap
-        var spacing = 20;
 
         var wobble = 8;
         var rotation = 0.08;
@@ -45,10 +45,10 @@ var Deck = {
         if (this.cardPool.length>0) {
             this.cardPool[0].draw(ctx, x, y, 0, true);
             if (this.cardPool.length>1) {
-                this.cardPool[1].draw(ctx, x + Deck.cardWidth + spacing, y, 0, true);
+                this.cardPool[1].draw(ctx, x + Deck.cardWidth + Deck.cardSpacing, y, 0, true);
             }
         }
-        var xHeap = x + 2*(Deck.cardWidth + spacing);
+        var xHeap = x + 2*(Deck.cardWidth + Deck.cardSpacing);
         for (var i=0;i<this.cardArray.length;i++) {
             var adjX = Math.random() * wobble - wobble / 2;
             var adjY = Math.random() * wobble - wobble / 2;
