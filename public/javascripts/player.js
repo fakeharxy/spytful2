@@ -9,7 +9,7 @@ var Player = {
       ctx.textBaseline = "top";
       ctx.fillStyle = "#000"
       ctx.fillText(this.name + "'s hand:", x, y);
-      
+
       //cards
       y+=Deck.cardSpacing;
       for (var i=0; i<this.hand.length; i++) {

@@ -24,7 +24,7 @@ var Hex = {
 			ctx.quadraticCurveTo(pt[2], pt[3], pt[4], pt[5]);
 		}
 		ctx.closePath();
-		
+
 		ctx.lineWidth = 2;
 		ctx.shadowColor= "rgba(100,100,100,.7)";
 		ctx.shadowOffsetX = 3;
@@ -32,26 +32,25 @@ var Hex = {
 		ctx.stroke();
 		ctx.fillStyle = Hex.colourMap[this.colourCode];
 		ctx.fill();
-		
-		
+
+
 		//for water, draw the background image
 		if (this.colourCode==0) {
 			ctx.clip(); // clip to the hex path on the context
 			ctx.drawImage(ctx.imageCache[0], - Board.hexSize - Math.random() * Board.hexSize, - Board.hexSize - Math.random() * Board.hexSize, Board.hexSize * 3, Board.hexSize * 3);
-			
+
 		//otherwise write the region name
 		} else {
 			ctx.shadowColor = "transparent";
 			ctx.lineWidth = 1;
-			ctx.textBaseline = 'bottom';
-			ctx.font = '8pt Arial';
+			ctx.textBaseline = "bottom";
 			ctx.fillStyle = "#000"
 			ctx.fillText("  " + this.regionName, - Board.hexSize, 0);
 		}
-		
+
 		ctx.restore();
 	},
-	
+
 
 	setValidColour: function () {
 			//find invalid colours based on neighbours

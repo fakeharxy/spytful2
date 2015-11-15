@@ -86,10 +86,9 @@ var Card = {
 
         //write region name
         //if (faceUp) {
-        ctx.font = '8pt Arial';
         ctx.fillStyle = "#000"
-            ctx.textBaseline = 'center';
-        ctx.textAlign = 'center';
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
         ctx.fillText(faceUp ? this.regionName : "LOGO", Deck.cardWidth/2, Deck.cardHeight/2);
         //}
         ctx.restore();

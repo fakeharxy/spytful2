@@ -5,6 +5,7 @@ $(document).ready(function(){
     var w = $("#canvas").width();
     var h = $("#canvas").height();
 
+    ctx.font = "8pt Arial";
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = "black";
