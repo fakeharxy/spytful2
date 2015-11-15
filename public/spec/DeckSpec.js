@@ -11,7 +11,15 @@ describe("Deck", function() {
 
 
   it("should be filled with the correct number of cards for the board", function() {
-    expect(deck.cardArray.length).toBe(deck.deckSizeMultiple * board.width * board.height);
+		var hexCount = board.width * board.height;
+		for (var j=0; j<board.height; j++) {
+			for (var i=0; i<board.width; i++) {
+				if (board.hexArray[j][i].colourCode==0) {
+					hexCount--;
+				}
+			}
+	  }
+    expect(deck.cardArray.length).toBe(deck.deckSizeMultiple * hexCount);
   });
 
   it("a card in the same array location should be the same colour as the hex in the hexArray", function() {
