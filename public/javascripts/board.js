@@ -1,32 +1,41 @@
 var Board = {
     hexSize: 30,
     hexRoundingRadius: 4,
+		hexDrawPoints: [],
     firstHexX: 50,
     firstHexY: 50,
     offset: 5,
 
     buildBoard: function (width, height) {
-        this.width = width;
-        this.height = height;
-        this.hexArray = [];
+			this.width = width;
+			this.height = height;
+			this.hexArray = [];
+			
+			//build template hex drawPoints
+			var corners = [];
+			for (var c = 0; c < 6; c++) {
+				corners[c] = [];
+				var point = [];
+				var angle_deg = 60 * c + 30;
+				var angle_rad = Math.PI / 180 * angle_deg;
+				point[0] = this.hexSize * Math.cos(angle_rad);
+				point[1] = this.hexSize * Math.sin(angle_rad);
+				corners[c] = point;
+			}
+			this.hexDrawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
 
-        for (var j = 0; j < this.height; j++) {
-            this.hexArray[j] = [];
-            for (var i = 0; i < this.width; i++) {
-                var newHex = Object.create(Hex);
-                newHex.regionName = String.fromCharCode(65+j,65+i);
-                newHex.centre = { x: this.calculateHexCentreX(i, j),
-                                  y: this.calculateHexCentreY(j) };
-                var corners = [];
-                for (var c = 0; c < 6; c++) {
-                    corners[c] = this.calculateHexCorner(newHex.centre, c);
-                }
-                newHex.corners = corners;
-				newHex.drawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
-                this.hexArray[j][i] = newHex;
-            }
-        }
-        this.prepareHexes();
+			//build hex objects
+			for (var j = 0; j < this.height; j++) {
+				this.hexArray[j] = [];
+				for (var i = 0; i < this.width; i++) {
+					var newHex = Object.create(Hex);
+					newHex.regionName = String.fromCharCode(65+j,65+i);
+					newHex.centre = { x: this.calculateHexCentreX(i, j),
+														y: this.calculateHexCentreY(j) };
+					this.hexArray[j][i] = newHex;
+				}
+			}
+			this.prepareHexes();
     },
 
     prepareHexes: function() {
@@ -42,7 +51,7 @@ var Board = {
     drawBoard: function (ctx) {
         for (var j = 0; j < this.height; j++) {
             for (var i = 0; i < this.width; i++) {
-                this.hexArray[j][i].draw(ctx);
+                this.hexArray[j][i].draw(ctx, this.hexDrawPoints);
             }
         }
     },
@@ -65,19 +74,10 @@ var Board = {
         return x;
     },
 
-    calculateHexCorner: function (centre, i) {
-        var point = [];
-        var angle_deg = 60 * i + 30;
-        var angle_rad = Math.PI / 180 * angle_deg;
-        point[0] = centre.x + this.hexSize * Math.cos(angle_rad);
-        point[1] = centre.y + this.hexSize * Math.sin(angle_rad);
-        return point;
-    },
-
     getRoundedPoints: function(pts, radius) {
       var i1, i2, i3, p1, p2, p3, prevPt, nextPt,
-          len = pts.length,
-          res = new Array(len);
+			len = pts.length,
+			res = new Array(len);
       for (i2 = 0; i2 < len; i2++) {
         i1 = i2-1;
         i3 = i2+1;
