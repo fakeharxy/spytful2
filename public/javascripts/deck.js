@@ -5,6 +5,8 @@ var Deck = {
     cardHeight: 100,
     cardRoundingRadius: 10,
     cardSpacing: 20,
+    cardRotationMax: 0.08,
+    cardWobbleMax: 8,
     drawPoints: [],
 
     deal: function (dealLocation, dealNumber){
@@ -24,6 +26,11 @@ var Deck = {
                         var card = Object.create(Card);
                         card.colourCode = hexArray[j][i].colourCode;
                         card.regionName = hexArray[j][i].regionName;
+                        card.rotation = Math.random() * Deck.cardRotationMax - Deck.cardRotationMax / 2;
+                        var wobble = {};
+                        wobble.x = Math.random() * Deck.cardWobbleMax - Deck.cardWobbleMax / 2;
+                        wobble.y = Math.random() * Deck.cardWobbleMax - Deck.cardWobbleMax / 2;
+                        card.wobble = wobble;
                         this.cardArray.push(card);
                     }
                 }
@@ -37,34 +44,29 @@ var Deck = {
     },
 
     draw: function (ctx, x, y) {
-        //draw top two cards then all the rest in a heap
-
-        var wobble = 8;
-        var rotation = 0.08;
-
+        //draw card pool
         if (this.cardPool.length>0) {
-            this.cardPool[0].draw(ctx, x, y, 0, true);
+            this.cardPool[0].draw(ctx, x, y, true);
             if (this.cardPool.length>1) {
-                this.cardPool[1].draw(ctx, x + Deck.cardWidth + Deck.cardSpacing, y, 0, true);
+                this.cardPool[1].draw(ctx, x + Deck.cardWidth + Deck.cardSpacing, y, true);
             }
         }
+
+        //draw deck
         var xHeap = x + 2*(Deck.cardWidth + Deck.cardSpacing);
         for (var i=0;i<this.cardArray.length;i++) {
-            var adjX = Math.random() * wobble - wobble / 2;
-            var adjY = Math.random() * wobble - wobble / 2;
-            var rotate = Math.random() * rotation - rotation / 2;
-            this.cardArray[i].draw(ctx, xHeap + adjX, y + adjY, rotate, false);
+            this.cardArray[i].draw(ctx, xHeap, y, false);
         }
     }
 };
 
 var Card = {
 
-    draw: function (ctx, x, y, r, faceUp) {
+    draw: function (ctx, x, y, faceUp) {
         ctx.save();
 
-        ctx.translate(x,y);
-        ctx.rotate(r);
+        ctx.translate(x + this.wobble.x, y + this.wobble.y);
+        ctx.rotate(this.rotation);
         ctx.shadowColor = "transparent";
 
         ctx.beginPath();

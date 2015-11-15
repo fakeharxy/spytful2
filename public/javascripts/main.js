@@ -1,15 +1,12 @@
 $(document).ready(function(){
 
-    var canvas = $("#canvas")[0];
-    ctx = canvas.getContext("2d");
-    var w = $("#canvas").width();
-    var h = $("#canvas").height();
+  var canvas = $("#canvas")[0];
+  ctx = canvas.getContext("2d");
+  w = $("#canvas").width();
+  h = $("#canvas").height();
 
-    ctx.font = "8pt Arial";
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, w, h);
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(0, 0, w, h);
+  ctx.font = "8pt Arial";
+
 
 	var img = new Image;
 	img.onload = function() {
@@ -23,10 +20,12 @@ $(document).ready(function(){
 	ctx.imageCache = [];
 	ctx.imageCache[0] = img;
 
-
+  var butAction = $("#butAction")[0];
+  console.log(butAction);
+  butAction.onclick = actionFunction;
 });
 
-var ctx;
+var ctx, w, h;
 var board;
 var deck;
 var players;
@@ -49,6 +48,13 @@ function setup() {
 };
 
 function draw() {
+  //reset canvas
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = "black";
+  ctx.strokeRect(0, 0, w, h);
+
+  //draw objects
   board.drawBoard(ctx);
   var deckX = 2 * (board.width * board.hexSize + board.firstHexX);
   var deckY = board.firstHexY - board.hexSize;
@@ -58,3 +64,9 @@ function draw() {
   }
 
 };
+
+function actionFunction() {
+  //deals another card to player 1
+  deck.deal(players[0].hand, 1);
+  draw();
+}

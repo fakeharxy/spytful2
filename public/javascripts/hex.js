@@ -42,7 +42,6 @@ var Hex = {
 		//otherwise write the region name
 		} else {
 			ctx.shadowColor = "transparent";
-			ctx.lineWidth = 1;
 			ctx.textBaseline = "bottom";
 			ctx.fillStyle = "#000"
 			ctx.fillText("  " + this.regionName, - Board.hexSize, 0);

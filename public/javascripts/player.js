@@ -13,7 +13,7 @@ var Player = {
       //cards
       y+=Deck.cardSpacing;
       for (var i=0; i<this.hand.length; i++) {
-        this.hand[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i&1 ? 3 : 0), 0, true);
+        this.hand[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i&1 ? 3 : 0), true);
       }
     }
 
