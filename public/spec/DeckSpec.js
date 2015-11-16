@@ -23,11 +23,29 @@ describe("Deck", function() {
   });
 
   it("a card in the same array location should be the same colour as the hex in the hexArray", function() {
-    expect(board.hexArray[0][0].colourCode).toEqual(deck.cardArray[0].colourCode);
+	var j=-1, i, notFound = true;
+	while (notFound && ++j<board.height) {
+		i=-1;
+		while (notFound && ++i<board.width) {
+			if (board.hexArray[j][i].colourCode!=0) {
+				notFound = false;
+			}
+		}
+	}
+    expect(board.hexArray[j][i].colourCode).toEqual(deck.cardArray[0].colourCode);
   });
 
   it("a card in the same array location should be the same region as the hex in the hexArray", function() {
-    expect(board.hexArray[0][0].regionName).toEqual(deck.cardArray[0].regionName);
+	var j=-1, i, notFound = true;
+	while (notFound && ++j<board.height) {
+		i=-1;
+		while(notFound && ++i<board.width) {
+			if (board.hexArray[j][i].colourCode!=0) {
+				notFound = false;
+			}
+		}
+	}
+	expect(board.hexArray[j][i].regionName).toEqual(deck.cardArray[0].regionName);
   });
 
   it("After setup, the cardPool should have two cards", function(){
