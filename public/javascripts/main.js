@@ -8,23 +8,39 @@ $(document).ready(function(){
   ctx.font = "8pt Arial";
 
 
-	var img = new Image;
-	img.onload = function() {
-        setup();
-        draw();
-	};
-	img.onerror = function() {
-		console.log("image not loaded");
-	};
-	img.src = "images/water.gif";
-	ctx.imageCache = [];
-	ctx.imageCache[0] = img;
-
+  ctx.imageCache = [];
+  var imgList = [ { name: "water", file: "water.gif" },
+	  { name: "briefcase", file: "briefcase.png" }];
+	  
+  imagesToLoad = imgList.length;
+  for (var i=0; i<imgList.length; i++) {
+	  loadImage(imgList[i]);
+  }
+  
   var butAction = $("#butAction")[0];
   butAction.onclick = actionFunction;
 });
 
+function loadImage(imgToLoad) {
+	var img = new Image;
+	img.onload = function() {
+        console.log("loaded image " + imgToLoad.file);
+		if (--imagesToLoad==0) imagesReady();
+	};
+	img.onerror = function() {
+		console.log("error loading image " + imgToLoad.file);
+	};
+	img.src = "images/" + imgToLoad.file;
+	ctx.imageCache[imgToLoad.name] = img;
+}
+
+function imagesReady() {
+	setup();
+    draw();
+}
+
 var ctx, w, h;
+var imagesToLoad;
 var board;
 var deck;
 var players;
@@ -37,6 +53,11 @@ function setup() {
     deck.shuffle(deck.cardArray);
     deck.deal(deck.cardPool, 2);
 
+	//add some briefcases for testing
+	for (var i=0; i<12; i++) {
+		board.hexArray[Math.floor(Math.random() * board.height)][Math.floor(Math.random() * board.width)].hasBriefcase = true;
+	}
+	
     //set up players
     players = [];
     var p1 = Object.create(Player);
