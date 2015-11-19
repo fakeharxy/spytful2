@@ -1,5 +1,5 @@
 describe("Player", function() {
-    
+
     var player;
 
     beforeEach(function(){
@@ -25,10 +25,4 @@ describe("Player", function() {
         expect(player.hand[0].colourCode).toBe(3);
     });
 
-    it("after setup, a player should have 2 cards", function() {
-        setup();
-        deck.deal(player.hand, 2);
-        expect(player.hand.length).toBe(2);        
-    });
-    
 });

@@ -34,5 +34,5 @@ describe("Board", function() {
   it("should create a hexArray of hex objects", function() {
       expect(board.hexArray.length).toBe(3);
   });
-  
+
 });
