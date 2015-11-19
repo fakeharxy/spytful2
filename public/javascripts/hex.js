@@ -37,23 +37,34 @@ var Hex = {
 		//for water, draw the background image
 		if (this.colourCode==0) {
 			ctx.clip(); // clip to the hex path on the context
-			ctx.drawImage(ctx.imageCache["water"], - Board.hexSize - Math.random() * Board.hexSize, - Board.hexSize - Math.random() * Board.hexSize, Board.hexSize * 3, Board.hexSize * 3);
+      if (!this.waterOffset) {
+				this.waterOffset = { x: - Board.hexSize - Math.random() * Board.hexSize, y: - Board.hexSize - Math.random() * Board.hexSize };
+			}
+			ctx.drawImage(ctx.imageCache["water"], this.waterOffset.x, this.waterOffset.y, Board.hexSize * 3, Board.hexSize * 3);
 
 		//otherwise write the region name
 		} else {
 			ctx.shadowColor = "transparent";
-			ctx.textBaseline = "bottom";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
 			ctx.fillStyle = "#000"
-			ctx.fillText("  " + this.regionName, - Board.hexSize, 0);
+			ctx.fillText(this.regionName, Board.offset - Board.hexSize, -Board.hexSize/2);
 		}
 
 		//draw overlays
+    var overlayImg = null;
 		if (this.hasBriefcase) {
-			var briefcaseSize = Board.hexSize * 0.75;
+      overlayImg = ctx.imageCache["briefcase"];
+    } else if (this.isExtractionpoint) {
+      overlayImg = ctx.imageCache["extractionpoint"];
+    }
+    if (overlayImg) {
+			var iconWidth = Board.hexSize * 0.75;
+      var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
 			ctx.shadowColor = "transparent";
-			ctx.drawImage(ctx.imageCache["briefcase"], - briefcaseSize/2, - briefcaseSize/2, briefcaseSize, briefcaseSize);
+			ctx.drawImage(overlayImg, - iconWidth/2, - iconHeight/2, iconWidth, iconHeight);
 		}
-		
+
 		ctx.restore();
 	},
 
