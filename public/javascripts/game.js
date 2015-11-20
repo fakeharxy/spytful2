@@ -1,7 +1,9 @@
 var Game = {
   briefcasesPerPlayer: 3,
   extractionpointsPerPlayer: 3,
-
+  startCardsPool: 2,
+  startCardsPlayer: 2,
+  
   setup: function (boardWidth, boardHeight) {
     this.board = Object.create(Board);
     this.board.buildBoard(boardWidth, boardHeight);
@@ -36,7 +38,7 @@ var Game = {
       alert("too many players on too small a board; tests don't count");
       return;
     }
-    validHexes = Deck.shuffle(validHexes);
+    Deck.shuffle(validHexes);
     for (var i=0; i<briefcaseCount; i++) {
       validHexes.shift().hasBriefcase = true;
     }
@@ -45,12 +47,12 @@ var Game = {
     }
 
 
-    //deal 2 cards into the card pool
-    this.deck.deal(this.deck.cardPool, 2);
+    //deal cards into the card pool
+    this.deck.deal(this.deck.cardPool, this.startCardsPool);
 
-    //deal 2 cards to each player
+    //deal cards to each player
     for (var i=0; i<this.players.length; i++) {
-      this.deck.deal(this.players[i].hand, 2);
+      this.deck.deal(this.players[i].hand, this.startCardsPlayer);
     }
   },
 
@@ -62,9 +64,9 @@ var Game = {
     var deckY = this.board.firstHexY - this.board.hexSize;
     this.deck.draw(ctx, deckX, deckY);
 
-    //draw a player's hand
-    if (this.players && this.players.length > 0) {
-      this.players[0].drawHand(ctx, deckX, deckY + this.deck.cardHeight + this.deck.cardSpacing);
+    //draw all players' hands
+    for (var i=0; i<this.players.length; i++) {
+      this.players[i].drawHand(ctx, deckX, deckY + (i+1)*(this.deck.cardHeight + 2*this.deck.cardSpacing));
     }
   }
 }

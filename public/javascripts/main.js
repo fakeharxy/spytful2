@@ -62,11 +62,10 @@ function draw() {
 
   //draw objects
   game.draw(ctx);
-
 };
 
 function actionFunction() {
-  //deals another card to player 1
-  game.deck.deal(game.players[0].hand, 1);
+  //deals another card to random player
+  game.deck.deal(game.players[Math.floor(Math.random() * game.players.length)].hand, 1);
   draw();
 }

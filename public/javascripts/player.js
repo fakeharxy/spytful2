@@ -7,6 +7,7 @@ var Player = {
       //label
       ctx.font = '8pt Arial';
       ctx.textBaseline = "top";
+	  ctx.textAlign="left";
       ctx.fillStyle = "#000"
       ctx.fillText(this.name + "'s hand:", x, y);
 

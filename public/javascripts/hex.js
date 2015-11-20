@@ -37,9 +37,11 @@ var Hex = {
 		//for water, draw the background image
 		if (this.colourCode==0) {
 			ctx.clip(); // clip to the hex path on the context
-      if (!this.waterOffset) {
+            if (!this.waterOffset) {
 				this.waterOffset = { x: - Board.hexSize - Math.random() * Board.hexSize, y: - Board.hexSize - Math.random() * Board.hexSize };
+				this.waterRotate = Math.random() * 2 * Math.PI;
 			}
+			ctx.rotate(this.waterRotate);
 			ctx.drawImage(ctx.imageCache["water"], this.waterOffset.x, this.waterOffset.y, Board.hexSize * 3, Board.hexSize * 3);
 
 		//otherwise write the region name
