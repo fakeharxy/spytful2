@@ -65,8 +65,7 @@ var Game = {
     this.deck.draw(ctx, deckX, deckY);
 
     //draw all players' hands
-    for (var i=0; i<this.players.length; i++) {
-      this.players[i].drawHand(ctx, deckX, deckY + (i+1)*(this.deck.cardHeight + 2*this.deck.cardSpacing));
-    }
+      this.players[0].drawHand(ctx, deckX, deckY + (this.deck.cardHeight + 2*this.deck.cardSpacing));
+      this.players[0].drawStack(ctx, deckX, deckY + 2*(this.deck.cardHeight + 2*this.deck.cardSpacing));
   }
 }

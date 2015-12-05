@@ -9,12 +9,20 @@ var Deck = {
     cardWobbleMax: 8,
     drawPoints: [],
 
-    deal: function(dealLocation, dealNumber) {
-        Array.prototype.push.apply(dealLocation, this.cardArray.splice(
+    deal: function(dealTarget, dealNumber) {
+        Array.prototype.push.apply(dealTarget, this.cardArray.splice(
             0, dealNumber));
         if (this.cardArray.length === 0) {
             alert('This game is over. The winner is Player 1');
         }
+    },
+
+    takePool: function(target) {
+      // target = target.concat(this.cardPool);
+      target.push(this.cardPool[0]);
+      target.push(this.cardPool[1]);
+      this.cardPool = [];
+      this.deal(this.cardPool, 2);
     },
 
     buildDeck: function(hexArray) {
