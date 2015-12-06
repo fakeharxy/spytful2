@@ -80,6 +80,10 @@ var Deck = {
         for (var i = this.cardArray.length - 1; i >= 0; i--) {
             this.cardArray[i].draw(ctx, xHeap, y, false);
         }
+    },
+
+    determineClick: function(x, y) {
+      return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
     }
 };
 

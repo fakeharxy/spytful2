@@ -8,7 +8,7 @@ $(document).ready(function() {
   ctx = canvas.getContext("2d");
   w = $("#canvas").width();
   h = $("#canvas").height();
-  
+
   ctx.font = "8pt Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -34,11 +34,7 @@ $(document).ready(function() {
     loadImage(imgList[i]);
   }
 
-  var button = $("#butDraw")[0];
-  button.onclick = drawCardFromDeckButton;
-  button = $("#butDrawPool")[0];
-  button.onclick = drawCardsFromPoolButton;
-  button = $("#butEndTurn")[0];
+  var button = $("#butEndTurn")[0];
   button.onclick = endTurn;
 });
 
@@ -83,23 +79,15 @@ function draw() {
   game.draw(ctx);
 }
 
-function drawCardFromDeckButton() {
-  game.players[game.currentPlayer].drawCardFromDeck();
-  draw();
-}
-
-function drawCardsFromPoolButton() {
-  game.players[game.currentPlayer].drawCardsFromPool();
-  draw();
-}
-
 function endTurn() {
-  if (game.players[game.currentPlayer].canEndTurn()) {
-	game.nextTurn();
-	draw();
+  if (game.turnState == 'finished') {
+    game.nextTurn();
+    draw();
+  } else {
+    alert("The game rules dictate you must draw cards before ending your turn...");
   }
 }
 
 function onMouseDown(event) {
-	game.onclick(event.pageX - canvasX, event.pageY - canvasY);
+  game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }

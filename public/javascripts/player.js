@@ -1,6 +1,6 @@
 var Player = {
   maxHandSize: 5,
-  
+
   setupHand: function() {
     this.hand = [];
     this.stack = [];
@@ -19,6 +19,10 @@ var Player = {
     for (var i = 0; i < this.hand.length; i++) {
       this.hand[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), true);
     }
+  },
+
+  determineClick: function(x, y) {
+    return Math.floor(x / (Deck.cardWidth * 0.75));
   },
 
   drawStack: function(ctx, x, y) {
@@ -48,15 +52,7 @@ var Player = {
   },
 
   drawCardsFromPool: function() {
-    game.deck.takePool(this.hand); 
-  },
-  
-  canEndTurn: function() {
-	if (this.hand.length <= Player.maxHandSize) {
-		return true;
-	} else {
-		alert("cannot end turn; too many cards in hand");
-		return false;
-	}
+    game.deck.takePool(this.hand);
   }
+
 };
