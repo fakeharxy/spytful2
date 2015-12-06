@@ -3,8 +3,13 @@ var Game = {
   extractionpointsPerPlayer: 3,
   startCardsPool: 2,
   startCardsPlayer: 2,
+  state: "setupBoard",
   
   setup: function (boardWidth, boardHeight) {
+	if (this.state!="setupBoard") {
+		alert("error: board already set up");
+		return;
+	}
     this.board = Object.create(Board);
     this.board.buildBoard(boardWidth, boardHeight);
 
@@ -13,9 +18,31 @@ var Game = {
     Deck.shuffle(this.deck.cardArray);
 
     this.players = [];
+	
+	this.setupCoordinates();
+	
+	this.state = "setupPlayers";
+  },
+  
+  setupCoordinates: function () {
+	//deck is positioned a little to the right of the hexes
+    this.deckX = 2 * (this.board.width * this.board.hexSize + this.board.firstHexX);
+    this.deckY = this.board.firstHexY - this.board.hexSize;
+	
+	//current player's hand is positioned below the deck
+	this.handX = this.deckX;
+	this.handY = this.deckY + (this.deck.cardHeight + 2*this.deck.cardSpacing);
+	
+	//current player's movement stack is positioned below the hand
+	this.stackX = this.deckX;	
+	this.stackY = this.deckY + 2*(this.deck.cardHeight + 2*this.deck.cardSpacing)
   },
 
   addPlayer: function (name) {
+	if (this.state!="setupPlayers") {
+		alert("error: game not in player setup stage");
+		return;
+	}
     var player = Object.create(Player);
     player.name = name;
     player.setupHand();
@@ -23,6 +50,15 @@ var Game = {
   },
 
   prepareGame: function () {
+	if (this.state!="setupPlayers") {
+	  alert("error: game not in setup stage");
+	  return;
+	}
+	if (this.players.length<2) {
+	  alert("error: not enough players to start game");
+	  return;
+	}
+	
     //add briefcases and extraction points
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
@@ -54,18 +90,40 @@ var Game = {
     for (var i=0; i<this.players.length; i++) {
       this.deck.deal(this.players[i].hand, this.startCardsPlayer);
     }
+	
+	//start first turn
+	this.currentPlayer = 0;
+	this.state="started";
+  },
+  
+  nextTurn: function() {
+	if (++this.currentPlayer >= this.players.length) {
+	  this.currentPlayer = 0;
+	}
   },
 
   draw: function (ctx) {
     //draw hexes
     this.board.drawBoard(ctx);
-    //draw deck, a little to the right of the hexes
-    var deckX = 2 * (this.board.width * this.board.hexSize + this.board.firstHexX);
-    var deckY = this.board.firstHexY - this.board.hexSize;
-    this.deck.draw(ctx, deckX, deckY);
+    
+	//draw deck
+    this.deck.draw(ctx, this.deckX, this.deckY);
 
-    //draw all players' hands
-      this.players[0].drawHand(ctx, deckX, deckY + (this.deck.cardHeight + 2*this.deck.cardSpacing));
-      this.players[0].drawStack(ctx, deckX, deckY + 2*(this.deck.cardHeight + 2*this.deck.cardSpacing));
+    //draw current player's hand
+    this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
+    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY);
+  },
+  
+  onclick: function (x, y) {
+    //locate click
+	if (x < this.deckX) {
+		console.log("clicked on board");
+	} else if (y < this.handY) {
+		console.log("clicked on deck (or pool)");
+	} else if (y < this.stackY) {
+		console.log("clicked on hand");
+	} else {
+		console.log("clicked on stack");
+	}
   }
 }

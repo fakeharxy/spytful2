@@ -1,10 +1,14 @@
 $(document).ready(function() {
 
   var canvas = $("#canvas")[0];
+  var rect = canvas.getBoundingClientRect();
+  canvasX = rect.left;
+  canvasY = rect.top;
+  canvas.addEventListener("mousedown", onMouseDown, false);
   ctx = canvas.getContext("2d");
   w = $("#canvas").width();
   h = $("#canvas").height();
-
+  
   ctx.font = "8pt Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -34,6 +38,8 @@ $(document).ready(function() {
   button.onclick = drawCardFromDeckButton;
   button = $("#butDrawPool")[0];
   button.onclick = drawCardsFromPoolButton;
+  button = $("#butEndTurn")[0];
+  button.onclick = endTurn;
 });
 
 function loadImage(imgToLoad) {
@@ -54,7 +60,7 @@ function imagesReady() {
   draw();
 }
 
-var ctx, w, h;
+var ctx, w, h, canvasX, canvasY;
 var imagesToLoad;
 var game;
 
@@ -62,8 +68,9 @@ function setup() {
   game = Object.create(Game);
   game.setup(10, 10);
   game.addPlayer("Player 1");
+  game.addPlayer("Player 2");
   game.prepareGame();
-};
+}
 
 function draw() {
   //reset canvas
@@ -74,14 +81,25 @@ function draw() {
 
   //draw objects
   game.draw(ctx);
-};
+}
 
 function drawCardFromDeckButton() {
-  game.players[0].drawCardFromDeck();
+  game.players[game.currentPlayer].drawCardFromDeck();
   draw();
 }
 
 function drawCardsFromPoolButton() {
-  game.players[0].drawCardsFromPool();
+  game.players[game.currentPlayer].drawCardsFromPool();
   draw();
+}
+
+function endTurn() {
+  if (game.players[game.currentPlayer].canEndTurn()) {
+	game.nextTurn();
+	draw();
+  }
+}
+
+function onMouseDown(event) {
+	game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }

@@ -6,8 +6,8 @@ describe("Game", function() {
 
   beforeEach(function() {
     game = Object.create(Game);
-    boardWidth = 3 + Math.floor(Math.random() * 10);
-    boardHeight = 3 + Math.floor(Math.random() * 10);
+    boardWidth = 5 + Math.floor(Math.random() * 10);
+    boardHeight = 5 + Math.floor(Math.random() * 10);
     game.setup(boardWidth, boardHeight);
   });
 
@@ -33,7 +33,7 @@ describe("Game", function() {
   });
 
   it("should have the correct number of players after adding players", function() {
-    var playerCount = 1 + Math.floor(Math.random() * 3);
+    var playerCount = 2 + Math.floor(Math.random() * 3);
     for (var i = 0; i < playerCount; i++) {
       game.addPlayer("player " + i);
     }
@@ -42,7 +42,7 @@ describe("Game", function() {
   
   it("should add the correct number of briefcases per player after preparing the game to start",
     function() {
-      var playerCount = 1 + Math.floor(Math.random() * 3);
+      var playerCount = 2 + Math.floor(Math.random() * 3);
       for (var i = 0; i < playerCount; i++) {
         game.addPlayer("player " + i);
       }
@@ -62,7 +62,7 @@ describe("Game", function() {
   it(
     "should add the correct number of extraction points per player after preparing the game to start",
     function() {
-      var playerCount = 1 + Math.floor(Math.random() * 3);
+      var playerCount = 2 + Math.floor(Math.random() * 3);
       for (var i = 0; i < playerCount; i++) {
         game.addPlayer("player " + i);
       }
@@ -79,7 +79,7 @@ describe("Game", function() {
       expect(extractionpointCount).toEqual(playerCount * Game.extractionpointsPerPlayer);
     });
   it("should give all players 2 cards after preparing the game to start", function() {
-    var playerCount = 1 + Math.floor(Math.random() * 3);
+    var playerCount = 2 + Math.floor(Math.random() * 3);
     for (var i = 0; i < playerCount; i++) {
       game.addPlayer("player " + i);
     }
