@@ -3,8 +3,13 @@ var Game = {
   extractionpointsPerPlayer: 3,
   startCardsPool: 2,
   startCardsPlayer: 2,
+  state: "setupBoard",
   
   setup: function (boardWidth, boardHeight) {
+	if (this.state!="setupBoard") {
+		alert("error: board already set up");
+		return;
+	}
     this.board = Object.create(Board);
     this.board.buildBoard(boardWidth, boardHeight);
 
@@ -13,9 +18,14 @@ var Game = {
     Deck.shuffle(this.deck.cardArray);
 
     this.players = [];
+	this.state = "setupPlayers";
   },
 
   addPlayer: function (name) {
+	if (this.state!="setupPlayers") {
+		alert("error: game not in player setup stage");
+		return;
+	}
     var player = Object.create(Player);
     player.name = name;
     player.setupHand();
@@ -23,6 +33,15 @@ var Game = {
   },
 
   prepareGame: function () {
+	if (this.state!="setupPlayers") {
+	  alert("error: game not in setup stage");
+	  return;
+	}
+	if (this.players.length<2) {
+	  alert("error: not enough players to start game");
+	  return;
+	}
+	
     //add briefcases and extraction points
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
@@ -54,6 +73,16 @@ var Game = {
     for (var i=0; i<this.players.length; i++) {
       this.deck.deal(this.players[i].hand, this.startCardsPlayer);
     }
+	
+	//start first turn
+	this.currentPlayer = 0;
+	this.state="started";
+  },
+  
+  nextTurn: function() {
+	if (++this.currentPlayer >= this.players.length) {
+	  this.currentPlayer = 0;
+	}
   },
 
   draw: function (ctx) {
@@ -64,8 +93,8 @@ var Game = {
     var deckY = this.board.firstHexY - this.board.hexSize;
     this.deck.draw(ctx, deckX, deckY);
 
-    //draw all players' hands
-      this.players[0].drawHand(ctx, deckX, deckY + (this.deck.cardHeight + 2*this.deck.cardSpacing));
-      this.players[0].drawStack(ctx, deckX, deckY + 2*(this.deck.cardHeight + 2*this.deck.cardSpacing));
+    //draw current player's hand
+    this.players[this.currentPlayer].drawHand(ctx, deckX, deckY + (this.deck.cardHeight + 2*this.deck.cardSpacing));
+    this.players[this.currentPlayer].drawStack(ctx, deckX, deckY + 2*(this.deck.cardHeight + 2*this.deck.cardSpacing));
   }
 }

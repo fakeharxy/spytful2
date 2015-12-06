@@ -1,4 +1,6 @@
 var Player = {
+  maxHandSize: 5,
+  
   setupHand: function() {
     this.hand = [];
     this.stack = [];
@@ -47,5 +49,14 @@ var Player = {
 
   drawCardsFromPool: function() {
     game.deck.takePool(this.hand); 
+  },
+  
+  canEndTurn: function() {
+	if (this.hand.length <= Player.maxHandSize) {
+		return true;
+	} else {
+		alert("cannot end turn; too many cards in hand");
+		return false;
+	}
   }
 };

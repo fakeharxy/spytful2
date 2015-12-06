@@ -34,6 +34,8 @@ $(document).ready(function() {
   button.onclick = drawCardFromDeckButton;
   button = $("#butDrawPool")[0];
   button.onclick = drawCardsFromPoolButton;
+  button = $("#butEndTurn")[0];
+  button.onclick = endTurn;
 });
 
 function loadImage(imgToLoad) {
@@ -62,8 +64,9 @@ function setup() {
   game = Object.create(Game);
   game.setup(10, 10);
   game.addPlayer("Player 1");
+  game.addPlayer("Player 2");
   game.prepareGame();
-};
+}
 
 function draw() {
   //reset canvas
@@ -74,14 +77,21 @@ function draw() {
 
   //draw objects
   game.draw(ctx);
-};
+}
 
 function drawCardFromDeckButton() {
-  game.players[0].drawCardFromDeck();
+  game.players[game.currentPlayer].drawCardFromDeck();
   draw();
 }
 
 function drawCardsFromPoolButton() {
-  game.players[0].drawCardsFromPool();
+  game.players[game.currentPlayer].drawCardsFromPool();
   draw();
+}
+
+function endTurn() {
+  if (game.players[game.currentPlayer].canEndTurn()) {
+	game.nextTurn();
+	draw();
+  }
 }
