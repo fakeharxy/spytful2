@@ -36,6 +36,8 @@ $(document).ready(function() {
 
   var button = $("#butEndTurn")[0];
   button.onclick = endTurn;
+  button = $("#butClearRoute")[0];
+  button.onclick = clearRoute;
 });
 
 function loadImage(imgToLoad) {
@@ -77,6 +79,13 @@ function draw() {
 
   //draw objects
   game.draw(ctx);
+}
+
+function clearRoute() {
+  if (confirm('Are you sure you want to clear your route? \n This can not be undone.')) {
+    game.clearRoute();
+    draw();
+  }
 }
 
 function endTurn() {

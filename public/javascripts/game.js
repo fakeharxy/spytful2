@@ -87,7 +87,7 @@ var Game = {
     //deal cards into the card pool
     this.deck.deal(this.deck.cardPool, this.startCardsPool);
 
-    //deal cards to each player
+    // deal cards to each player
     for (var i = 0; i < this.players.length; i++) {
       this.deck.deal(this.players[i].hand, this.startCardsPlayer);
     }
@@ -152,6 +152,10 @@ var Game = {
     } else {
       console.log("clicked on stack");
     }
+  },
+
+  clearRoute: function() {
+    game.players[game.currentPlayer].clearRoute();
   },
 
   drawCardFromDeck: function() {

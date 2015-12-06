@@ -42,6 +42,10 @@ var Player = {
     }
   },
 
+  clearRoute: function() {
+    this.stack = [];
+  },
+
   playCardToStack: function(index) {
     var card = this.hand.splice(index, 1);
     this.stack.push(card[0]);
