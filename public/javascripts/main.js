@@ -1,10 +1,14 @@
 $(document).ready(function() {
 
   var canvas = $("#canvas")[0];
+  var rect = canvas.getBoundingClientRect();
+  canvasX = rect.left;
+  canvasY = rect.top;
+  canvas.addEventListener("mousedown", onMouseDown, false);
   ctx = canvas.getContext("2d");
   w = $("#canvas").width();
   h = $("#canvas").height();
-
+  
   ctx.font = "8pt Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -56,7 +60,7 @@ function imagesReady() {
   draw();
 }
 
-var ctx, w, h;
+var ctx, w, h, canvasX, canvasY;
 var imagesToLoad;
 var game;
 
@@ -94,4 +98,8 @@ function endTurn() {
 	game.nextTurn();
 	draw();
   }
+}
+
+function onMouseDown(event) {
+	game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }
