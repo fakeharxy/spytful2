@@ -22,7 +22,13 @@ var Player = {
   },
 
   determineClick: function(x, y) {
-    return Math.floor(x / (Deck.cardWidth * 0.75));
+    var index = Math.floor(x / (Deck.cardWidth * 0.75))
+    if (index >= this.hand.length) {
+		if (x < this.hand.length * Deck.cardWidth * 0.75 + Deck.cardWidth * 0.25) {
+			index--;
+		}
+	}
+	return index;
   },
 
   drawStack: function(ctx, x, y) {

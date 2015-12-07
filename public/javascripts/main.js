@@ -5,6 +5,7 @@ $(document).ready(function() {
   canvasX = rect.left;
   canvasY = rect.top;
   canvas.addEventListener("mousedown", onMouseDown, false);
+  canvas.addEventListener("mousemove", onMouseMove, false);
   ctx = canvas.getContext("2d");
   w = $("#canvas").width();
   h = $("#canvas").height();
@@ -23,7 +24,7 @@ $(document).ready(function() {
     file: "briefcase.png"
   }, {
     name: "extractionpoint",
-    file: "exit.png"
+    file: "exit.svg"
   }, {
     name: 'logo',
     file: "logo.png"
@@ -97,6 +98,9 @@ function endTurn() {
   }
 }
 
+function onMouseMove(event) {
+  game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
+}
 function onMouseDown(event) {
   game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }
