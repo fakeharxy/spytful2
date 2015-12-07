@@ -24,7 +24,7 @@ $(document).ready(function() {
     file: "briefcase.png"
   }, {
     name: "extractionpoint",
-    file: "exit.png"
+    file: "exit.svg"
   }, {
     name: 'logo',
     file: "logo.png"
