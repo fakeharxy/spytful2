@@ -1,9 +1,11 @@
-var Player = {
+var Player = { 
+  playerColours: { 1: '#E80000', 2: '#0000FF', 3: '#CCFF33', 4: '#006600' },
   maxHandSize: 5,
 
-  setupHand: function() {
+  setup: function() {
     this.hand = [];
     this.stack = [];
+    this.colour = this.playerColours[this.number];
   },
 
   drawHand: function(ctx, x, y) {
@@ -24,11 +26,11 @@ var Player = {
   determineClick: function(x, y) {
     var index = Math.floor(x / (Deck.cardWidth * 0.75))
     if (index >= this.hand.length) {
-		if (x < this.hand.length * Deck.cardWidth * 0.75 + Deck.cardWidth * 0.25) {
-			index--;
-		}
-	}
-	return index;
+      if (x < this.hand.length * Deck.cardWidth * 0.75 + Deck.cardWidth * 0.25) {
+        index--;
+      }
+    }
+    return index;
   },
 
   drawStack: function(ctx, x, y) {

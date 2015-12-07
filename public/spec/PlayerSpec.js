@@ -5,7 +5,7 @@ describe("Player", function() {
 
   beforeEach(function() {
     player = Object.create(Player);
-    player.setupHand();
+    player.setup();
     card = Object.create(Card);
     card.colourCode = 3;
     card.regionName = 'AB';
@@ -47,5 +47,16 @@ describe("Player", function() {
     player.playCardToStack(1)
     expect(player.stack[0].colourCode).toBe(1);
   });
+
+  it("will set a colour for a new player when they are created", function() {
+    expect(player.colour).not.toBe(undefined);
+  });
+
+  it("each player will be given a different colour", function() {
+    var player2 = Object.create(Player);
+    player2.setup();
+    expect(player.colour).not.toBe(player2.colour);
+  });
+
 
 });
