@@ -132,8 +132,10 @@ var Game = {
       if (this.turnState == "playing") {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
         if (poolDeckCardIndex < this.deck.cardPool.length) {
+          this.updateFocus(null);
           this.drawCardsFromPool();
         } else if (poolDeckCardIndex === this.deck.cardPool.length) {
+          this.updateFocus(null);
           this.drawCardFromDeck();
         }
       } else {
@@ -141,9 +143,9 @@ var Game = {
       }
     } else if (loc=="hand") {
       if (this.turnState == "playing") {
-        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
-          this.handY);
+        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
+          this.updateFocus(null);
           this.players[this.currentPlayer].playCardToStack(handCardIndex);
           this.draw();
         }
@@ -188,7 +190,7 @@ var Game = {
 	  if (this.focusObj === obj) {
 		  //still moving over same object
 	  } else {
-		  //move focues to new object
+		  //move focus to new object
 		  if (this.focusObj) {
 			 this.focusObj.focusOffsetX = 0;
 			 this.focusObj.focusOffsetY = 0;
