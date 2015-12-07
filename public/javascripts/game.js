@@ -5,6 +5,7 @@ var Game = {
   startCardsPlayer: 2,
   state: "setupBoard",
   turnState: "pre-start",
+  focusObj: null,
 
   setup: function(boardWidth, boardHeight) {
     if (this.state != "setupBoard") {
@@ -124,10 +125,10 @@ var Game = {
   },
 
   onclick: function(x, y) {
-    //locate click
-    if (x < this.deckX) {
+    var loc = this.locateMouse(x, y);
+    if (loc=="board") {
       console.log("clicked on board");
-    } else if (y < this.handY) {
+    } else if (loc=="deck") {
       if (this.turnState == "playing") {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
         if (poolDeckCardIndex < this.deck.cardPool.length) {
@@ -138,7 +139,7 @@ var Game = {
       } else {
         alert("The rules state that you can only draw cards once a turn");
       }
-    } else if (y < this.stackY) {
+    } else if (loc=="hand") {
       if (this.turnState == "playing") {
         var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
           this.handY);
@@ -149,11 +150,71 @@ var Game = {
       } else {
         alert("The rules state that once you have drawn cards, you can no longer play actions");
       }
-    } else {
+    } else if (loc=="stack") {
       console.log("clicked on stack");
-    }
+    } else {
+	  console.log("clicked somewhere unknown");
+	}
   },
 
+  onmousemove: function(x, y) {
+	var loc = this.locateMouse(x, y);
+    if (loc=="board") {
+	  this.updateFocus(null);
+    } else if (loc=="deck") {
+      var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
+        if (poolDeckCardIndex < this.deck.cardPool.length) {
+			this.updateFocus(this.deck.cardPool);
+		} else if (poolDeckCardIndex == this.deck.cardPool.length) {
+			this.updateFocus(this.deck.cardArray[0]);
+		} else {
+			this.updateFocus(null);
+		}
+    } else if (loc=="hand") {
+      var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y - this.handY);
+        if (handCardIndex < this.players[this.currentPlayer].hand.length) {
+			this.updateFocus(this.players[this.currentPlayer].hand[handCardIndex]);
+		} else {
+			this.updateFocus(null);
+		}
+    } else if (loc=="stack") {
+	  this.updateFocus(null);
+    } else {
+	  this.updateFocus(null);
+	}
+  },
+  
+  updateFocus: function(obj) {
+	  if (this.focusObj === obj) {
+		  //still moving over same object
+	  } else {
+		  //move focues to new object
+		  if (this.focusObj) {
+			 this.focusObj.focusOffsetX = 0;
+			 this.focusObj.focusOffsetY = 0;
+		  }
+		  if (obj) {
+			obj.focusOffsetX = -7;
+			obj.focusOffsetY = -12;
+		  }
+		  this.focusObj = obj;
+		  this.draw();
+	  }
+  },
+  
+  locateMouse: function(x, y) {
+	//locate co-ordinates
+    if (x < this.deckX) {
+      return "board";
+    } else if (y < this.handY) {
+	  return "deck";
+	} else if (y < this.stackY) {
+	  return "hand";
+	} else {
+	  return "stack";
+	}
+  },
+  
   clearRoute: function() {
     game.players[game.currentPlayer].clearRoute();
   },

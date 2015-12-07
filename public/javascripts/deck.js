@@ -27,6 +27,8 @@ var Deck = {
 
     buildDeck: function(hexArray) {
         this.cardPool = [];
+		this.cardPool.focusOffsetX = 0;
+		this.cardPool.focusOffsetY = 0;
         this.cardArray = [];
         var points = [
             [0, 0],
@@ -67,11 +69,11 @@ var Deck = {
     draw: function(ctx, x, y) {
         //draw card pool
         if (this.cardPool.length > 0) {
-            this.cardPool[0].draw(ctx, x, y, true);
+            this.cardPool[0].draw(ctx, x + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY, true);
             if (this.cardPool.length > 1) {
                 this.cardPool[1].draw(ctx, x + Deck.cardWidth +
-                    Deck.cardSpacing,
-                    y, true);
+                    Deck.cardSpacing + this.cardPool.focusOffsetX,
+                    y + this.cardPool.focusOffsetY, true);
             }
         }
 
@@ -88,12 +90,14 @@ var Deck = {
 };
 
 var Card = {
-
+	focusOffsetX: 0,
+	focusOffsetY: 0,
+	
     draw: function(ctx, x, y, faceUp) {
         ctx.save();
-
-        ctx.translate(x + this.wobble.x, y + this.wobble.y);
-        ctx.rotate(this.rotation);
+	
+		ctx.translate(x + this.wobble.x + this.focusOffsetX, y + this.wobble.y + this.focusOffsetY);
+		ctx.rotate(this.rotation);
         ctx.shadowColor = "transparent";
 
         ctx.beginPath();
