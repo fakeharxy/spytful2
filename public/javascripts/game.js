@@ -1,6 +1,6 @@
 var Game = {
   briefcasesPerPlayer: 3,
-  extractionpointsPerPlayer: 3,
+  extractionpointsPerPlayer: 2,
   startCardsPool: 2,
   startCardsPlayer: 2,
   state: "setupBoard",

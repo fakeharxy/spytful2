@@ -65,9 +65,10 @@ var game;
 
 function setup() {
   game = Object.create(Game);
-  game.setup(10, 10);
+  game.setup(8, 8);
   game.addPlayer("Player 1");
   game.addPlayer("Player 2");
+  game.addPlayer("Player 3");
   game.prepareGame();
 }
 

@@ -129,4 +129,4 @@ var Board = {
     }
     return result;
   }
-}
+};
