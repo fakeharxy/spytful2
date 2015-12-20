@@ -1,5 +1,11 @@
-var Player = { 
-  playerColours: { 1: '#E80000', 2: '#0000FF', 3: '#CCFF33', 4: '#006600' },
+var Player = {
+  playerColours: {
+    1: '#E80000',
+    2: '#0000FF',
+    3: '#CCFF33',
+    4: '#006600',
+    5: '#663300'
+  },
   maxHandSize: 5,
 
   setup: function() {
@@ -13,7 +19,7 @@ var Player = {
     ctx.font = '8pt Arial';
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
-    ctx.fillStyle = "#000"
+    ctx.fillStyle = "#000";
     ctx.fillText(this.name + "'s hand:", x, y);
 
     //cards
@@ -24,7 +30,7 @@ var Player = {
   },
 
   determineClick: function(x, y) {
-    var index = Math.floor(x / (Deck.cardWidth * 0.75))
+    var index = Math.floor(x / (Deck.cardWidth * 0.75));
     if (index >= this.hand.length) {
       if (x < this.hand.length * Deck.cardWidth * 0.75 + Deck.cardWidth * 0.25) {
         index--;
@@ -38,7 +44,7 @@ var Player = {
     ctx.font = '8pt Arial';
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
-    ctx.fillStyle = "#000"
+    ctx.fillStyle = "#000";
     ctx.fillText(this.name + "'s movement stack:", x, y);
 
     //cards
@@ -50,13 +56,30 @@ var Player = {
     }
   },
 
+  dropInToken: function(hex) {
+    if (this.tokenHex !== undefined) {
+      this.tokenHex.removeToken(this.colour);
+    }
+    this.tokenHex = hex;
+    if (hex !== undefined) {
+      this.tokenHex.addToken(this.colour);
+    }
+  },
+
   clearRoute: function() {
     this.stack = [];
+    this.dropInToken(undefined);
   },
 
   playCardToStack: function(index) {
     var card = this.hand.splice(index, 1);
-    this.stack.push(card[0]);
+    validClick = card !== [];
+    if (validClick) {
+      this.stack.push(card[0]);
+      if (this.stack.length == 1) {
+        this.dropInToken(this.stack[0].hex);
+      }
+    }
   },
 
   drawCardFromDeck: function() {

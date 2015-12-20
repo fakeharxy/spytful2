@@ -23,7 +23,7 @@ $(document).ready(function() {
     name: "briefcase",
     file: "briefcase.png"
   }, {
-    name: "extractionpoint",
+    name: "extractionPoint",
     file: "exit.svg"
   }, {
     name: 'logo',

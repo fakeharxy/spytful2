@@ -44,7 +44,7 @@ describe("Player", function() {
     card2.regionName = 'TY';
     player.hand.unshift(card2);
     player.hand.unshift(card);
-    player.playCardToStack(1)
+    player.playCardToStack(1);
     expect(player.stack[0].colourCode).toBe(1);
   });
 
@@ -57,6 +57,4 @@ describe("Player", function() {
     player2.setup();
     expect(player.colour).not.toBe(player2.colour);
   });
-
-
 });

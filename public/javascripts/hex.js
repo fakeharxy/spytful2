@@ -1,6 +1,4 @@
 var Hex = {
-  neighbours: [],
-
   colourMap: ["#000099",
     "#78FF78",
     "#CBBC91",
@@ -17,7 +15,7 @@ var Hex = {
     ctx.beginPath();
     for (var i = 0; i < drawPoints.length; i++) {
       var pt = drawPoints[i];
-      if (i == 0) {
+      if (i === 0) {
         ctx.moveTo(pt[0], pt[1]);
       } else {
         ctx.lineTo(pt[0], pt[1]);
@@ -36,7 +34,7 @@ var Hex = {
 
 
     //for water, draw the background image
-    if (this.colourCode == 0) {
+    if (this.colourCode === 0) {
       ctx.clip(); // clip to the hex path on the context
       if (!this.waterOffset) {
         this.waterOffset = {
@@ -54,16 +52,16 @@ var Hex = {
       ctx.shadowColor = "transparent";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
-      ctx.fillStyle = "#000"
+      ctx.fillStyle = "#000";
       ctx.fillText(this.regionName, Board.offset - Board.hexSize, -Board.hexSize / 2);
     }
 
     //draw overlays
     var overlayImg = null;
     if (this.hasBriefcase) {
-      overlayImg = ctx.imageCache["briefcase"];
+      overlayImg = ctx.imageCache.briefcase;
     } else if (this.isExtractionpoint) {
-      overlayImg = ctx.imageCache["extractionpoint"];
+      overlayImg = ctx.imageCache.extractionPoint;
     }
     if (overlayImg) {
       var iconWidth = Board.hexSize * 0.75;
@@ -71,10 +69,36 @@ var Hex = {
       ctx.shadowColor = "transparent";
       ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);
     }
-
+    for (var i = 0; i < this.tokensOnHex.length; i++) {
+      ctx.beginPath();
+      var x = 7 * (i-1);
+      var y = 6;
+      ctx.arc(x, y, 5, 0, 2 * Math.PI, false);
+      console.log("x: " + x);
+      console.log("y: " + y);
+      console.log("token: " + this.tokensOnHex[i]);
+      ctx.fillStyle = this.tokensOnHex[i];
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.restore();
   },
 
+  addToken: function(colour) {
+    if (this.tokensOnHex === undefined) {
+      this.tokensOnHex = [];
+    }
+    this.tokensOnHex.push(colour);
+  },
+
+  removeToken: function(colour) {
+    for (var i = 0; i < this.tokensOnHex.length; i++) {
+      if (this.tokensOnHex[i] == colour) {
+        this.tokensOnHex.splice(i, 1);
+        break;
+      }
+    }
+  },
 
   setValidColour: function() {
     //find invalid colours based on neighbours

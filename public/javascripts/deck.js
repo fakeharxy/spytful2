@@ -1,142 +1,92 @@
 var Deck = {
-    cardArray: [],
-    deckSizeMultiple: 3,
-    cardWidth: 60,
-    cardHeight: 100,
-    cardRoundingRadius: 10,
-    cardSpacing: 20,
-    cardRotationMax: 0.08,
-    cardWobbleMax: 8,
-    drawPoints: [],
+  cardArray: [],
+  deckSizeMultiple: 3,
+  cardWidth: 60,
+  cardHeight: 100,
+  cardRoundingRadius: 10,
+  cardSpacing: 20,
+  cardRotationMax: 0.08,
+  cardWobbleMax: 8,
+  drawPoints: [],
 
-    deal: function(dealTarget, dealNumber) {
-        Array.prototype.push.apply(dealTarget, this.cardArray.splice(
-            0, dealNumber));
-        if (this.cardArray.length === 0) {
-            alert('This game is over. The winner is Player 1');
-        }
-    },
-
-    takePool: function(target) {
-      // target = target.concat(this.cardPool);
-      target.push(this.cardPool[0]);
-      target.push(this.cardPool[1]);
-      this.cardPool = [];
-      this.cardPool.focusOffsetX = 0;
-      this.cardPool.focusOffsetY = 0;
-      this.deal(this.cardPool, 2);
-    },
-
-    buildDeck: function(hexArray) {
-        this.cardPool = [];
-		this.cardPool.focusOffsetX = 0;
-		this.cardPool.focusOffsetY = 0;
-        this.cardArray = [];
-        var points = [
-            [0, 0],
-            [Deck.cardWidth, 0],
-            [Deck.cardWidth, Deck.cardHeight],
-            [0, Deck.cardHeight]
-        ];
-        drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
-
-        for (var j = 0; j < hexArray.length; j++) {
-            for (var i = 0; i < hexArray[j].length; i++) {
-                for (var n = 0; n < this.deckSizeMultiple; n++) {
-                    if (hexArray[j][i].colourCode != 0) {
-                        var card = Object.create(Card);
-                        card.colourCode = hexArray[j][i].colourCode;
-                        card.regionName = hexArray[j][i].regionName;
-                        card.rotation = Math.random() * Deck.cardRotationMax -
-                            Deck.cardRotationMax / 2;
-                        var wobble = {};
-                        wobble.x = Math.random() * Deck.cardWobbleMax -
-                            Deck.cardWobbleMax / 2;
-                        wobble.y = Math.random() * Deck.cardWobbleMax -
-                            Deck.cardWobbleMax / 2;
-                        card.wobble = wobble;
-                        this.cardArray.push(card);
-                    }
-                }
-            }
-        }
-    },
-
-    shuffle: function(o) {
-        for (var j, x, i = o.length; i; j = Math.floor(Math.random() *
-                i), x = o[--i], o[i] = o[j], o[j] = x);
-        return o;
-    },
-
-    draw: function(ctx, x, y) {
-        //draw card pool
-        if (this.cardPool.length > 0) {
-            this.cardPool[0].draw(ctx, x + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY, true);
-            if (this.cardPool.length > 1) {
-                this.cardPool[1].draw(ctx, x + Deck.cardWidth +
-                    Deck.cardSpacing + this.cardPool.focusOffsetX,
-                    y + this.cardPool.focusOffsetY, true);
-            }
-        }
-
-        //draw deck
-        var xHeap = x + 2 * (Deck.cardWidth + Deck.cardSpacing);
-        for (var i = this.cardArray.length - 1; i >= 0; i--) {
-            this.cardArray[i].draw(ctx, xHeap, y, false);
-        }
-    },
-
-    determineClick: function(x, y) {
-      return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
+  deal: function(dealTarget, dealNumber) {
+    Array.prototype.push.apply(dealTarget, this.cardArray.splice(
+      0, dealNumber));
+    if (this.cardArray.length === 0) {
+      alert('This game is over. The winner is Player 1');
     }
-};
+  },
 
-var Card = {
-	focusOffsetX: 0,
-	focusOffsetY: 0,
-	
-    draw: function(ctx, x, y, faceUp) {
-        ctx.save();
-	
-		ctx.translate(x + this.wobble.x + this.focusOffsetX, y + this.wobble.y + this.focusOffsetY);
-		ctx.rotate(this.rotation);
-        ctx.shadowColor = "transparent";
+  takePool: function(target) {
+    // target = target.concat(this.cardPool);
+    target.push(this.cardPool[0]);
+    target.push(this.cardPool[1]);
+    this.cardPool = [];
+    this.cardPool.focusOffsetX = 0;
+    this.cardPool.focusOffsetY = 0;
+    this.deal(this.cardPool, 2);
+  },
 
-        ctx.beginPath();
-        for (var i = 0; i < drawPoints.length; i++) {
-            var pt = drawPoints[i];
-            if (i == 0) {
-                ctx.moveTo(pt[0], pt[1]);
-            } else {
-                ctx.lineTo(pt[0], pt[1]);
-            }
-            ctx.quadraticCurveTo(pt[2], pt[3], pt[4], pt[5]);
+  buildDeck: function(hexArray) {
+    this.cardPool = [];
+    this.cardPool.focusOffsetX = 0;
+    this.cardPool.focusOffsetY = 0;
+    this.cardArray = [];
+    var points = [
+      [0, 0],
+      [Deck.cardWidth, 0],
+      [Deck.cardWidth, Deck.cardHeight],
+      [0, Deck.cardHeight]
+    ];
+    drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
+
+    for (var j = 0; j < hexArray.length; j++) {
+      for (var i = 0; i < hexArray[j].length; i++) {
+        for (var n = 0; n < this.deckSizeMultiple; n++) {
+          if (hexArray[j][i].colourCode !== 0) {
+            var card = Object.create(Card);
+            card.hex = hexArray[j][i];
+            card.rotation = Math.random() * Deck.cardRotationMax -
+              Deck.cardRotationMax / 2;
+            var wobble = {};
+            wobble.x = Math.random() * Deck.cardWobbleMax -
+              Deck.cardWobbleMax / 2;
+            wobble.y = Math.random() * Deck.cardWobbleMax -
+              Deck.cardWobbleMax / 2;
+            card.wobble = wobble;
+            this.cardArray.push(card);
+          }
         }
-        ctx.closePath();
-
-        ctx.lineWidth = 2;
-        ctx.stroke();
-        ctx.fillStyle = faceUp ? Hex.colourMap[this.colourCode] :
-            "#FFF";
-        ctx.fill();
-
-        //write region name
-        if (faceUp) {
-            ctx.fillStyle = "#000"
-            ctx.textBaseline = "middle";
-            ctx.textAlign = "center";
-            ctx.fillText(
-                this.regionName,
-                Deck.cardWidth / 2,
-                Deck.cardHeight / 2);
-        } else {
-            ctx.drawImage(
-                ctx.imageCache['logo'],
-                2.5,
-                2.5,
-                Deck.cardWidth - 5,
-                Deck.cardHeight - 5);
-        }
-        ctx.restore();
+      }
     }
+  },
+
+  shuffle: function(o) {
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() *
+        i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+  },
+
+  draw: function(ctx, x, y) {
+    //draw card pool
+    if (this.cardPool.length > 0) {
+      this.cardPool[0].draw(ctx, x + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY,
+        true);
+      if (this.cardPool.length > 1) {
+        this.cardPool[1].draw(ctx, x + Deck.cardWidth +
+          Deck.cardSpacing + this.cardPool.focusOffsetX,
+          y + this.cardPool.focusOffsetY, true);
+      }
+    }
+
+    //draw deck
+    var xHeap = x + 2 * (Deck.cardWidth + Deck.cardSpacing);
+    for (var i = this.cardArray.length - 1; i >= 0; i--) {
+      this.cardArray[i].draw(ctx, xHeap, y, false);
+    }
+  },
+
+  determineClick: function(x, y) {
+    return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
+  }
 };

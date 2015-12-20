@@ -37,7 +37,7 @@ var Game = {
 
     //current player's movement stack is positioned below the hand
     this.stackX = this.deckX;
-    this.stackY = this.deckY + 2 * (this.deck.cardHeight + 2 * this.deck.cardSpacing)
+    this.stackY = this.deckY + 2 * (this.deck.cardHeight + 2 * this.deck.cardSpacing);
   },
 
   addPlayer: function(name) {
@@ -66,7 +66,7 @@ var Game = {
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
       for (var i = 0; i < this.board.width; i++) {
-        if (this.board.hexArray[j][i].colourCode != 0) {
+        if (this.board.hexArray[j][i].colourCode !== 0) {
           validHexes.push(this.board.hexArray[j][i]);
         }
       }
@@ -243,4 +243,4 @@ var Game = {
       alert("There is no room in your hand. Play some cards first");
     }
   }
-}
+};
