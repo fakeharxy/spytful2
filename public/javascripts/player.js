@@ -72,12 +72,25 @@ var Player = {
   },
 
   playCardToStack: function(index) {
-    var card = this.hand.splice(index, 1);
-    validClick = card !== [];
-    if (validClick) {
+    var validCardCheck = this.hand[index];
+    if (this.validClick(validCardCheck)) {
+      var card = this.hand.splice(index, 1);
       this.stack.push(card[0]);
       if (this.stack.length == 1) {
         this.dropInToken(this.stack[0].hex);
+      }
+    }
+  },
+
+  validClick: function(card) {
+    if (card !== []) {
+      if (this.stack.length !== 0) {
+        return true;
+      } else if (!card.hex.hasBriefcase && !card.hex.isExtractionpoint) {
+        return true;
+      } else {
+        alert("The rules dictate that this is not a valid card to play");
+        return false;
       }
     }
   },

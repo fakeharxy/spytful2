@@ -44,7 +44,7 @@ var Hex = {
         this.waterRotate = Math.random() * 2 * Math.PI;
       }
       ctx.rotate(this.waterRotate);
-      ctx.drawImage(ctx.imageCache["water"], this.waterOffset.x, this.waterOffset.y, Board.hexSize *
+      ctx.drawImage(ctx.imageCache.water, this.waterOffset.x, this.waterOffset.y, Board.hexSize *
         3, Board.hexSize * 3);
 
       //otherwise write the region name
