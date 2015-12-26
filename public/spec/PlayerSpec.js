@@ -39,13 +39,17 @@ describe("Player", function() {
   });
 
   it("should be able to move any card from the hand to the end of the stack", function() {
-    var card2 = Object.create(Card);
-    card2.colourCode = 1;
-    card2.regionName = 'TY';
+    var hex = Object.create(Hex);
+    hex.colourCode = 1;
+    hex.regionName = 'TY';
+		
+		var card2 = Object.create(Card);
+		card2.hex = hex;
+		
     player.hand.unshift(card2);
     player.hand.unshift(card);
     player.playCardToStack(1);
-    expect(player.stack[0].colourCode).toBe(1);
+    expect(player.stack[0].hex.colourCode).toBe(1);
   });
 
   it("will set a colour for a new player when they are created", function() {
