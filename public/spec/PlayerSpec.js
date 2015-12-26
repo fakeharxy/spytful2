@@ -5,6 +5,7 @@ describe("Player", function() {
 
   beforeEach(function() {
     player = Object.create(Player);
+		player.number = 1;
     player.setup();
     card = Object.create(Card);
     card.colourCode = 3;
@@ -39,21 +40,26 @@ describe("Player", function() {
   });
 
   it("should be able to move any card from the hand to the end of the stack", function() {
-    var card2 = Object.create(Card);
-    card2.colourCode = 1;
-    card2.regionName = 'TY';
+    var hex = Object.create(Hex);
+    hex.colourCode = 1;
+    hex.regionName = 'TY';
+		
+		var card2 = Object.create(Card);
+		card2.hex = hex;
+		
     player.hand.unshift(card2);
     player.hand.unshift(card);
     player.playCardToStack(1);
-    expect(player.stack[0].colourCode).toBe(1);
+    expect(player.stack[0].hex.colourCode).toBe(1);
   });
 
-  it("will set a colour for a new player when they are created", function() {
-    expect(player.colour).not.toBe(undefined);
+  it("will set a colour for a new player when they are set up", function() {
+		expect(player.colour).not.toBe(undefined);
   });
 
   it("each player will be given a different colour", function() {
     var player2 = Object.create(Player);
+		player2.number = 2;
     player2.setup();
     expect(player.colour).not.toBe(player2.colour);
   });

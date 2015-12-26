@@ -14,13 +14,10 @@ describe("Hex", function() {
         expect(hex.regionName).toBe("Andall");
     });
 
-});
-
-describe("Hex creation", function() {
-    
     it("#setValidColour, should.", function() {
-        var hex = Object.create(Hex);
-        hex.setValidColour();
-        expect(hex.colourCode).not.toBe('undefined');
+				var hexNeighbour = Object.create(Hex);
+				hexNeighbour.neighbours = [ hex ];
+        hexNeighbour.setValidColour();
+        expect(hexNeighbour.colourCode).not.toBe('undefined');
     });
 });

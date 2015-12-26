@@ -34,7 +34,7 @@ describe("Deck", function() {
           }
         }
       }
-      expect(board.hexArray[j][i].colourCode).toEqual(deck.cardArray[0].colourCode);
+      expect(board.hexArray[j][i].colourCode).toEqual(deck.cardArray[0].hex.colourCode);
     });
 
   it("a card in the same array location should be the same region as the hex in the hexArray",
@@ -49,7 +49,7 @@ describe("Deck", function() {
           }
         }
       }
-      expect(board.hexArray[j][i].regionName).toEqual(deck.cardArray[0].regionName);
+      expect(board.hexArray[j][i].regionName).toEqual(deck.cardArray[0].hex.regionName);
     });
 
   it("After setup, the cardPool should have two cards", function() {

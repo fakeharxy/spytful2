@@ -73,7 +73,7 @@ var Player = {
 
   playCardToStack: function(index) {
     var validCardCheck = this.hand[index];
-    if (this.validClick(validCardCheck)) {
+    if (this.validHandClick(validCardCheck)) {
       var card = this.hand.splice(index, 1);
       this.stack.push(card[0]);
       if (this.stack.length == 1) {
@@ -82,7 +82,7 @@ var Player = {
     }
   },
 
-  validClick: function(card) {
+  validHandClick: function(card) {
     if (card !== []) {
       if (this.stack.length !== 0) {
         return true;
@@ -90,9 +90,9 @@ var Player = {
         return true;
       } else {
         alert("The rules dictate that this is not a valid card to play");
-        return false;
       }
     }
+    return false;
   },
 
   drawCardFromDeck: function() {

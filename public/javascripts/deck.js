@@ -19,11 +19,11 @@ var Deck = {
 
   takePool: function(target) {
     // target = target.concat(this.cardPool);
-    target.push(this.cardPool[0]);
-    target.push(this.cardPool[1]);
-    this.cardPool = [];
-    this.cardPool.focusOffsetX = 0;
-    this.cardPool.focusOffsetY = 0;
+    target.push(this.cardPool.shift());
+    target.push(this.cardPool.shift());
+    // this.cardPool = [];
+    // this.cardPool.focusOffsetX = 0;
+    // this.cardPool.focusOffsetY = 0;
     this.deal(this.cardPool, 2);
   },
 
