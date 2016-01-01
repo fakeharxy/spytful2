@@ -123,5 +123,14 @@ var Hex = {
     } else {
       console.log("error: no valid colours left for a hex");
     }
-  }
+  },
+	
+	hasNeighbour: function (testHex) {
+		for (var i = 0; i < this.neighbours.length; i++) {
+      if (this.neighbours[i] === testHex) {
+				return true;
+			}
+    }
+		return false;
+	}
 };
