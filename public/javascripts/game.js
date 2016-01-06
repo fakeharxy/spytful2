@@ -151,6 +151,9 @@ var Game = {
 							this.extractionRoute.push(clickedHex);
 							this.draw();
 							//TODO: check if clicked hex is an extraction point and redeem points in extraction route?
+							if (clickedHex.isExtractionpoint) {
+								this.completeExtraction();
+							}
 						} else {
 							alert("the next hex must match the colour of the next card in your movement stack");
 						}
@@ -200,6 +203,22 @@ var Game = {
     }
   },
 
+  completeExtraction: function() {
+	  //go through extraction route and collect points, reset hexes
+	  var points = 0;
+	  for (var i=0; i< this.extractionRoute.length; i++) {
+		  var hex = this.extractionRoute[i];
+		  if (hex.hasBriefcase) {
+			  points++; //TODO: increase points by briefcase value instead
+			  hex.hasBriefcase = false;
+		  }
+	  }
+	  //TODO: add points to player's total
+	  alert("if points were being recorded, you would have just collected " + points + " more");
+	  this.clearRoute();
+	  this.draw();
+  },
+  
   onmousemove: function(x, y) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
