@@ -261,6 +261,10 @@ var Game = {
 
   clearRoute: function() {
     game.players[game.currentPlayer].clearRoute();
+	if (this.turnState == "extracting") {
+		//cancel extraction
+		this.turnState = "playing";
+	}
   },
 
   drawCardFromDeck: function() {
