@@ -12,6 +12,7 @@ var Player = {
     this.hand = [];
     this.stack = [];
     this.colour = this.playerColours[this.number];
+	this.score = 0;
   },
 
   drawHand: function(ctx, x, y) {

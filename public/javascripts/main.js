@@ -39,6 +39,8 @@ $(document).ready(function() {
   button.onclick = endTurn;
   button = $("#butClearRoute")[0];
   button.onclick = clearRoute;
+  button = $("#butFinishRoute")[0];
+  button.onclick = finishRoute;
 });
 
 function loadImage(imgToLoad) {
@@ -88,6 +90,10 @@ function clearRoute() {
     game.clearRoute();
     draw();
   }
+}
+
+function finishRoute() {
+  game.completeExtraction();
 }
 
 function endTurn() {

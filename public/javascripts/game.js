@@ -150,10 +150,6 @@ var Game = {
 						if (this.players[this.currentPlayer].stack[this.extractionRoute.length].hex.colourCode == clickedHex.colourCode) {
 							this.extractionRoute.push(clickedHex);
 							this.draw();
-							//TODO: check if clicked hex is an extraction point and redeem points in extraction route?
-							if (clickedHex.isExtractionpoint) {
-								this.completeExtraction();
-							}
 						} else {
 							alert("the next hex must match the colour of the next card in your movement stack");
 						}
@@ -204,19 +200,27 @@ var Game = {
   },
 
   completeExtraction: function() {
-	  //go through extraction route and collect points, reset hexes
-	  var points = 0;
-	  for (var i=0; i< this.extractionRoute.length; i++) {
-		  var hex = this.extractionRoute[i];
-		  if (hex.hasBriefcase) {
-			  points++; //TODO: increase points by briefcase value instead
-			  hex.hasBriefcase = false;
+	  if (this.turnState == "extracting") {
+		  if (this.extractionRoute[this.extractionRoute.length-1].isExtractionpoint) {
+			  //go through extraction route and collect points, reset hexes
+			  var points = 0;
+			  for (var i=0; i< this.extractionRoute.length; i++) {
+				  var hex = this.extractionRoute[i];
+				  if (hex.hasBriefcase) {
+					  points++; //TODO: increase points by briefcase value instead
+					  hex.hasBriefcase = false;
+				  }
+			  }
+			  this.players[this.currentPlayer].score += points; //add points to player's total
+			  alert("you just collected " + points + " points, bringing your total to " + this.players[this.currentPlayer].score);
+			  this.clearRoute();
+			  this.draw();
+		  } else {
+			alert("the rules require that movement must end on an extraction point");
 		  }
+	  } else {
+		  alert("logic suggests that to finish extraction you must first start extraction");
 	  }
-	  //TODO: add points to player's total
-	  alert("if points were being recorded, you would have just collected " + points + " more");
-	  this.clearRoute();
-	  this.draw();
   },
   
   onmousemove: function(x, y) {
