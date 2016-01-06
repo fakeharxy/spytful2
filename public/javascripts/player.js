@@ -39,7 +39,7 @@ var Player = {
     return index;
   },
 
-  drawStack: function(ctx, x, y) {
+  drawStack: function(ctx, x, y, faceup) {
     //label
     ctx.font = '8pt Arial';
     ctx.textBaseline = "top";
@@ -51,8 +51,7 @@ var Player = {
     y += Deck.cardSpacing;
 
     for (var i = 0; i < this.stack.length; i++) {
-      this.stack[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 ?
-        true : false);
+      this.stack[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 || faceup ? true : false);
     }
   },
 

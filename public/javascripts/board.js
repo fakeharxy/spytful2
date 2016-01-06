@@ -128,5 +128,41 @@ var Board = {
       }
     }
     return result;
-  }
+  },
+	
+	determineClick: function (x, y) {
+		var coords = this.pixel_to_hex(x-this.firstHexX, y-this.firstHexY);
+		return this.getHexAt(coords.x, coords.y);
+	},
+	
+	pixel_to_hex: function (x, y) {
+		var q = (x * Math.sqrt(3)/3 - y / 3) / (this.hexSize + this.offset);
+    var r = y * 2/3 / (this.hexSize + this.offset);
+		return this.cube_to_hex(this.cube_round( { x: q, y: -q-r, z: r } ));
+	},
+	
+	cube_round: function (h) {
+    var rx = Math.round(h.x);
+    var ry = Math.round(h.y);
+    var rz = Math.round(h.z);
+
+    var x_diff = Math.abs(rx - h.x);
+    var y_diff = Math.abs(ry - h.y);
+    var z_diff = Math.abs(rz - h.z);
+
+    if (x_diff > y_diff && x_diff > z_diff) {
+        rx = -ry-rz;
+    } else if (y_diff > z_diff) {
+        ry = -rx-rz;
+    } else {
+        rz = -rx-ry;
+		}
+    return { x: rx, y: ry, z: rz};
+	},
+	
+	cube_to_hex: function (h) {
+    var col = h.x + (h.z - (h.z&1)) / 2;
+    var row = h.z;
+		return { x: col, y: row };
+	}
 };

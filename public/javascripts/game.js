@@ -5,6 +5,7 @@ var Game = {
   startCardsPlayer: 2,
   state: "setupBoard",
   turnState: "pre-start",
+	extractionRoute: [],
   focusObj: null,
 
   setup: function(boardWidth, boardHeight) {
@@ -117,18 +118,47 @@ var Game = {
     //draw hexes
     this.board.drawBoard(ctx);
 
+		//draw extraction route
+		if (this.turnState == "extracting") {
+			if (this.extractionRoute.length > 1) {
+				ctx.beginPath();
+				ctx.moveTo(this.extractionRoute[0].centre.x, this.extractionRoute[0].centre.y);
+				for (var i=1; i<this.extractionRoute.length; i++) {
+					ctx.lineTo(this.extractionRoute[i].centre.x, this.extractionRoute[i].centre.y);
+				}
+				ctx.stroke();
+			}
+		}
+		
     //draw deck
     this.deck.draw(ctx, this.deckX, this.deckY);
 
     //draw current player's hand
     this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
-    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY);
+    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState=="extracting");
   },
 
   onclick: function(x, y) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
-      console.log("clicked on board");
+			if (this.turnState == "extracting") {
+				var clickedHex = this.board.determineClick(x, y);
+				if (clickedHex != undefined) {
+					//check if clicked hex is a neighbour of the previous
+					if (this.extractionRoute[this.extractionRoute.length-1].hasNeighbour(clickedHex)) {
+						//check if it matches next card in movement stack
+						if (this.players[this.currentPlayer].stack[this.extractionRoute.length].hex.colourCode == clickedHex.colourCode) {
+							this.extractionRoute.push(clickedHex);
+							this.draw();
+							//TODO: check if clicked hex is an extraction point and redeem points in extraction route?
+						} else {
+							alert("the next hex must match the colour of the next card in your movement stack");
+						}
+					} else {
+						alert("you can only continue movement to an adjacent hex");
+					}
+				}
+			}
     } else if (loc == "deck") {
       if (this.turnState == "playing") {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
@@ -155,7 +185,16 @@ var Game = {
         alert("The rules state that once you have drawn cards, you can no longer play actions");
       }
     } else if (loc == "stack") {
-      console.log("clicked on stack");
+      if (this.turnState == "playing") {
+				if (this.players[this.currentPlayer].stack.length > 0) {
+					//TODO confirm start of extraction with user?
+					this.turnState = "extracting";
+					this.extractionRoute = [ this.players[this.currentPlayer].stack[0].hex ];
+					this.draw();
+				} else {
+					alert("The rules don't even need to specify that you can't start extraction without a movement stack");
+				}
+			}
     } else {
       console.log("clicked somewhere unknown");
     }
@@ -222,6 +261,10 @@ var Game = {
 
   clearRoute: function() {
     game.players[game.currentPlayer].clearRoute();
+	if (this.turnState == "extracting") {
+		//cancel extraction
+		this.turnState = "playing";
+	}
   },
 
   drawCardFromDeck: function() {
