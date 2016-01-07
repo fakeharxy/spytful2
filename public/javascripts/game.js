@@ -133,6 +133,21 @@ var Game = {
     //draw deck
     this.deck.draw(ctx, this.deckX, this.deckY);
 
+    //draw scores
+	var scoreX = this.deckX + (Deck.cardWidth + Deck.cardSpacing) * 3;
+	var scoreY = this.deckY;
+    ctx.font = 'bold 8pt Arial';
+    ctx.textBaseline = "top";
+    ctx.textAlign = "left";
+	ctx.fillStyle = "#000";
+	ctx.fillText("Scores", scoreX, scoreY);
+	scoreY += 5;
+	ctx.font = '8pt Arial';
+	for (var i=0; i<this.players.length; i++) {
+		scoreY += 15;
+		ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
+	}
+	
     //draw current player's hand
     this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
     this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState=="extracting");
