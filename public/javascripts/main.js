@@ -73,10 +73,9 @@ var game;
 
 function setup() {
   game = Object.create(Game);
-  game.setup(8, 8);
+  game.setup(4, 4);
   game.addPlayer("Player 1");
   game.addPlayer("Player 2");
-  game.addPlayer("Player 3");
   game.prepareGame();
 }
 
@@ -104,8 +103,13 @@ function finishRoute() {
 
 function endTurn() {
   if (game.turnState == 'finished') {
-    game.nextTurn();
-    draw();
+    game.checkIfGameEnd();
+    if (game.state != 'finished') {
+      game.nextTurn();
+      draw();
+    } else {
+      game.determineWinner();
+    }
   } else {
     alert("The game rules dictate you must draw cards before ending your turn...");
   }
@@ -114,6 +118,7 @@ function endTurn() {
 function onMouseMove(event) {
   game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
 }
+
 function onMouseDown(event) {
   game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }

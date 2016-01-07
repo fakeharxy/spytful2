@@ -5,7 +5,7 @@ var Game = {
   startCardsPlayer: 2,
   state: "setupBoard",
   turnState: "pre-start",
-	extractionRoute: [],
+  extractionRoute: [],
   focusObj: null,
 
   setup: function(boardWidth, boardHeight) {
@@ -79,14 +79,14 @@ var Game = {
       return;
     }
     Deck.shuffle(validHexes);
-	var briefcaseValue = 1;
+    var briefcaseValue = 1;
     for (var i = 0; i < briefcaseCount; i++) {
-		var hex = validHexes.shift();
-		hex.hasBriefcase = true;
-		hex.briefcaseValue = briefcaseValue;
-		if (++briefcaseValue > 3) {
-			briefcaseValue = 1;
-		}
+      var hex = validHexes.shift();
+      hex.hasBriefcase = true;
+      hex.briefcaseValue = briefcaseValue;
+      if (++briefcaseValue > 3) {
+        briefcaseValue = 1;
+      }
     }
     for (var i = 0; i < extractionpointCount; i++) {
       validHexes.shift().isExtractionpoint = true;
@@ -118,70 +118,73 @@ var Game = {
 
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, w, h);
-	ctx.lineWidth = 1;
+    ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
     ctx.strokeRect(0, 0, w, h);
 
     //draw hexes
     this.board.drawBoard(ctx);
 
-		//draw extraction route
-		ctx.lineWidth = 5;
-		ctx.strokeStyle = 'rgba(50,50,255,0.7)';
-		if (this.turnState == "extracting") {
-			if (this.extractionRoute.length > 1) {
-				ctx.beginPath();
-				ctx.moveTo(this.extractionRoute[0].centre.x, this.extractionRoute[0].centre.y);
-				for (var i=1; i<this.extractionRoute.length; i++) {
-					ctx.lineTo(this.extractionRoute[i].centre.x, this.extractionRoute[i].centre.y);
-				}
-				ctx.stroke();
-			}
-		}
-		
+    //draw extraction route
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgba(50,50,255,0.7)';
+    if (this.turnState == "extracting") {
+      if (this.extractionRoute.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(this.extractionRoute[0].centre.x, this.extractionRoute[0].centre.y);
+        for (var i = 1; i < this.extractionRoute.length; i++) {
+          ctx.lineTo(this.extractionRoute[i].centre.x, this.extractionRoute[i].centre.y);
+        }
+        ctx.stroke();
+      }
+    }
+
     //draw deck
     this.deck.draw(ctx, this.deckX, this.deckY);
 
     //draw scores
-	var scoreX = this.deckX + (Deck.cardWidth + Deck.cardSpacing) * 3;
-	var scoreY = this.deckY;
+    var scoreX = this.deckX + (Deck.cardWidth + Deck.cardSpacing) * 3;
+    var scoreY = this.deckY;
     ctx.font = 'bold 8pt Arial';
     ctx.textBaseline = "top";
     ctx.textAlign = "left";
-	ctx.fillStyle = "#000";
-	ctx.fillText("Scores", scoreX, scoreY);
-	scoreY += 5;
-	ctx.font = '8pt Arial';
-	for (var i=0; i<this.players.length; i++) {
-		scoreY += 15;
-		ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
-	}
-	
+    ctx.fillStyle = "#000";
+    ctx.fillText("Scores", scoreX, scoreY);
+    scoreY += 5;
+    ctx.font = '8pt Arial';
+    for (var i = 0; i < this.players.length; i++) {
+      scoreY += 15;
+      ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
+    }
+
     //draw current player's hand
     this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
-    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState=="extracting");
+    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState ==
+      "extracting");
   },
 
   onclick: function(x, y) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
-			if (this.turnState == "extracting") {
-				var clickedHex = this.board.determineClick(x, y);
-				if (clickedHex != undefined) {
-					//check if clicked hex is a neighbour of the previous
-					if (this.extractionRoute[this.extractionRoute.length-1].hasNeighbour(clickedHex)) {
-						//check if it matches next card in movement stack
-						if (this.players[this.currentPlayer].stack[this.extractionRoute.length].hex.colourCode == clickedHex.colourCode) {
-							this.extractionRoute.push(clickedHex);
-							this.draw();
-						} else {
-							alert("the next hex must match the colour of the next card in your movement stack");
-						}
-					} else {
-						alert("you can only continue movement to an adjacent hex");
-					}
-				}
-			}
+      if (this.turnState == "extracting") {
+        var clickedHex = this.board.determineClick(x, y);
+        if (clickedHex != undefined) {
+          //check if clicked hex is a neighbour of the previous
+          if (this.extractionRoute[this.extractionRoute.length - 1].hasNeighbour(clickedHex)) {
+            //check if it matches next card in movement stack
+            if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
+              .hex.colourCode == clickedHex.colourCode) {
+              this.extractionRoute.push(clickedHex);
+              this.draw();
+            } else {
+              alert(
+                "the next hex must match the colour of the next card in your movement stack");
+            }
+          } else {
+            alert("you can only continue movement to an adjacent hex");
+          }
+        }
+      }
     } else if (loc == "deck") {
       if (this.turnState == "playing") {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
@@ -209,44 +212,91 @@ var Game = {
       }
     } else if (loc == "stack") {
       if (this.turnState == "playing") {
-				if (this.players[this.currentPlayer].stack.length > 0) {
-					//TODO confirm start of extraction with user?
-					this.turnState = "extracting";
-					this.extractionRoute = [ this.players[this.currentPlayer].stack[0].hex ];
-					this.draw();
-				} else {
-					alert("The rules don't even need to specify that you can't start extraction without a movement stack");
-				}
-			}
+        if (this.players[this.currentPlayer].stack.length > 0) {
+          //TODO confirm start of extraction with user?
+          this.turnState = "extracting";
+          this.extractionRoute = [this.players[this.currentPlayer].stack[0].hex];
+          this.draw();
+        } else {
+          alert(
+            "The rules don't even need to specify that you can't start extraction without a movement stack"
+          );
+        }
+      }
     } else {
       console.log("clicked somewhere unknown");
     }
   },
 
-  completeExtraction: function() {
-	  if (this.turnState == "extracting") {
-		  if (this.extractionRoute[this.extractionRoute.length-1].isExtractionpoint) {
-			  //go through extraction route and collect points, reset hexes
-			  var points = 0;
-			  for (var i=0; i< this.extractionRoute.length; i++) {
-				  var hex = this.extractionRoute[i];
-				  if (hex.hasBriefcase) {
-					  points += hex.briefcaseValue;
-					  hex.hasBriefcase = false;
-				  }
-			  }
-			  this.players[this.currentPlayer].score += points; //add points to player's total
-			  alert("you just collected " + points + " points, bringing your total to " + this.players[this.currentPlayer].score);
-			  this.clearRoute();
-			  this.draw();
-		  } else {
-			alert("the rules require that movement must end on an extraction point");
-		  }
-	  } else {
-		  alert("logic suggests that to finish extraction you must first start extraction");
-	  }
+  checkIfGameEnd: function() {
+    if (this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) {
+      this.state = 'finished';
+    }
   },
-  
+
+  determineWinner: function() {
+    var highest = 0;
+    var topPlayer;
+    var tieList = [];
+    for (var i = 0; i < this.players.length; i++) {
+      if (this.players[i].score > highest) {
+        highest = this.players[i].score;
+        topPlayer = this.players[i];
+    var tieList = [];
+      } else if (this.players[i].score == highest) {
+        if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
+          topPlayer = this.players[i];
+    var tieList = [];
+        } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
+          tieList.push(this.players[i]);
+        }
+        topPlayers.push(this.players[i]); 
+      }
+    }
+
+    var message;
+    if (tieList.length > 0) {
+      message = "The game was a tie: " + topPlayer.name;
+      for (var i=0; i<tieList.length; i++) {
+        message += ", " + tieList[i].name;
+      }
+      message += " all ";
+    } else {
+      message = topPlayer.name + " has won. They";
+    }
+    message += " got " + highest + " points (" + topPlayer.briefcaseCount + " briefcases).";
+
+    alert(message);
+
+  },
+
+  completeExtraction: function() {
+    if (this.turnState == "extracting") {
+      if (this.extractionRoute[this.extractionRoute.length - 1].isExtractionpoint) {
+        //go through extraction route and collect points, reset hexes
+        var points = 0;
+        var briefcases = 0;
+        for (var i = 0; i < this.extractionRoute.length; i++) {
+          var hex = this.extractionRoute[i];
+          if (hex.hasBriefcase) {
+            briefcases++;
+            points += hex.briefcaseValue;
+            hex.hasBriefcase = false;
+          }
+        }
+        this.players[this.currentPlayer].score += points; //add points to player's total
+        this.players[this.currentPlayer].briefcaseCount += briefcases;
+        alert("you just collected " + points + " points, bringing your total to " + this.players[this.currentPlayer].score);
+        this.clearRoute();
+        this.draw();
+      } else {
+        alert("the rules require that movement must end on an extraction point");
+      }
+    } else {
+      alert("logic suggests that to finish extraction you must first start extraction");
+    }
+  },
+
   onmousemove: function(x, y) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
@@ -308,10 +358,10 @@ var Game = {
 
   clearRoute: function() {
     game.players[game.currentPlayer].clearRoute();
-	if (this.turnState == "extracting") {
-		//cancel extraction
-		this.turnState = "playing";
-	}
+    if (this.turnState == "extracting") {
+      //cancel extraction
+      this.turnState = "playing";
+    }
   },
 
   drawCardFromDeck: function() {
