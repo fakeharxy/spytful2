@@ -242,22 +242,22 @@ var Game = {
       if (this.players[i].score > highest) {
         highest = this.players[i].score;
         topPlayer = this.players[i];
-    var tieList = [];
+        var tieList = [];
       } else if (this.players[i].score == highest) {
         if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
           topPlayer = this.players[i];
-    var tieList = [];
+          var tieList = [];
         } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
           tieList.push(this.players[i]);
         }
-        topPlayers.push(this.players[i]); 
+        topPlayers.push(this.players[i]);
       }
     }
 
     var message;
     if (tieList.length > 0) {
       message = "The game was a tie: " + topPlayer.name;
-      for (var i=0; i<tieList.length; i++) {
+      for (var i = 0; i < tieList.length; i++) {
         message += ", " + tieList[i].name;
       }
       message += " all ";
@@ -286,7 +286,8 @@ var Game = {
         }
         this.players[this.currentPlayer].score += points; //add points to player's total
         this.players[this.currentPlayer].briefcaseCount += briefcases;
-        alert("you just collected " + points + " points, bringing your total to " + this.players[this.currentPlayer].score);
+        alert("you just collected " + points + " points, bringing your total to " + this.players[
+          this.currentPlayer].score);
         this.clearRoute();
         this.draw();
       } else {
