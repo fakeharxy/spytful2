@@ -79,8 +79,14 @@ var Game = {
       return;
     }
     Deck.shuffle(validHexes);
+	var briefcaseValue = 1;
     for (var i = 0; i < briefcaseCount; i++) {
-      validHexes.shift().hasBriefcase = true;
+		var hex = validHexes.shift();
+		hex.hasBriefcase = true;
+		hex.briefcaseValue = briefcaseValue;
+		if (++briefcaseValue > 3) {
+			briefcaseValue = 1;
+		}
     }
     for (var i = 0; i < extractionpointCount; i++) {
       validHexes.shift().isExtractionpoint = true;
@@ -222,7 +228,7 @@ var Game = {
 			  for (var i=0; i< this.extractionRoute.length; i++) {
 				  var hex = this.extractionRoute[i];
 				  if (hex.hasBriefcase) {
-					  points++; //TODO: increase points by briefcase value instead
+					  points += hex.briefcaseValue;
 					  hex.hasBriefcase = false;
 				  }
 			  }

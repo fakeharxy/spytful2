@@ -20,8 +20,14 @@ $(document).ready(function() {
     name: "water",
     file: "water.gif"
   }, {
-    name: "briefcase",
-    file: "briefcase.png"
+    name: "briefcase1",
+    file: "briefcase1.png"
+  }, {
+    name: "briefcase2",
+    file: "briefcase2.png"
+  }, {
+    name: "briefcase3",
+    file: "briefcase3.png"
   }, {
     name: "extractionPoint",
     file: "exit.svg"
