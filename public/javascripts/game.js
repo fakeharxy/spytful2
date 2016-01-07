@@ -118,6 +118,7 @@ var Game = {
 
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, w, h);
+	ctx.lineWidth = 1;
     ctx.strokeStyle = "black";
     ctx.strokeRect(0, 0, w, h);
 
@@ -125,6 +126,8 @@ var Game = {
     this.board.drawBoard(ctx);
 
 		//draw extraction route
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = 'rgba(50,50,255,0.7)';
 		if (this.turnState == "extracting") {
 			if (this.extractionRoute.length > 1) {
 				ctx.beginPath();
