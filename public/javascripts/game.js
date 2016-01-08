@@ -250,7 +250,6 @@ var Game = {
         } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
           tieList.push(this.players[i]);
         }
-        topPlayers.push(this.players[i]);
       }
     }
 
@@ -260,7 +259,7 @@ var Game = {
       for (var i = 0; i < tieList.length; i++) {
         message += ", " + tieList[i].name;
       }
-      message += " all ";
+      message += " all";
     } else {
       message = topPlayer.name + " has won. They";
     }
