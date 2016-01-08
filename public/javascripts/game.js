@@ -235,7 +235,7 @@ var Game = {
   },
 
   determineWinner: function() {
-    var highest = 0;
+    var highest = -1;
     var topPlayer;
     var tieList = [];
     for (var i = 0; i < this.players.length; i++) {
