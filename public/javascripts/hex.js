@@ -25,7 +25,7 @@ var Hex = {
     ctx.closePath();
 
     ctx.lineWidth = 2;
-    ctx.shadowColor = "rgba(100,100,100,.7)";
+    // ctx.shadowColor = "rgba(100,100,100,.7)";
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 2;
     ctx.stroke();
@@ -71,7 +71,7 @@ var Hex = {
     }
     for (var i = 0; i < this.tokensOnHex.length; i++) {
       ctx.beginPath();
-      var x = 7 * (i-1);
+      var x = 7 * (i - 1);
       var y = 6;
       ctx.arc(x, y, 5, 0, 2 * Math.PI, false);
       //console.log("x: " + x);
@@ -80,6 +80,17 @@ var Hex = {
       ctx.fillStyle = this.tokensOnHex[i];
       ctx.fill();
       ctx.stroke();
+    }
+    for (var i = 0; i < this.outposts.length; i++) {
+      if (this.outposts[i] !== '') {
+        var j = (i + 1) % 6;
+        ctx.beginPath();
+        ctx.lineWidth = 5;
+        ctx.strokeStyle = this.outposts[i];
+        ctx.moveTo(Hex.outpostCorners[i][0], Hex.outpostCorners[i][1]);
+        ctx.lineTo(Hex.outpostCorners[j][0], Hex.outpostCorners[j][1]);
+        ctx.stroke();
+      }
     }
     ctx.restore();
   },
@@ -105,8 +116,10 @@ var Hex = {
     var invalid = [];
     for (var i = 0; i < this.neighbours.length; i++) {
       var hex = this.neighbours[i];
-      if (hex.colourCode !== undefined) {
-        invalid.push(hex.colourCode);
+      if (hex) {
+        if (hex.colourCode !== undefined) {
+          invalid.push(hex.colourCode);
+        }
       }
     }
     //build valid list
@@ -124,13 +137,51 @@ var Hex = {
       console.log("error: no valid colours left for a hex");
     }
   },
-	
-	hasNeighbour: function (testHex) {
-		for (var i = 0; i < this.neighbours.length; i++) {
+
+  hasNeighbour: function(testHex) {
+    for (var i = 0; i < this.neighbours.length; i++) {
       if (this.neighbours[i] === testHex) {
-				return true;
-			}
+        return true;
+      }
     }
-		return false;
-	}
+    return false;
+  },
+
+  determineSegment: function(x, y) {
+    var dx = x - this.centre.x;
+    var dy = y - this.centre.y;
+    var angle = Math.atan2(dy, dx) + Math.PI / 2;
+    var segment = this.fixSegment(Math.floor(angle / (Math.PI / 3)));
+    return segment;
+  },
+
+  fixSegment: function(segment) {
+    return (6 + segment) % 6;
+  },
+
+  getOutpostAt: function(segment) {
+    if (this.outposts[segment] != '') {
+      return this.outposts[segment];
+    }
+    var oppHex = this.neighbours[segment];
+    if (oppHex) {
+      var oppSeg = this.fixSegment(segment + 3);
+      if (oppHex.outposts[oppSeg] != '') {
+        return oppHex.outposts[oppSeg];
+      }
+    }
+    return "";
+  },
+
+  setOutpostAt: function(segment, colourCode) {
+    this.outposts[segment] = colourCode;
+    var oppHex = this.neighbours[segment];
+    if (oppHex) {
+      oppHex.outposts[this.fixSegment(segment + 3)] = "";
+    }
+  },
+
+  removeOutpostAt: function(segment) {
+    this.setOutpostAt(segment, "");
+  }
 };

@@ -4,7 +4,7 @@ var Board = {
   hexDrawPoints: [],
   firstHexX: 50,
   firstHexY: 50,
-  offset: 5,
+  offset: 7,
 
   buildBoard: function(width, height) {
     this.width = width;
@@ -13,14 +13,19 @@ var Board = {
 
     //build template hex drawPoints
     var corners = [];
+    Hex.outpostCorners = [];
     for (var c = 0; c < 6; c++) {
       corners[c] = [];
       var point = [];
-      var angle_deg = 60 * c + 30;
+      var point2 = [];
+      var angle_deg = 60 * c + 270;
       var angle_rad = Math.PI / 180 * angle_deg;
       point[0] = this.hexSize * Math.cos(angle_rad);
       point[1] = this.hexSize * Math.sin(angle_rad);
       corners[c] = point;
+      point2[0] = (this.hexSize + this.offset) * Math.cos(angle_rad);
+      point2[1] = (this.hexSize + this.offset) * Math.sin(angle_rad);
+      Hex.outpostCorners[c] = point2;
     }
     this.hexDrawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
 
@@ -47,6 +52,7 @@ var Board = {
         hex.neighbours = this.getHexNeighbours(i, j);
         hex.tokensOnHex = [];
         hex.setValidColour();
+        hex.outposts = ['','','','','',''];
       }
     }
   },
@@ -111,21 +117,19 @@ var Board = {
   },
 
   getHexNeighbours: function(x, y) {
-    var leftOrRight = y & 1 ? 1 : -1;
+    var odd = y & 1;
     var neighbours = [
-      [x - 1, y],
+      [x + (odd ? 1 : 0), y - 1],
       [x + 1, y],
-      [x, y - 1],
-      [x, y + 1],
-      [x + leftOrRight, y + 1],
-      [x + leftOrRight, y - 1]
+      [x + (odd ? 1 : 0), y + 1],
+      [x - (odd ? 0 : 1), y + 1],
+      [x - 1, y],
+      [x - (odd ? 0 : 1), y - 1]
     ];
     var result = [];
     for (var n = 0; n < 6; n++) {
       var hex = this.getHexAt(neighbours[n][0], neighbours[n][1]);
-      if (hex) {
-        result.push(hex);
-      }
+      result.push(hex);
     }
     return result;
   },

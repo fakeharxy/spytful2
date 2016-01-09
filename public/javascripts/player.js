@@ -6,6 +6,7 @@ var Player = {
     4: '#006600',
     5: '#663300'
   },
+
   maxHandSize: 5,
   setup: function() {
     this.hand = [];

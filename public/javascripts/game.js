@@ -184,6 +184,22 @@ var Game = {
             alert("you can only continue movement to an adjacent hex");
           }
         }
+      } else if (this.turnState == 'playing') {
+        var clickedHex = this.board.determineClick(x, y);
+        console.log(clickedHex);
+        if (clickedHex !== undefined) {
+          var segmentClicked = clickedHex.determineSegment(x,y);
+          var outpost = clickedHex.getOutpostAt(segmentClicked);
+          if (outpost == '') {
+            clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+            this.draw();
+          } else if (outpost == this.players[this.currentPlayer].colour) {
+            clickedHex.removeOutpostAt(segmentClicked);
+            this.draw();
+          } else {
+            alert(" The rules dictate that you cannot conquer existing outposts! ");
+          }
+        }
       }
     } else if (loc == "deck") {
       if (this.turnState == "playing") {
