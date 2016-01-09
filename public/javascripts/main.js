@@ -20,8 +20,14 @@ $(document).ready(function() {
     name: "water",
     file: "water.gif"
   }, {
-    name: "briefcase",
-    file: "briefcase.png"
+    name: "briefcase1",
+    file: "briefcase1.png"
+  }, {
+    name: "briefcase2",
+    file: "briefcase2.png"
+  }, {
+    name: "briefcase3",
+    file: "briefcase3.png"
   }, {
     name: "extractionPoint",
     file: "exit.svg"
@@ -39,6 +45,8 @@ $(document).ready(function() {
   button.onclick = endTurn;
   button = $("#butClearRoute")[0];
   button.onclick = clearRoute;
+  button = $("#butFinishRoute")[0];
+  button.onclick = finishRoute;
 });
 
 function loadImage(imgToLoad) {
@@ -65,10 +73,9 @@ var game;
 
 function setup() {
   game = Object.create(Game);
-  game.setup(8, 8);
+  game.setup(4, 4);
   game.addPlayer("Player 1");
   game.addPlayer("Player 2");
-  game.addPlayer("Player 3");
   game.prepareGame();
 }
 
@@ -90,10 +97,19 @@ function clearRoute() {
   }
 }
 
+function finishRoute() {
+  game.completeExtraction();
+}
+
 function endTurn() {
   if (game.turnState == 'finished') {
-    game.nextTurn();
-    draw();
+    game.checkIfGameEnd();
+    if (game.state != 'finished') {
+      game.nextTurn();
+      draw();
+    } else {
+      game.determineWinner();
+    }
   } else {
     alert("The game rules dictate you must draw cards before ending your turn...");
   }
@@ -102,6 +118,7 @@ function endTurn() {
 function onMouseMove(event) {
   game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
 }
+
 function onMouseDown(event) {
   game.onclick(event.pageX - canvasX, event.pageY - canvasY);
 }

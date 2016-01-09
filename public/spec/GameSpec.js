@@ -39,7 +39,7 @@ describe("Game", function() {
     }
     expect(game.players.length).toEqual(playerCount);
   });
-  
+
   it("should add the correct number of briefcases per player after preparing the game to start",
     function() {
       var playerCount = 2 + Math.floor(Math.random() * 3);
@@ -78,6 +78,7 @@ describe("Game", function() {
       }
       expect(extractionpointCount).toEqual(playerCount * Game.extractionpointsPerPlayer);
     });
+
   it("should give all players 2 cards after preparing the game to start", function() {
     var playerCount = 2 + Math.floor(Math.random() * 3);
     for (var i = 0; i < playerCount; i++) {

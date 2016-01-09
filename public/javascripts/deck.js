@@ -1,6 +1,6 @@
 var Deck = {
   cardArray: [],
-  deckSizeMultiple: 3,
+  deckSizeMultiple: 1,
   cardWidth: 60,
   cardHeight: 100,
   cardRoundingRadius: 10,
@@ -12,9 +12,6 @@ var Deck = {
   deal: function(dealTarget, dealNumber) {
     Array.prototype.push.apply(dealTarget, this.cardArray.splice(
       0, dealNumber));
-    if (this.cardArray.length === 0) {
-      alert('This game is over. The winner is Player 1');
-    }
   },
 
   takePool: function(target) {

@@ -59,7 +59,7 @@ var Hex = {
     //draw overlays
     var overlayImg = null;
     if (this.hasBriefcase) {
-      overlayImg = ctx.imageCache.briefcase;
+      overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
     } else if (this.isExtractionpoint) {
       overlayImg = ctx.imageCache.extractionPoint;
     }
@@ -74,9 +74,9 @@ var Hex = {
       var x = 7 * (i-1);
       var y = 6;
       ctx.arc(x, y, 5, 0, 2 * Math.PI, false);
-      console.log("x: " + x);
-      console.log("y: " + y);
-      console.log("token: " + this.tokensOnHex[i]);
+      //console.log("x: " + x);
+      //console.log("y: " + y);
+      //console.log("token: " + this.tokensOnHex[i]);
       ctx.fillStyle = this.tokensOnHex[i];
       ctx.fill();
       ctx.stroke();

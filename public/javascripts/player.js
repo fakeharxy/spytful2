@@ -7,11 +7,12 @@ var Player = {
     5: '#663300'
   },
   maxHandSize: 5,
-
   setup: function() {
     this.hand = [];
     this.stack = [];
     this.colour = this.playerColours[this.number];
+    this.score = 0;
+    this.briefcaseCount = 0;
   },
 
   drawHand: function(ctx, x, y) {
@@ -51,7 +52,8 @@ var Player = {
     y += Deck.cardSpacing;
 
     for (var i = 0; i < this.stack.length; i++) {
-      this.stack[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 || faceup ? true : false);
+      this.stack[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 ||
+        faceup ? true : false);
     }
   },
 
