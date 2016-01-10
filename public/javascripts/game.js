@@ -170,15 +170,26 @@ var Game = {
         var clickedHex = this.board.determineClick(x, y);
         if (clickedHex != undefined) {
           //check if clicked hex is a neighbour of the previous
-          if (this.extractionRoute[this.extractionRoute.length - 1].hasNeighbour(clickedHex)) {
-            //check if it matches next card in movement stack
-            if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
-              .hex.colourCode == clickedHex.colourCode) {
-              this.extractionRoute.push(clickedHex);
-              this.draw();
+          var hexNeighbourSegment = this.extractionRoute[this.extractionRoute.length - 1].getNeighbourSegment(
+            clickedHex);
+          if (hexNeighbourSegment !== -1) {
+            //check if there is an outpost
+            var outpostColour = this.extractionRoute[this.extractionRoute.length - 1].getOutpostAt(
+              hexNeighbourSegment);
+            if (outpostColour == '' || outpostColour == this.players[this.currentPlayer].colour) {
+              //check if it matches next card in movement stack
+              if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
+                .hex.colourCode == clickedHex.colourCode) {
+                this.extractionRoute.push(clickedHex);
+                this.draw();
+              } else {
+                alert(
+                  "the next hex must match the colour of the next card in your movement stack"
+                );
+              }
             } else {
               alert(
-                "the next hex must match the colour of the next card in your movement stack");
+                " You cannot move through another player's outpost (the rules dictate this)");
             }
           } else {
             alert("you can only continue movement to an adjacent hex");
@@ -186,18 +197,36 @@ var Game = {
         }
       } else if (this.turnState == 'playing') {
         var clickedHex = this.board.determineClick(x, y);
-        console.log(clickedHex);
         if (clickedHex !== undefined) {
-          var segmentClicked = clickedHex.determineSegment(x,y);
+          var segmentClicked = clickedHex.determineSegment(x, y);
           var outpost = clickedHex.getOutpostAt(segmentClicked);
-          if (outpost == '') {
-            clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
-            this.draw();
-          } else if (outpost == this.players[this.currentPlayer].colour) {
+          if (outpost !== 'invalid') {
+            if (outpost == '') {
+              clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+              this.turnState = "outposting";
+              this.outpostHex = clickedHex;
+              this.outpostSegment = segmentClicked;
+              this.draw();
+            } else if (outpost == this.players[this.currentPlayer].colour) {
+              clickedHex.removeOutpostAt(segmentClicked);
+              this.draw();
+            } else {
+              alert(" The rules dictate that you cannot conquer existing outposts! ");
+            }
+          }
+        }
+      } else if (this.turnState == 'outposting') {
+        var clickedHex = this.board.determineClick(x, y);
+        if (clickedHex !== undefined) {
+          var segmentClicked = clickedHex.determineSegment(x, y);
+          if (segmentClicked == this.outpostSegment && this.outpostHex == clickedHex) {
             clickedHex.removeOutpostAt(segmentClicked);
             this.draw();
-          } else {
-            alert(" The rules dictate that you cannot conquer existing outposts! ");
+            this.turnState = 'playing';
+          } else if (clickedHex.neighbours[segmentClicked] == this.outpostHex && Hex.fixSegment(segmentClicked + 3) == this.outpostSegment) {
+            clickedHex.removeOutpostAt(segmentClicked);
+            this.draw();
+            this.turnState = 'playing';
           }
         }
       }
@@ -216,15 +245,35 @@ var Game = {
       }
     } else if (loc == "hand") {
       if (this.turnState == "playing") {
-        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
+        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
+          y -
           this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           this.updateFocus(null);
           this.players[this.currentPlayer].playCardToStack(handCardIndex);
           this.draw();
         }
+      } else if (this.turnState == "outposting") {
+        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
+          y -
+          this.handY);
+        if (handCardIndex < this.players[this.currentPlayer].hand.length) {
+          var clickedCardColour = this.players[this.currentPlayer].hand[handCardIndex].hex.colourCode;
+          if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
+            .neighbours[this.outpostSegment].colourCode) {
+            this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
+            this.draw();
+            this.turnState = "playing";
+          } else {
+            alert(
+              "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
+            );
+          }
+        }
       } else {
-        alert("The rules state that once you have drawn cards, you can no longer play actions");
+        alert(
+          "The rules state that once you have drawn cards, you can no longer play actions"
+        );
       }
     } else if (loc == "stack") {
       if (this.turnState == "playing") {
@@ -279,7 +328,8 @@ var Game = {
     } else {
       message = topPlayer.name + " has won. They";
     }
-    message += " got " + highest + " points (" + topPlayer.briefcaseCount + " briefcases).";
+    message += " got " + highest + " points (" + topPlayer.briefcaseCount +
+      " briefcases).";
 
     alert(message);
 
@@ -327,7 +377,8 @@ var Game = {
         this.updateFocus(null);
       }
     } else if (loc == "hand") {
-      var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
+      var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
+        y -
         this.handY);
       if (handCardIndex < this.players[this.currentPlayer].hand.length) {
         this.updateFocus(this.players[this.currentPlayer].hand[handCardIndex]);

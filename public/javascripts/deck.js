@@ -1,6 +1,6 @@
 var Deck = {
   cardArray: [],
-  deckSizeMultiple: 1,
+  deckSizeMultiple: 2,
   cardWidth: 60,
   cardHeight: 100,
   cardRoundingRadius: 10,

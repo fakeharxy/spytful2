@@ -138,13 +138,14 @@ var Hex = {
     }
   },
 
-  hasNeighbour: function(testHex) {
+  getNeighbourSegment: function(testHex) {
     for (var i = 0; i < this.neighbours.length; i++) {
       if (this.neighbours[i] === testHex) {
-        return true;
+        return i;
       }
     }
-    return false;
+    //if the testHex is not a neighbour, return -1
+    return -1;
   },
 
   determineSegment: function(x, y) {
@@ -164,11 +165,13 @@ var Hex = {
       return this.outposts[segment];
     }
     var oppHex = this.neighbours[segment];
-    if (oppHex) {
+    if (oppHex && oppHex.colourCode !== 0) {
       var oppSeg = this.fixSegment(segment + 3);
       if (oppHex.outposts[oppSeg] != '') {
         return oppHex.outposts[oppSeg];
       }
+    } else {
+      return 'invalid';
     }
     return "";
   },
