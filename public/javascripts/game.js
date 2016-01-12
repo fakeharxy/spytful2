@@ -1,6 +1,6 @@
 var Game = {
-  briefcasesPerPlayer: 3,
-  extractionpointsPerPlayer: 1,
+  briefcasesPerPlayer: 4,
+  extractionpointsPerPlayer: 4,
   startCardsPool: 2,
   startCardsPlayer: 2,
   state: "setupBoard",
@@ -88,10 +88,26 @@ var Game = {
         briefcaseValue = 1;
       }
     }
-    for (var i = 0; i < extractionpointCount; i++) {
-      validHexes.shift().isExtractionpoint = true;
+    var i=0;
+    while (i < extractionpointCount) {
+      var hex = validHexes.shift();
+      if (hex) {
+        var valid = true; //check extractionpoints are not adjacent
+        for (var n=0; n<hex.neighbours.length; n++) {
+          if (hex.neighbours[n] && hex.neighbours[n].isExtractionpoint) {
+            valid = false;
+            break;
+          }
+        }
+        if(valid) {
+          hex.isExtractionpoint = true;
+          i++;
+        }
+      } else {
+        alert("ran out of valid locations for the extraction points!");
+        return;
+      }
     }
-
 
     //deal cards into the card pool
     this.deck.deal(this.deck.cardPool, this.startCardsPool);
