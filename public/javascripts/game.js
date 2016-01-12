@@ -1,8 +1,9 @@
 var Game = {
   briefcasesPerPlayer: 4,
-  extractionpointsPerPlayer: 4,
+  extractionpointsPerPlayer: 1,
   startCardsPool: 2,
   startCardsPlayer: 2,
+  maxOutpostsPerTurn: 1,
   state: "setupBoard",
   turnState: "pre-start",
   extractionRoute: [],
@@ -120,6 +121,7 @@ var Game = {
     //start first turn
     this.currentPlayer = 0;
     this.turnState = "playing";
+    this.turnOutpostsSet = 0;
     this.state = "started";
   },
 
@@ -127,6 +129,7 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
+    this.turnOutpostsSet = 0;
     this.turnState = 'playing';
   },
 
@@ -219,15 +222,18 @@ var Game = {
           if (outpost !== 'invalid') {
             if (outpost == '') {
               if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
-                if (this.players[this.currentPlayer].outposts < Player.maxOutposts) {
-                  clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
-                  this.players[this.currentPlayer].outposts++;
-                  this.turnState = "outposting";
-                  this.outpostHex = clickedHex;
-                  this.outpostSegment = segmentClicked;
-                  this.draw();
+                if (this.turnOutpostsSet < this.maxOutpostsPerTurn) {
+                  if (this.players[this.currentPlayer].outposts < Player.maxOutposts) {
+                    clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+                    this.turnState = "outposting";
+                    this.outpostHex = clickedHex;
+                    this.outpostSegment = segmentClicked;
+                    this.draw();
+                  } else {
+                    alert("The rules preclude having too many outposts. You must remove an existing outpost before you can place another.");
+                  }
                 } else {
-                  alert("The rules preclude having too many outposts. You must remove an existing outpost before you can place another.");
+                  alert("The rules prohibit playing too many outposts in one turn. You have already reached the limit.");
                 }
               } else {
                 alert("The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)");
@@ -283,14 +289,15 @@ var Game = {
         }
       } else if (this.turnState == "outposting") {
         var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
-          y -
-          this.handY);
+          y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           var clickedCardColour = this.players[this.currentPlayer].hand[handCardIndex].hex.colourCode;
           if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
             .neighbours[this.outpostSegment].colourCode) {
             this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
             this.draw();
+            this.players[this.currentPlayer].outposts++;
+            this.turnOutpostsSet++;
             this.turnState = "playing";
           } else {
             alert(
