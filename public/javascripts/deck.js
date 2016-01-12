@@ -15,13 +15,15 @@ var Deck = {
   },
 
   takePool: function(target) {
-    // target = target.concat(this.cardPool);
-    target.push(this.cardPool.shift());
-    target.push(this.cardPool.shift());
-    // this.cardPool = [];
-    // this.cardPool.focusOffsetX = 0;
-    // this.cardPool.focusOffsetY = 0;
-    this.deal(this.cardPool, 2);
+    var poolCard = this.cardPool.shift();
+    if (poolCard) {
+      target.push(poolCard);
+      poolCard = this.cardPool.shift();
+      if (poolCard) {
+        target.push(poolCard);
+        this.deal(this.cardPool, 2);
+      }
+    }
   },
 
   buildDeck: function(hexArray) {
