@@ -160,8 +160,28 @@ var Hex = {
     return (6 + segment) % 6;
   },
 
+  newOutpostValid: function (segment, colourCode) {
+	// checks if a new outpost can be built on this segment
+	// (by checking x2 neighbours of both relevant hexes)
+	if (this.getOutpostAt(this.fixSegment(segment-1)) == colourCode ||
+	  this.getOutpostAt(this.fixSegment(segment+1)) == colourCode) {
+	  return false;
+	}
+	var oppHex = this.neighbours[segment];
+	if (oppHex && (oppHex.getOutpostAt(this.fixSegment(segment+2)) == colourCode ||
+	oppHex.getOutpostAt(this.fixSegment(segment+4)) == colourCode)) {
+	  return false;
+	}
+	return true;
+  },
+  
   getOutpostAt: function(segment) {
-    if (this.outposts[segment] != '') {
+	// checks the colourCode of the outpost at this position
+	// (by checking both relevant hexes)
+	// - returns '' if no outpost is present
+	// - returns 'invalid' if no outpost would be valid (hex is
+	//   at edge of board or segment borders a water hex)
+	if (this.outposts[segment] != '') {
       return this.outposts[segment];
     }
     var oppHex = this.neighbours[segment];

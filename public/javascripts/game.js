@@ -1,6 +1,6 @@
 var Game = {
   briefcasesPerPlayer: 3,
-  extractionpointsPerPlayer: 2,
+  extractionpointsPerPlayer: 1,
   startCardsPool: 2,
   startCardsPlayer: 2,
   state: "setupBoard",
@@ -202,16 +202,20 @@ var Game = {
           var outpost = clickedHex.getOutpostAt(segmentClicked);
           if (outpost !== 'invalid') {
             if (outpost == '') {
-              clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
-              this.turnState = "outposting";
-              this.outpostHex = clickedHex;
-              this.outpostSegment = segmentClicked;
-              this.draw();
+			  if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
+                clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+                this.turnState = "outposting";
+                this.outpostHex = clickedHex;
+                this.outpostSegment = segmentClicked;
+                this.draw();
+			  } else {
+				  alert("The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)");
+			  }
             } else if (outpost == this.players[this.currentPlayer].colour) {
               clickedHex.removeOutpostAt(segmentClicked);
               this.draw();
             } else {
-              alert(" The rules dictate that you cannot conquer existing outposts! ");
+              alert("The rules dictate that you cannot conquer existing outposts! ");
             }
           }
         }
