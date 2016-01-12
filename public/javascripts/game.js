@@ -203,17 +203,23 @@ var Game = {
           if (outpost !== 'invalid') {
             if (outpost == '') {
               if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
-                clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
-                this.turnState = "outposting";
-                this.outpostHex = clickedHex;
-                this.outpostSegment = segmentClicked;
-                this.draw();
+                if (this.players[this.currentPlayer].outposts < Player.maxOutposts) {
+                  clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+                  this.players[this.currentPlayer].outposts++;
+                  this.turnState = "outposting";
+                  this.outpostHex = clickedHex;
+                  this.outpostSegment = segmentClicked;
+                  this.draw();
+                } else {
+                  alert("The rules preclude having too many outposts. You must remove an existing outpost before you can place another.");
+                }
               } else {
                 alert("The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)");
               }
             } else if (outpost == this.players[this.currentPlayer].colour) {
               if (confirm("Are you sure you want to permanently remove this outpost?")) {
                 clickedHex.removeOutpostAt(segmentClicked);
+                this.players[this.currentPlayer].outposts--;
                 this.draw();
               }
             } else {

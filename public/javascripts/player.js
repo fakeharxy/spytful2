@@ -8,12 +8,15 @@ var Player = {
   },
 
   maxHandSize: 5,
+  maxOutposts: 5,
+  
   setup: function() {
     this.hand = [];
     this.stack = [];
     this.colour = this.playerColours[this.number];
     this.score = 0;
     this.briefcaseCount = 0;
+    this.outposts = 0;
   },
 
   drawHand: function(ctx, x, y) {
