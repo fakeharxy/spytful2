@@ -224,7 +224,7 @@ var Game = {
               if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
                 if (this.turnOutpostsSet < this.maxOutpostsPerTurn) {
                   if (this.players[this.currentPlayer].outposts < Player.maxOutposts) {
-                    clickedHex.setOutpostAt(segmentClicked, this.players[this.currentPlayer].colour);
+                    clickedHex.setOutpostAt(segmentClicked, "#FFFFFF"); //provisional outpost
                     this.turnState = "outposting";
                     this.outpostHex = clickedHex;
                     this.outpostSegment = segmentClicked;
@@ -295,6 +295,7 @@ var Game = {
           if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
             .neighbours[this.outpostSegment].colourCode) {
             this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
+            this.outpostHex.setOutpostAt(this.outpostSegment, this.players[this.currentPlayer].colour); //finalise outpost
             this.draw();
             this.players[this.currentPlayer].outposts++;
             this.turnOutpostsSet++;

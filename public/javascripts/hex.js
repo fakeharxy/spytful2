@@ -85,11 +85,15 @@ var Hex = {
       if (this.outposts[i] !== '') {
         var j = (i + 1) % 6;
         ctx.beginPath();
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = this.outposts[i];
-        ctx.moveTo(Hex.outpostCorners[i][0], Hex.outpostCorners[i][1]);
-        ctx.lineTo(Hex.outpostCorners[j][0], Hex.outpostCorners[j][1]);
+        ctx.lineWidth = 1;
+        ctx.fillStyle = this.outposts[i];
+        ctx.moveTo(Hex.outpostCorners[i][0].x, Hex.outpostCorners[i][0].y);
+        ctx.lineTo(Hex.outpostCorners[i][1].x, Hex.outpostCorners[i][1].y);
+        ctx.lineTo(Hex.outpostCorners[j][1].x, Hex.outpostCorners[j][1].y);
+        ctx.lineTo(Hex.outpostCorners[j][0].x, Hex.outpostCorners[j][0].y);
+        ctx.closePath();
         ctx.stroke();
+        ctx.fill();
       }
     }
     ctx.restore();

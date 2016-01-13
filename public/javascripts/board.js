@@ -17,15 +17,21 @@ var Board = {
     for (var c = 0; c < 6; c++) {
       corners[c] = [];
       var point = [];
-      var point2 = [];
+      var point2 = {}, point3 = {};
       var angle_deg = 60 * c + 270;
       var angle_rad = Math.PI / 180 * angle_deg;
       point[0] = this.hexSize * Math.cos(angle_rad);
       point[1] = this.hexSize * Math.sin(angle_rad);
       corners[c] = point;
-      point2[0] = (this.hexSize + this.offset) * Math.cos(angle_rad);
-      point2[1] = (this.hexSize + this.offset) * Math.sin(angle_rad);
-      Hex.outpostCorners[c] = point2;
+      point2.x = (this.hexSize + this.offset * 0.6) * Math.cos(angle_rad);
+      point2.x = point[0] + Math.cos(angle_rad) * this.offset * 0.75;
+      point2.y = (this.hexSize + this.offset * 0.6) * Math.sin(angle_rad);
+      point2.y = point[1] + Math.sin(angle_rad) * this.offset * 0.75;
+      point3.x = (this.hexSize + this.offset * 1.4) * Math.cos(angle_rad);
+      point3.x = point[0] + Math.cos(angle_rad) * this.offset * 1.5;
+      point3.y = (this.hexSize + this.offset * 1.4) * Math.sin(angle_rad);
+      point3.y = point[1] + Math.sin(angle_rad) * this.offset * 1.5;
+      Hex.outpostCorners[c] = [ point2, point3 ];
     }
     this.hexDrawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
 
