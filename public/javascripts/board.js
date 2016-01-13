@@ -12,28 +12,24 @@ var Board = {
     this.hexArray = [];
 
     //build template hex drawPoints
-    var corners = [];
+    Hex.corners = [];
     Hex.outpostCorners = [];
     for (var c = 0; c < 6; c++) {
-      corners[c] = [];
+      Hex.corners[c] = [];
       var point = [];
       var point2 = {}, point3 = {};
       var angle_deg = 60 * c + 270;
       var angle_rad = Math.PI / 180 * angle_deg;
       point[0] = this.hexSize * Math.cos(angle_rad);
       point[1] = this.hexSize * Math.sin(angle_rad);
-      corners[c] = point;
-      point2.x = (this.hexSize + this.offset * 0.6) * Math.cos(angle_rad);
-      point2.x = point[0] + Math.cos(angle_rad) * this.offset * 0.75;
-      point2.y = (this.hexSize + this.offset * 0.6) * Math.sin(angle_rad);
-      point2.y = point[1] + Math.sin(angle_rad) * this.offset * 0.75;
-      point3.x = (this.hexSize + this.offset * 1.4) * Math.cos(angle_rad);
-      point3.x = point[0] + Math.cos(angle_rad) * this.offset * 1.5;
-      point3.y = (this.hexSize + this.offset * 1.4) * Math.sin(angle_rad);
-      point3.y = point[1] + Math.sin(angle_rad) * this.offset * 1.5;
+      Hex.corners[c] = point;
+      point2.dx = (2.5) * Math.cos(angle_rad+0.52359877559829887307710723054658);
+      point2.dy = (2.5) * Math.sin(angle_rad+0.52359877559829887307710723054658);
+      point3.dx = (this.offset*2 -5) * Math.cos(angle_rad+0.52359877559829887307710723054658);
+      point3.dy = (this.offset*2 -5) * Math.sin(angle_rad+0.52359877559829887307710723054658);
       Hex.outpostCorners[c] = [ point2, point3 ];
     }
-    this.hexDrawPoints = this.getRoundedPoints(corners, this.hexRoundingRadius);
+    this.hexDrawPoints = this.getRoundedPoints(Hex.corners, this.hexRoundingRadius);
 
     //build hex objects
     for (var j = 0; j < this.height; j++) {
@@ -84,7 +80,7 @@ var Board = {
   calculateHexCentreX: function(i, j) {
     var x = this.firstHexX + i * (this.hexSize + this.offset) * Math.sqrt(3);
     if (j & 1) {
-      x += this.hexSize;
+      x += this.hexSize + this.offset/2;
     }
     return x;
   },

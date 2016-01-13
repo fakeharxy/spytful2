@@ -87,10 +87,10 @@ var Hex = {
         ctx.beginPath();
         ctx.lineWidth = 1;
         ctx.fillStyle = this.outposts[i];
-        ctx.moveTo(Hex.outpostCorners[i][0].x, Hex.outpostCorners[i][0].y);
-        ctx.lineTo(Hex.outpostCorners[i][1].x, Hex.outpostCorners[i][1].y);
-        ctx.lineTo(Hex.outpostCorners[j][1].x, Hex.outpostCorners[j][1].y);
-        ctx.lineTo(Hex.outpostCorners[j][0].x, Hex.outpostCorners[j][0].y);
+        ctx.moveTo(Hex.corners[i][0] + Hex.outpostCorners[i][0].dx, Hex.corners[i][1] + Hex.outpostCorners[i][0].dy);
+        ctx.lineTo(Hex.corners[i][0] + Hex.outpostCorners[i][1].dx, Hex.corners[i][1] + Hex.outpostCorners[i][1].dy);
+        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][1].dx, Hex.corners[j][1] + Hex.outpostCorners[i][1].dy);
+        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][0].dx, Hex.corners[j][1] + Hex.outpostCorners[i][0].dy);
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
@@ -187,6 +187,9 @@ var Hex = {
 	//   at edge of board or segment borders a water hex)
 	if (this.outposts[segment] != '') {
       return this.outposts[segment];
+    }
+    if (this.colourCode == 0) {
+      return 'invalid';
     }
     var oppHex = this.neighbours[segment];
     if (oppHex && oppHex.colourCode !== 0) {
