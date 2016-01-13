@@ -83,8 +83,16 @@ var Deck = {
     for (var i = this.cardArray.length - 1; i >= 0; i--) {
       this.cardArray[i].draw(ctx, xHeap, y, false);
     }
+    //remaining cards label
+    if(this.cardArray.length > 0) {
+      ctx.font = '8pt Arial';
+      ctx.textBaseline = "top";
+      ctx.textAlign = "right";
+      ctx.fillStyle = "#000";
+      ctx.fillText(this.cardArray.length, xHeap + Deck.cardWidth, y + Deck.cardHeight + Deck.cardSpacing/2);
+    }
   },
-
+  
   determineClick: function(x, y) {
     return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
   }

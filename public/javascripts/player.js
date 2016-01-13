@@ -88,10 +88,10 @@ var Player = {
   },
 
   validHandClick: function(card) {
-    if (card !== []) {
+    if (card) {
       if (this.stack.length !== 0) {
         return true;
-      } else if (!card.hex.hasBriefcase && !card.hex.isExtractionpoint) {
+      } else if (!card.hex.hasBriefcase && !card.hex.isExtractionpoint) { //first card played to stack cannot be briefcase or extraction point
         return true;
       } else {
         alert("The rules dictate that this is not a valid card to play");
