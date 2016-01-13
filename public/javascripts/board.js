@@ -1,10 +1,11 @@
 var Board = {
-  hexSize: 30,
+  hexSize: 32,
   hexRoundingRadius: 4,
   hexDrawPoints: [],
   firstHexX: 50,
   firstHexY: 50,
-  offset: 7,
+  offset: 8,
+  outpostOffset: 3,
 
   buildBoard: function(width, height) {
     this.width = width;
@@ -23,14 +24,14 @@ var Board = {
       point[0] = this.hexSize * Math.cos(angle_rad);
       point[1] = this.hexSize * Math.sin(angle_rad);
       Hex.corners[c] = point;
-      point2.dx = (2.5) * Math.cos(angle_rad+0.52359877559829887307710723054658);
-      point2.dy = (2.5) * Math.sin(angle_rad+0.52359877559829887307710723054658);
-      point3.dx = (this.offset*2 -5) * Math.cos(angle_rad+0.52359877559829887307710723054658);
-      point3.dy = (this.offset*2 -5) * Math.sin(angle_rad+0.52359877559829887307710723054658);
+      point2.dx = (this.outpostOffset) * Math.cos(angle_rad+0.52359877559829887307710723054658);
+      point2.dy = (this.outpostOffset) * Math.sin(angle_rad+0.52359877559829887307710723054658);
+      point3.dx = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.cos(angle_rad+0.52359877559829887307710723054658);
+      point3.dy = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.sin(angle_rad+0.52359877559829887307710723054658);
       Hex.outpostCorners[c] = [ point2, point3 ];
     }
     this.hexDrawPoints = this.getRoundedPoints(Hex.corners, this.hexRoundingRadius);
-
+    
     //build hex objects
     for (var j = 0; j < this.height; j++) {
       this.hexArray[j] = [];
@@ -78,11 +79,7 @@ var Board = {
   },
 
   calculateHexCentreX: function(i, j) {
-    var x = this.firstHexX + i * (this.hexSize + this.offset) * Math.sqrt(3);
-    if (j & 1) {
-      x += this.hexSize + this.offset/2;
-    }
-    return x;
+    return this.firstHexX + (i+ (j&1 ? 0.5 : 0)) * (this.hexSize + this.offset) * Math.sqrt(3);
   },
 
   getRoundedPoints: function(pts, radius) {
