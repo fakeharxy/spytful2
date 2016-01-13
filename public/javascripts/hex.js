@@ -25,9 +25,9 @@ var Hex = {
     ctx.closePath();
 
     ctx.lineWidth = 2;
-    // ctx.shadowColor = "rgba(100,100,100,.7)";
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 2;
+    ctx.shadowColor = "rgba(100,100,100,.7)";
+    ctx.shadowOffsetX = 1.5;
+    ctx.shadowOffsetY = 1.5;
     ctx.stroke();
     ctx.fillStyle = Hex.colourMap[this.colourCode];
     ctx.fill();
@@ -81,12 +81,15 @@ var Hex = {
       ctx.fill();
       ctx.stroke();
     }
+    ctx.lineWidth = 1;
+    ctx.shadowColor = "rgba(100,100,100,.7)";
+    ctx.shadowOffsetX = 1;
+    ctx.shadowOffsetY = 1;
     for (var i = 0; i < this.outposts.length; i++) {
       if (this.outposts[i] !== '') {
         var j = (i + 1) % 6;
-        ctx.beginPath();
-        ctx.lineWidth = 1;
         ctx.fillStyle = this.outposts[i];
+        ctx.beginPath();
         ctx.moveTo(Hex.corners[i][0] + Hex.outpostCorners[i][0].dx, Hex.corners[i][1] + Hex.outpostCorners[i][0].dy);
         ctx.lineTo(Hex.corners[i][0] + Hex.outpostCorners[i][1].dx, Hex.corners[i][1] + Hex.outpostCorners[i][1].dy);
         ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][1].dx, Hex.corners[j][1] + Hex.outpostCorners[i][1].dy);

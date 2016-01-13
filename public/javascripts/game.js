@@ -30,7 +30,7 @@ var Game = {
 
   setupCoordinates: function() {
     //deck is positioned a little to the right of the hexes
-    this.deckX = 2 * (this.board.width * this.board.hexSize + this.board.firstHexX);
+    this.deckX = this.board.firstHexX * 2 + this.board.width * (this.board.hexSize + this.board.offset) * Math.sqrt(3);
     this.deckY = this.board.firstHexY - this.board.hexSize;
 
     //current player's hand is positioned below the deck

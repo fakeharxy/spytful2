@@ -4,8 +4,8 @@ var Board = {
   hexDrawPoints: [],
   firstHexX: 50,
   firstHexY: 50,
-  offset: 8,
-  outpostOffset: 3,
+  offset: 10,
+  outpostOffset: 5,
 
   buildBoard: function(width, height) {
     this.width = width;
