@@ -3,7 +3,7 @@ var app = express();
 
 app.use(express.static(__dirname + '/public'));
 
-app.listen(3080, function () {
+app.listen(process.env.PORT || 3080, function () {
   console.log('Spytful is running on port 3080!');
 });
 
