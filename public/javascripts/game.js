@@ -1,6 +1,5 @@
 var Game = {
   briefcasesPerPlayer: 4,
-  extractionpointsPerPlayer: 1,
   startCardsPool: 2,
   startCardsPlayer: 2,
   maxOutpostsPerTurn: 1,
@@ -30,7 +29,8 @@ var Game = {
 
   setupCoordinates: function() {
     //deck is positioned a little to the right of the hexes
-    this.deckX = this.board.firstHexX * 2 + this.board.width * (this.board.hexSize + this.board.offset) * Math.sqrt(3);
+    this.deckX = this.board.firstHexX * 2 + this.board.width * (this.board.hexSize + this.board
+      .offset) * Math.sqrt(3);
     this.deckY = this.board.firstHexY - this.board.hexSize;
 
     //current player's hand is positioned below the deck
@@ -64,7 +64,7 @@ var Game = {
       return;
     }
 
-    //add briefcases and extraction points
+    //add briefcases
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
       for (var i = 0; i < this.board.width; i++) {
@@ -74,8 +74,7 @@ var Game = {
       }
     }
     var briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
-    var extractionpointCount = this.players.length * Game.extractionpointsPerPlayer;
-    if (validHexes.length < briefcaseCount + extractionpointCount) {
+    if (validHexes.length < briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
       return;
     }
@@ -87,26 +86,6 @@ var Game = {
       hex.briefcaseValue = briefcaseValue;
       if (++briefcaseValue > 3) {
         briefcaseValue = 1;
-      }
-    }
-    var i=0;
-    while (i < extractionpointCount) {
-      var hex = validHexes.shift();
-      if (hex) {
-        var valid = true; //check extractionpoints are not adjacent
-        for (var n=0; n<hex.neighbours.length; n++) {
-          if (hex.neighbours[n] && hex.neighbours[n].isExtractionpoint) {
-            valid = false;
-            break;
-          }
-        }
-        if(valid) {
-          hex.isExtractionpoint = true;
-          i++;
-        }
-      } else {
-        alert("ran out of valid locations for the extraction points!");
-        return;
       }
     }
 
@@ -230,13 +209,19 @@ var Game = {
                     this.outpostSegment = segmentClicked;
                     this.draw();
                   } else {
-                    alert("The rules preclude having too many outposts. You must remove an existing outpost before you can place another.");
+                    alert(
+                      "The rules preclude having too many outposts. You must remove an existing outpost before you can place another."
+                    );
                   }
                 } else {
-                  alert("The rules prohibit playing too many outposts in one turn. You have already reached the limit.");
+                  alert(
+                    "The rules prohibit playing too many outposts in one turn. You have already reached the limit."
+                  );
                 }
               } else {
-                alert("The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)");
+                alert(
+                  "The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)"
+                );
               }
             } else if (outpost == this.players[this.currentPlayer].colour) {
               if (confirm("Are you sure you want to permanently remove this outpost?")) {
@@ -257,7 +242,8 @@ var Game = {
             clickedHex.removeOutpostAt(segmentClicked);
             this.draw();
             this.turnState = 'playing';
-          } else if (clickedHex.neighbours[segmentClicked] == this.outpostHex && Hex.fixSegment(segmentClicked + 3) == this.outpostSegment) {
+          } else if (clickedHex.neighbours[segmentClicked] == this.outpostHex && Hex.fixSegment(
+              segmentClicked + 3) == this.outpostSegment) {
             clickedHex.removeOutpostAt(segmentClicked);
             this.draw();
             this.turnState = 'playing';
@@ -373,7 +359,8 @@ var Game = {
 
   completeExtraction: function() {
     if (this.turnState == "extracting") {
-      if (this.extractionRoute[this.extractionRoute.length - 1].isExtractionpoint) {
+      if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
+        .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
         //go through extraction route and collect points, reset hexes
         var points = 0;
         var briefcases = 0;
@@ -392,7 +379,7 @@ var Game = {
         this.clearRoute();
         this.draw();
       } else {
-        alert("the rules require that movement must end on an extraction point");
+        alert("the rules require the correct region card to extract");
       }
     } else {
       alert("logic suggests that to finish extraction you must first start extraction");

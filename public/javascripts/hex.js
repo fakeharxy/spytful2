@@ -60,8 +60,6 @@ var Hex = {
     var overlayImg = null;
     if (this.hasBriefcase) {
       overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
-    } else if (this.isExtractionpoint) {
-      overlayImg = ctx.imageCache.extractionPoint;
     }
     if (overlayImg) {
       var iconWidth = Board.hexSize * 0.75;

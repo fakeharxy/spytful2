@@ -91,7 +91,7 @@ var Player = {
     if (card) {
       if (this.stack.length !== 0) {
         return true;
-      } else if (!card.hex.hasBriefcase && !card.hex.isExtractionpoint) { //first card played to stack cannot be briefcase or extraction point
+      } else if (!card.hex.hasBriefcase) { //first card played to stack cannot be briefcase
         return true;
       } else {
         alert("The rules dictate that this is not a valid card to play");

@@ -59,26 +59,6 @@ describe("Game", function() {
       expect(briefcaseCount).toEqual(playerCount * Game.briefcasesPerPlayer);
     });
 
-  it(
-    "should add the correct number of extraction points per player after preparing the game to start",
-    function() {
-      var playerCount = 2 + Math.floor(Math.random() * 3);
-      for (var i = 0; i < playerCount; i++) {
-        game.addPlayer("player " + i);
-      }
-      game.prepareGame();
-
-      var extractionpointCount = 0;
-      for (var j = 0; j < game.board.height; j++) {
-        for (var i = 0; i < game.board.width; i++) {
-          if (game.board.hexArray[j][i].isExtractionpoint) {
-            extractionpointCount++;
-          }
-        }
-      }
-      expect(extractionpointCount).toEqual(playerCount * Game.extractionpointsPerPlayer);
-    });
-
   it("should give all players 2 cards after preparing the game to start", function() {
     var playerCount = 2 + Math.floor(Math.random() * 3);
     for (var i = 0; i < playerCount; i++) {
