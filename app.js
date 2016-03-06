@@ -3,16 +3,19 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-app.use(express.static(__dirname + '/public'));
 app.get('/', function(req, res) {
-  res.sendfile('index.html');
+  res.sendfile('public/lobby.html');
+});
+
+app.get('/game', function(req, res) {
+  res.sendfile('public/index.html');
 });
 
 io.on('connection', function(socket) {
   console.log('a user connected');
-  socket.on('chat message', function(msg) {
+  socket.on('lobby', function(msg) {
     console.log('message: ' + msg);
-    io.emit('chat message', msg);
+    io.emit('lobby', msg);
   });
   socket.on('disconnect', function() {
     console.log('user disconnected');
