@@ -73,14 +73,14 @@ var Game = {
         }
       }
     }
-    var briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
-    if (validHexes.length < briefcaseCount) {
+    this.briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
+    if (validHexes.length < this.briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
       return;
     }
     Deck.shuffle(validHexes);
     var briefcaseValue = 1;
-    for (var i = 0; i < briefcaseCount; i++) {
+    for (var i = 0; i < this.briefcaseCount; i++) {
       var hex = validHexes.shift();
       hex.hasBriefcase = true;
       hex.briefcaseValue = briefcaseValue;
@@ -316,7 +316,7 @@ var Game = {
   },
 
   checkIfGameEnd: function() {
-    if (this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) {
+    if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
       this.state = 'finished';
     }
   },
@@ -370,6 +370,7 @@ var Game = {
             briefcases++;
             points += hex.briefcaseValue;
             hex.hasBriefcase = false;
+            this.briefcaseCount--;
           }
         }
         this.players[this.currentPlayer].score += points; //add points to player's total
