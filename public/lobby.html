@@ -7,8 +7,8 @@
 </head>
 
 <body>
-  <input id='nameEntry' autocomplete='off' value="Anon" />
-  <button onclick="onSetName(); return false"> Set name </button>
+  <input id='nameEntry' autocomplete='off' />
+  <button onclick="onSetName()">Set name</button>
 
   <ul id="messages"></ul>
   <form action="" id='message_form'>
@@ -19,6 +19,7 @@
 </body>
 <script>
   var name = "annnnnonnn";
+  $('#nameEntry').val(name);
   var socket = io();
   socket.emit("lobby", name + " joined");
   $('#message_form').submit(function() {
@@ -32,8 +33,10 @@
 
   function onSetName() {
     var newname = $('#nameEntry').val();
-    socket.emit("lobby", name + " changed their name to " + newname);
-    name = newname;
+    if (newname && newname != name) {
+      socket.emit("lobby", name + " changed their name to " + newname);
+      name = newname;
+    }
   }
 </script>
 
