@@ -3,6 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var clients = [];
+
 app.use(express.static('public'));
 
 app.get('/', function(req, res) {
@@ -15,9 +17,17 @@ app.get('/game', function(req, res) {
 
 io.on('connection', function(socket) {
   console.log('a user connected');
+  clients.push(socket);
+  socket.clientId = clients.length;
+  console.log('...user assigned id ' + socket.clientId);
   socket.on('lobby', function(msg) {
-    console.log('message: ' + msg);
-    io.emit('lobby', msg);
+    if (msg.indexOf('sweary')==-1) {
+      console.log('message from client ' + this.clientId + ': ' + msg);
+      io.emit('lobby', msg);
+    } else {
+      console.log('client ' + this.clientId + ' swore');
+      socket.emit('lobby', 'message rejected you rudey');
+    }
   });
   socket.on('disconnect', function() {
     console.log('user disconnected');
