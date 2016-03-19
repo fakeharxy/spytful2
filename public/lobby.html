@@ -18,23 +18,34 @@
 
 </body>
 <script>
-  var name = "annnnnonnn";
-  $('#nameEntry').val(name);
   var socket = io();
-  socket.emit("lobby", name + " joined");
+  
+  socket.on('connect', function() {
+    socket.emit('getname');
+  });
+  
   $('#message_form').submit(function() {
-    socket.emit('lobby', name + ": " + $('#m').val());
-    $('#m').val('');
+    var m = $('#m');
+    if (m.val()) {
+      socket.emit('lobby', m.val());
+      m.val('');
+    }
     return false;
   });
+  
   socket.on('lobby', function(msg) {
     $('#messages').append($('<li>').text(msg));
+  });
+
+  socket.on('setname', function(newname) {
+    $('#nameEntry').val(newname);
+    name = newname;
   });
 
   function onSetName() {
     var newname = $('#nameEntry').val();
     if (newname && newname != name) {
-      socket.emit("lobby", name + " changed their name to " + newname);
+      socket.emit("setname", newname);
       name = newname;
     }
   }

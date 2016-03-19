@@ -36,7 +36,7 @@
 
   <script>
     var socket = io();
-    socket.emit("game", "Started Chat");
+    socket.emit("game", "joined the game");
     $('form').submit(function() {
       socket.emit('game', $('#m').val());
       $('#m').val('');
