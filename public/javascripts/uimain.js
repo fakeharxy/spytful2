@@ -44,6 +44,10 @@ $(document).ready(function() {
   button.onclick = clearRoute;
   button = $("#butFinishRoute")[0];
   button.onclick = finishRoute;
+  button = $("#butReady")[0];
+  button.onclick = playerReady;
+  button = $("#butStartGame")[0];
+  button.onclick = startGame;
 });
 
 function loadImage(imgToLoad) {
@@ -60,21 +64,14 @@ function loadImage(imgToLoad) {
 }
 
 function imagesReady() {
-  setup();
-  draw();
+  //only at this point can the client connect to the socket and request the 'game' object/data
+  startSocket();
 }
 
 var ctx, w, h, canvasX, canvasY;
 var imagesToLoad;
 var game;
 
-function setup() {
-  game = Object.create(Game);
-  game.setup(5, 5);
-  game.addPlayer("Player 1");
-  game.addPlayer("Player 2");
-  game.prepareGame();
-}
 
 function draw() {
   //reset canvas
@@ -84,21 +81,32 @@ function draw() {
   ctx.strokeRect(0, 0, w, h);
 
   //draw objects
-  game.draw(ctx);
+  drawGame.call(game, ctx);
+}
+
+function playerReady() {
+  socket.emit("ready", "");
+}
+
+function startGame() {
+  socket.emit("startGame", "");
 }
 
 function clearRoute() {
   if (confirm('Are you sure you want to clear your route? \n This can not be undone.')) {
-    game.clearRoute();
-    draw();
+    //game.clearRoute();
+    //draw();
+    //TODO: send the request to the server
   }
 }
 
 function finishRoute() {
-  game.completeExtraction();
+  //game.completeExtraction();
+  //TODO: send the request to the server
 }
 
 function endTurn() {
+  /*
   if (game.turnState == 'finished') {
     game.checkIfGameEnd();
     if (game.state != 'finished') {
@@ -110,12 +118,16 @@ function endTurn() {
   } else {
     alert("The game rules dictate you must draw cards before ending your turn...");
   }
+  */
+  //TODO: send the request to the server
 }
 
 function onMouseMove(event) {
-  game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
+  //game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
+  //TODO: send the calculated co-ords to the server instead?
 }
 
 function onMouseDown(event) {
-  game.onclick(event.pageX - canvasX, event.pageY - canvasY);
+  //game.onclick(event.pageX - canvasX, event.pageY - canvasY);
+  //TODO: send the calculated co-ords to the server instead?
 }

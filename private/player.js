@@ -1,4 +1,4 @@
-var Player = {
+module.exports = {
   playerColours: {
     1: '#E80000',
     2: '#0000FF',

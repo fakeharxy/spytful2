@@ -1,3 +1,6 @@
+var Board = require('./board.js');
+var Deck = require('./deck.js');
+var Player = require('./player.js');
 var Game = {
   briefcasesPerPlayer: 4,
   startCardsPool: 2,
@@ -42,26 +45,42 @@ var Game = {
     this.stackY = this.deckY + 2 * (this.deck.cardHeight + 2 * this.deck.cardSpacing);
   },
 
-  addPlayer: function(name) {
+  addPlayer: function(uid, name) {
     if (this.state != "setupPlayers") {
-      alert("error: game not in player setup stage");
-      return;
+      console.log("error: game not in player setup stage");
+      return false;
     }
+    if (this.isPlayer(uid)) {
+      console.log("error: player already in game");
+      return false;
+    }
+    
     var player = Object.create(Player);
+    player.uid = uid;
     player.name = name;
     player.number = this.players.length + 1;
     player.setup();
     this.players.push(player);
+    return true;
+  },
+  
+  isPlayer: function(uid) {
+    for (var i in this.players) {
+      if (this.players[i].uid == uid) {
+        return true;
+      }
+    }
+    return false;
   },
 
   prepareGame: function() {
     if (this.state != "setupPlayers") {
-      alert("error: game not in setup stage");
-      return;
+      console.log("error: game not in setup stage");
+      return false;
     }
     if (this.players.length < 2) {
-      alert("error: not enough players to start game");
-      return;
+      console.log("error: not enough players to start game");
+      return false;
     }
 
     //add briefcases
@@ -75,8 +94,8 @@ var Game = {
     }
     this.briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
     if (validHexes.length < this.briefcaseCount) {
-      alert("too many players on too small a board; tests don't count");
-      return;
+      console.log("too many players on too small a board; tests don't count");
+      return false;
     }
     Deck.shuffle(validHexes);
     var briefcaseValue = 1;
@@ -102,6 +121,8 @@ var Game = {
     this.turnState = "playing";
     this.turnOutpostsSet = 0;
     this.state = "started";
+    
+    return true;
   },
 
   nextTurn: function() {
@@ -473,5 +494,21 @@ var Game = {
     } else {
       alert("There is no room in your hand. Play some cards first");
     }
+  },
+
+
+  getObjectForClient: function() {
+    return { board: this.board.getObjectForClient(),
+             state: this.state,
+             turnState: this.turnState,
+             extractionRoute: this.extractionRoute,
+             deck: this.deck.getObjectForClient(),
+             deckX: this.deckX,
+             deckY: this.deckY,
+             players: this.players,
+             currentPlayer: this.currentPlayer
+           };
   }
 };
+
+module.exports = Game;
