@@ -40,7 +40,7 @@ var Deck = {
       [Deck.cardWidth, Deck.cardHeight],
       [0, Deck.cardHeight]
     ];
-    drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
+    Deck.drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
 
     for (var j = 0; j < hexArray.length; j++) {
       for (var i = 0; i < hexArray[j].length; i++) {
@@ -113,8 +113,8 @@ var Deck = {
     out = [];
     for (var i=0; i<this.length; i++) {
       out.push( { wobble: { x: this[i].wobble.x, y: this[i].wobble.y },
-                  focusOffsetX: this[i].focusOffsetX,
-                  focusOffsetY: this[i].focusOffsetY,
+                  focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
+                  focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
                   rotation: this[i].rotation,
                   hex: this[i].hex.getObjectForClient()
                 }

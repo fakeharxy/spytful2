@@ -50,7 +50,7 @@ var Game = {
       console.log("error: game not in player setup stage");
       return false;
     }
-    if (this.isPlayer(uid)) {
+    if (this.getPlayerIndex(uid)>-1) {
       console.log("error: player already in game");
       return false;
     }
@@ -63,16 +63,16 @@ var Game = {
     this.players.push(player);
     return true;
   },
-  
-  isPlayer: function(uid) {
+
+  getPlayerIndex: function(uid) {
     for (var i in this.players) {
       if (this.players[i].uid == uid) {
-        return true;
+        return i;
       }
     }
-    return false;
+    return -1;
   },
-
+  
   prepareGame: function() {
     if (this.state != "setupPlayers") {
       console.log("error: game not in setup stage");
@@ -505,9 +505,20 @@ var Game = {
              deck: this.deck.getObjectForClient(),
              deckX: this.deckX,
              deckY: this.deckY,
-             players: this.players,
+             handX: this.handX,
+             handY: this.handY,
+             players: this.getPlayersForClient(),
+             
              currentPlayer: this.currentPlayer
            };
+  },
+  
+  getPlayersForClient: function() {
+    var out = [];
+    for (var i=0; i<this.players.length; i++) {
+      out.push(this.players[i].getObjectForClient()); //TODO select here so that the full data is only sent to the player?
+    }
+    return out;
   }
 };
 

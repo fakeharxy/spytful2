@@ -218,16 +218,16 @@ var Hex = {
   
   
   getObjectForClient: function() {
-      return { centre: this.centre,
-               colourCode: this.colourCode,
-               waterOffset: this.waterOffset,
-               waterRotate: this.waterRotate,
-               regionName: this.regionName,
-               hasBriefcase: this.hasBriefcase,
-               briefcaseValue: this.briefcaseValue,
-               tokensOnHex: this.tokensOnHex,
-               outposts: this.outposts
-             };
+    return { centre: this.centre,
+             colourCode: this.colourCode,
+             waterOffset: this.waterOffset,
+             waterRotate: this.waterRotate,
+             regionName: this.regionName,
+             hasBriefcase: this.hasBriefcase,
+             briefcaseValue: this.briefcaseValue,
+             tokensOnHex: this.tokensOnHex,
+             outposts: this.outposts
+           };
   }
 };
 module.exports = Hex;

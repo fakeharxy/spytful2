@@ -55,9 +55,10 @@ function drawGame(ctx) {
       ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
     }
 
-    //draw current player's hand
-    this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
-    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState ==
-      "extracting");
+    //draw THIS player's hand (not the current player's)
+    //this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
+    //this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState == "extracting");
+    drawHand.call(this.players[this.playerIndex], ctx, this.handX, this.handY);
+    drawStack.call(this.players[this.playerIndex], ctx, this.stackX, this.stackY, this.turnState == "extracting");
   }
 };

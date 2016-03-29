@@ -1,9 +1,9 @@
 function drawDeck(ctx, x, y) {
   //draw card pool
   if (this.cardPool.length > 0) {
-    drawCard.call(this.cardPool[0], ctx, x + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY, true);
+    drawCard.call(this.cardPool[0], ctx, x + this.cardPool[0].focusOffsetX, y + this.cardPool[0].focusOffsetY, true);
     if (this.cardPool.length > 1) {
-      drawCard.call(this.cardPool[1], ctx, x + this.cardWidth + this.cardSpacing + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY, true);
+      drawCard.call(this.cardPool[1], ctx, x + this.cardWidth + this.cardSpacing + this.cardPool[1].focusOffsetX, y + this.cardPool[1].focusOffsetY, true);
     }
   }
 

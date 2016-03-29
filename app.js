@@ -89,8 +89,11 @@ io.on('connection', function(socket) {
     
     socket.on('requestGame', function() {
       if (game) {
-        console.log("sending game state to client with id " + this.handshake.session.uid);
-        socket.emit('gameState', game.getObjectForClient());
+        var uid = this.handshake.session.uid;
+        console.log("sending game state to client with id " + uid);
+        var data = game.getObjectForClient();
+        data.playerIndex = game.getPlayerIndex(uid);
+        socket.emit('gameState', data);
       }
     });
     
@@ -100,7 +103,10 @@ io.on('connection', function(socket) {
         console.log('client with id ' + uid + ' has pressed ready');
         if (game.addPlayer(uid, clients[uid].name)) {
           io.emit('game', clients[uid].name + " is ready to play");
-          io.emit('gameUpdate', { players: game.players });
+          //io.emit('gameUpdate', { players: game.players }); //TODO: see below
+          var data = game.getObjectForClient();
+          data.playerIndex = game.getPlayerIndex(uid);
+          io.emit('gameState', data);
         } else {
           socket.emit('game', "you can't say you're ready for the game now");
         }
@@ -111,12 +117,21 @@ io.on('connection', function(socket) {
       if (game) {
         var uid = this.handshake.session.uid;
         console.log('client with id ' + uid + ' has pressed start game');
-        if (game.isPlayer(uid)) {
+        if (game.getPlayerIndex(uid)>-1) {
           if (game.prepareGame()) {
             io.emit('game', clients[uid].name + ' starts the game');
-            io.emit('gameUpdate', { state: game.state,
-                                    deck: game.deck.getObjectForClient() //TODO: find a neater way to update small deck changes without sending all the cards
-                                  }); //TODO: what else????
+            //TODO: find a neater way to update small changes instead of sending everything
+            /*
+            var data = { state: game.state,
+                                    deck: game.deck.getObjectForClient(), 
+                                    players: game.players
+            }; //TODO: what else????
+            console.log(data);
+            io.emit('gameUpdate', data); 
+            */
+            data = game.getObjectForClient();
+            data.playerIndex = game.getPlayerIndex(uid);
+            io.emit('gameState', data);
           } else {
             socket.emit('game', 'could not start the game');
           }

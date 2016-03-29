@@ -184,11 +184,26 @@ module.exports = {
   
   
   getObjectForClient: function() {
-    return { hexArray: this.HexArray,
-             hexDrawPoints: this.hexDrawPoints,
-             hexColourMap: Hex.colourMap,
-             hexCorners: Hex.corners,
-             hexOutpostCorners: Hex.outpostCorners
+    return { //width: this.width,
+              //height: this.height,
+              offset: this.offset,
+              hexSize: this.hexSize,
+              hexArray: this.getHexArrayForClient(),
+              hexDrawPoints: this.hexDrawPoints,
+              hexColourMap: Hex.colourMap,
+              hexCorners: Hex.corners,
+              hexOutpostCorners: Hex.outpostCorners,
+              
            };
+  },
+  
+  getHexArrayForClient: function() {
+    var out = [];
+    for (var j = 0; j < this.height; j++) {
+      for (var i = 0; i < this.width; i++) {
+        out.push(this.hexArray[j][i].getObjectForClient()); //hexes pushed as flat array to clients
+      }
+    }
+    return out;
   }
 };

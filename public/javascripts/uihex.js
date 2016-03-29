@@ -27,14 +27,14 @@ function drawHex(ctx, drawPoints) {
     ctx.clip(); // clip to the hex path on the context
     if (!this.waterOffset) {
       this.waterOffset = {
-        x: -Board.hexSize - Math.random() * Board.hexSize,
-        y: -Board.hexSize - Math.random() * Board.hexSize
+        x: -game.board.hexSize - Math.random() * game.board.hexSize,
+        y: -game.board.hexSize - Math.random() * game.board.hexSize
       };
       this.waterRotate = Math.random() * 2 * Math.PI;
     }
     ctx.rotate(this.waterRotate);
-    ctx.drawImage(ctx.imageCache.water, this.waterOffset.x, this.waterOffset.y, Board.hexSize *
-      3, Board.hexSize * 3);
+    ctx.drawImage(ctx.imageCache.water, this.waterOffset.x, this.waterOffset.y, game.board.hexSize *
+      3, game.board.hexSize * 3);
 
     //otherwise write the region name
   } else {
@@ -42,7 +42,7 @@ function drawHex(ctx, drawPoints) {
     ctx.textAlign = "left";
     ctx.textBaseline = "top";
     ctx.fillStyle = "#000";
-    ctx.fillText(this.regionName, Board.offset - Board.hexSize, -Board.hexSize / 2);
+    ctx.fillText(this.regionName, game.board.offset - game.board.hexSize, -game.board.hexSize / 2);
   }
 
   //draw overlays
@@ -51,7 +51,7 @@ function drawHex(ctx, drawPoints) {
     overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
   }
   if (overlayImg) {
-    var iconWidth = Board.hexSize * 0.75;
+    var iconWidth = game.board.hexSize * 0.75;
     var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
     ctx.shadowColor = "transparent";
     ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);

@@ -1,3 +1,5 @@
+var Deck = require('./deck.js');
+
 module.exports = {
   playerColours: {
     1: '#E80000',
@@ -106,6 +108,17 @@ module.exports = {
 
   drawCardsFromPool: function() {
     game.deck.takePool(this.hand);
+  },
+  
+  getObjectForClient: function() {
+    return { name: this.name,
+             colour: this.colour,
+             score: this.score,
+             briefcaseCount: this.briefcaseCount,
+             outposts: this.outposts,
+             hand: Deck.getCardsForClient.call(this.hand),
+             stack: Deck.getCardsForClient.call(this.stack)
+    };
   }
 
 };
