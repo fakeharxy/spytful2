@@ -71,6 +71,7 @@ function imagesReady() {
 var ctx, w, h, canvasX, canvasY;
 var imagesToLoad;
 var game;
+var playerIndex;
 
 
 function draw() {

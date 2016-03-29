@@ -92,7 +92,6 @@ io.on('connection', function(socket) {
         var uid = this.handshake.session.uid;
         console.log("sending game state to client with id " + uid);
         var data = game.getObjectForClient();
-        data.playerIndex = game.getPlayerIndex(uid);
         socket.emit('gameState', data);
       }
     });
@@ -105,8 +104,9 @@ io.on('connection', function(socket) {
           io.emit('game', clients[uid].name + " is ready to play");
           //io.emit('gameUpdate', { players: game.players }); //TODO: see below
           var data = game.getObjectForClient();
+          socket.broadcast.emit('gameState', data);
           data.playerIndex = game.getPlayerIndex(uid);
-          io.emit('gameState', data);
+          socket.emit('gameState', data);
         } else {
           socket.emit('game', "you can't say you're ready for the game now");
         }
@@ -118,8 +118,11 @@ io.on('connection', function(socket) {
         var uid = this.handshake.session.uid;
         console.log('client with id ' + uid + ' has pressed start game');
         if (game.getPlayerIndex(uid)>-1) {
-          if (game.prepareGame()) {
-            io.emit('game', clients[uid].name + ' starts the game');
+          if (game.prepareGame(function (alertMsg) {
+              socket.emit('game', alertMsg);
+            } )) {
+            //io.emit('game', clients[uid].name + ' starts the game');
+            io.emit('game', "It's " + game.players[game.currentPlayer].name + "'s turn");
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -130,10 +133,9 @@ io.on('connection', function(socket) {
             io.emit('gameUpdate', data); 
             */
             data = game.getObjectForClient();
-            data.playerIndex = game.getPlayerIndex(uid);
             io.emit('gameState', data);
-          } else {
-            socket.emit('game', 'could not start the game');
+          //} else {
+          //  socket.emit('game', 'could not start the game');
           }
         } else {
           socket.emit('game', "you aren't a player so you can't start the game");

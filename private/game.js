@@ -73,13 +73,13 @@ var Game = {
     return -1;
   },
   
-  prepareGame: function() {
+  prepareGame: function(alert) {
     if (this.state != "setupPlayers") {
-      console.log("error: game not in setup stage");
+      alert("error: game not in setup stage");
       return false;
     }
     if (this.players.length < 2) {
-      console.log("error: not enough players to start game");
+      alert("error: not enough players to start game");
       return false;
     }
 
@@ -94,7 +94,7 @@ var Game = {
     }
     this.briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
     if (validHexes.length < this.briefcaseCount) {
-      console.log("too many players on too small a board; tests don't count");
+      alert("too many players on too small a board; tests don't count");
       return false;
     }
     Deck.shuffle(validHexes);

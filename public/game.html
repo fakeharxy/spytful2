@@ -45,7 +45,10 @@
     });
     socket.on('gameState', function(gameData) {
       game = gameData;
-      console.log(gameData);
+      if (game.playerIndex) {
+        playerIndex = game.playerIndex;
+        console.log('setting playerIndex: ' + playerIndex);
+      }
       draw();
     });
     socket.on('gameUpdate', function(mergeData) {
