@@ -121,8 +121,7 @@ io.on('connection', function(socket) {
           if (game.prepareGame(function (alertMsg) {
               socket.emit('game', alertMsg);
             } )) {
-            //io.emit('game', clients[uid].name + ' starts the game');
-            io.emit('game', "It's " + game.players[game.currentPlayer].name + "'s turn");
+            io.emit('game', clients[uid].name + " starts the game; it's " + game.players[game.currentPlayer].name + "'s turn");
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -139,6 +138,20 @@ io.on('connection', function(socket) {
           }
         } else {
           socket.emit('game', "you aren't a player so you can't start the game");
+        }
+      }
+    });
+    
+    socket.on('mouseDown', function(data) {
+      if (game) {
+        var uid = this.handshake.session.uid;
+        console.log('client with id ' + uid + ' clicked something');
+        if (game.getPlayerIndex(uid) == game.currentPlayer) {
+          game.onclick(data.x, data.y, function (alertMsg) {
+              socket.emit('game', alertMsg);
+            });
+        } else {
+          socket.emit('game', "it's not your turn");
         }
       }
     });

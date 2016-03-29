@@ -182,7 +182,7 @@ var Game = {
       "extracting");
   },
 
-  onclick: function(x, y) {
+  onclick: function(x, y, alert) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
       if (this.turnState == "extracting") {
@@ -477,8 +477,8 @@ var Game = {
   },
 
   drawCardFromDeck: function() {
-    if (game.players[game.currentPlayer].hand.length < Player.maxHandSize) {
-      game.players[game.currentPlayer].drawCardFromDeck();
+    if (this.players[this.currentPlayer].hand.length < Player.maxHandSize) {
+      this.players[this.currentPlayer].drawCardFromDeck();
       this.turnState = "finished";
       this.draw();
     } else {

@@ -130,5 +130,6 @@ function onMouseMove(event) {
 
 function onMouseDown(event) {
   //game.onclick(event.pageX - canvasX, event.pageY - canvasY);
-  //TODO: send the calculated co-ords to the server instead?
+  //send the calculated co-ords to the server
+  socket.emit('mouseDown', {x: event.pageX - canvasX, y: event.pageY - canvasY});
 }
