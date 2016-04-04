@@ -25,7 +25,6 @@ function drawStack(ctx, x, y, faceup) {
   y += game.deck.cardSpacing;
 
   for (var i = 0; i < this.stack.length; i++) {
-    this.stack[i].draw(ctx, x + i * (game.deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 ||
-      faceup ? true : false);
+    drawCard.call(this.stack[i], ctx, x + i * (game.deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 || faceup ? true : false);
   }
 };

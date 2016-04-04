@@ -98,12 +98,14 @@ function clearRoute() {
     //game.clearRoute();
     //draw();
     //TODO: send the request to the server
+    socket.emit('clearRoute', '');
   }
 }
 
 function finishRoute() {
   //game.completeExtraction();
-  //TODO: send the request to the server
+  //send the request to the server
+  socket.emit('completeExtraction', '');
 }
 
 function endTurn() {
@@ -120,7 +122,8 @@ function endTurn() {
     alert("The game rules dictate you must draw cards before ending your turn...");
   }
   */
-  //TODO: send the request to the server
+  //send the request to the server
+  socket.emit('endTurn', '');
 }
 
 function onMouseMove(event) {

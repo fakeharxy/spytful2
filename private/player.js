@@ -102,11 +102,11 @@ module.exports = {
     return false;
   },
 
-  drawCardFromDeck: function() {
+  drawCardFromDeck: function(game) {
     game.deck.deal(this.hand, 1);
   },
 
-  drawCardsFromPool: function() {
+  drawCardsFromPool: function(game) {
     game.deck.takePool(this.hand);
   },
   

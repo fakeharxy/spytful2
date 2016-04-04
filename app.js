@@ -145,17 +145,76 @@ io.on('connection', function(socket) {
     socket.on('mouseDown', function(data) {
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log('client with id ' + uid + ' clicked something');
+        //console.log('client with id ' + uid + ' clicked something');
         if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          game.onclick(data.x, data.y, function (alertMsg) {
+          if (game.onclick(data.x, data.y, function (alertMsg) {
               socket.emit('game', alertMsg);
-            });
+            })) {
+            data = game.getObjectForClient();
+            io.emit('gameState', data);
+          }
         } else {
           socket.emit('game', "it's not your turn");
         }
       }
     });
     
+    socket.on('endTurn', function() {
+      if (game) {
+        var uid = this.handshake.session.uid;
+        if (game.getPlayerIndex(uid) == game.currentPlayer) {
+          if (game.endTurn(function (alertMsg) {
+              socket.emit('game', alertMsg);
+            })) {
+              
+            data = game.getObjectForClient();
+            io.emit('gameState', data);
+            
+            if (game.state != 'finished') {
+              game.nextTurn();
+              io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name + "'s turn");
+            } else {
+              io.emit('game', game.determineWinner());
+            }
+          }
+          
+        } else {
+          socket.emit('game', "it's not your turn");
+        }
+      }
+    });
+    
+    socket.on('clearRoute', function() {
+      if (game) {
+        var uid = this.handshake.session.uid;
+        if (game.getPlayerIndex(uid) == game.currentPlayer) {
+          if (game.clearRoute(function (alertMsg) {
+              socket.emit('game', alertMsg);
+            })) {
+            data = game.getObjectForClient();
+            io.emit('gameState', data);
+          }
+        } else {
+          socket.emit('game', "it's not your turn");
+        }
+      }
+    });
+    
+    socket.on('completeExtraction', function() {
+      if (game) {
+        var uid = this.handshake.session.uid;
+        if (game.getPlayerIndex(uid) == game.currentPlayer) {
+          if (game.completeExtraction(function (alertMsg) {
+              socket.emit('game', alertMsg);
+            })) {
+            data = game.getObjectForClient();
+            io.emit('gameState', data);
+          }
+        } else {
+          socket.emit('game', "it's not your turn");
+        }
+      }
+    });
   } else {
     console.log("(session no longer active; connection ignored)"); //should send an expiration message to client to refresh the page
   }
