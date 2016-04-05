@@ -59,6 +59,6 @@ function drawGame(ctx) {
     //this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
     //this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState == "extracting");
     drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY);
-    drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, this.turnState == "extracting");
+    drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
   }
 };

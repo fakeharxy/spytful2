@@ -90,8 +90,9 @@ io.on('connection', function(socket) {
     socket.on('requestGame', function() {
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log("sending game state to client with id " + uid);
+        //console.log("sending game state to client with id " + uid);
         var data = game.getObjectForClient();
+        data.playerIndex = game.getPlayerIndex(uid);
         socket.emit('gameState', data);
       }
     });
@@ -99,7 +100,7 @@ io.on('connection', function(socket) {
     socket.on('ready', function() {
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log('client with id ' + uid + ' has pressed ready');
+        //console.log('client with id ' + uid + ' has pressed ready');
         if (game.addPlayer(uid, clients[uid].name)) {
           io.emit('game', clients[uid].name + " is ready to play");
           //io.emit('gameUpdate', { players: game.players }); //TODO: see below
@@ -116,7 +117,7 @@ io.on('connection', function(socket) {
     socket.on('startGame', function() {
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log('client with id ' + uid + ' has pressed start game');
+        //console.log('client with id ' + uid + ' has pressed start game');
         if (game.getPlayerIndex(uid)>-1) {
           if (game.prepareGame(function (alertMsg) {
               socket.emit('game', alertMsg);

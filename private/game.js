@@ -190,28 +190,33 @@ var Game = {
       if (this.turnState == "extracting") {
         var clickedHex = this.board.determineClick(x, y);
         if (clickedHex != undefined) {
-          //check if clicked hex is a neighbour of the previous
-          var hexNeighbourSegment = this.extractionRoute[this.extractionRoute.length - 1].getNeighbourSegment(
-            clickedHex);
-          if (hexNeighbourSegment !== -1) {
-            //check if there is an outpost
-            var outpostColour = this.extractionRoute[this.extractionRoute.length - 1].getOutpostAt(
-              hexNeighbourSegment);
-            if (outpostColour == '' || outpostColour == this.players[this.currentPlayer].colour) {
-              //check if it matches next card in movement stack
-              if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
-                .hex.colourCode == clickedHex.colourCode) {
-                this.extractionRoute.push(clickedHex);
-                //this.draw();
-                return true;
+          //check if there is another card in the player's stack
+          if (this.players[this.currentPlayer].stack.length > this.extractionRoute.length) {
+            //check if clicked hex is a neighbour of the previous
+            var hexNeighbourSegment = this.extractionRoute[this.extractionRoute.length - 1].getNeighbourSegment(
+              clickedHex);
+            if (hexNeighbourSegment !== -1) {
+              //check if there is an outpost
+              var outpostColour = this.extractionRoute[this.extractionRoute.length - 1].getOutpostAt(
+                hexNeighbourSegment);
+              if (outpostColour == '' || outpostColour == this.players[this.currentPlayer].colour) {
+                //check if it matches next card in movement stack
+                if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
+                  .hex.colourCode == clickedHex.colourCode) {
+                  this.extractionRoute.push(clickedHex);
+                  //this.draw();
+                  return true;
+                } else {
+                  alert("the next hex must match the colour of the next card in your movement stack");
+                }
               } else {
-                alert("the next hex must match the colour of the next card in your movement stack");
+                alert("You cannot move through another player's outpost (the rules dictate this)");
               }
             } else {
-              alert("You cannot move through another player's outpost (the rules dictate this)");
+              alert("you can only continue movement to an adjacent hex");
             }
           } else {
-            alert("you can only continue movement to an adjacent hex");
+            alert("you don't have any more cards in your movement stack");
           }
         }
       } else if (this.turnState == 'playing') {
@@ -246,12 +251,13 @@ var Game = {
                 );
               }
             } else if (outpost == this.players[this.currentPlayer].colour) {
-              if (confirm("Are you sure you want to permanently remove this outpost?")) {
+              //TODO: add confirmation mechanism
+              //if (confirm("Are you sure you want to permanently remove this outpost?")) {
                 clickedHex.removeOutpostAt(segmentClicked);
                 this.players[this.currentPlayer].outposts--;
                 //this.draw();
                 return true;
-              }
+              //}
             } else {
               alert("The rules dictate that you cannot conquer existing outposts! ");
             }
@@ -512,7 +518,7 @@ var Game = {
     return { board: this.board.getObjectForClient(),
              state: this.state,
              turnState: this.turnState,
-             extractionRoute: this.extractionRoute,
+             extractionRoute: this.getExtractionRouteForClient(),
              deck: this.deck.getObjectForClient(),
              deckX: this.deckX,
              deckY: this.deckY,
@@ -529,10 +535,19 @@ var Game = {
   getPlayersForClient: function() {
     var out = [];
     for (var i=0; i<this.players.length; i++) {
-      out.push(this.players[i].getObjectForClient()); //TODO select here so that the full data is only sent to the player?
+      out.push(this.players[i].getObjectForClient()); //TODO select here so that the full player data is only sent to each player?
+    }
+    return out;
+  },
+  
+  getExtractionRouteForClient: function() {
+    var out = [];
+    for (var i=0; i<this.extractionRoute.length; i++) {
+      out.push(this.extractionRoute[i].getObjectForClient());
     }
     return out;
   }
+  
 };
 
 module.exports = Game;
