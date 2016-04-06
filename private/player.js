@@ -78,9 +78,9 @@ module.exports = {
     this.dropInToken(undefined);
   },
 
-  playCardToStack: function(index) {
+  playCardToStack: function(index, alert) {
     var validCardCheck = this.hand[index];
-    if (this.validHandClick(validCardCheck)) {
+    if (this.validHandClick(validCardCheck, alert)) {
       var card = this.hand.splice(index, 1);
       this.stack.push(card[0]);
       if (this.stack.length == 1) {
@@ -89,7 +89,7 @@ module.exports = {
     }
   },
 
-  validHandClick: function(card) {
+  validHandClick: function(card, alert) {
     if (card) {
       if (this.stack.length !== 0) {
         return true;

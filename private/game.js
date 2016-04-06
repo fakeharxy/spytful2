@@ -299,7 +299,7 @@ var Game = {
         var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           this.updateFocus(null);
-          this.players[this.currentPlayer].playCardToStack(handCardIndex);
+          this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
           //this.draw();
           return true;
         }
