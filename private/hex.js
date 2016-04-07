@@ -88,10 +88,14 @@ var Hex = {
         var j = (i + 1) % 6;
         ctx.fillStyle = this.outposts[i];
         ctx.beginPath();
-        ctx.moveTo(Hex.corners[i][0] + Hex.outpostCorners[i][0].dx, Hex.corners[i][1] + Hex.outpostCorners[i][0].dy);
-        ctx.lineTo(Hex.corners[i][0] + Hex.outpostCorners[i][1].dx, Hex.corners[i][1] + Hex.outpostCorners[i][1].dy);
-        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][1].dx, Hex.corners[j][1] + Hex.outpostCorners[i][1].dy);
-        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][0].dx, Hex.corners[j][1] + Hex.outpostCorners[i][0].dy);
+        ctx.moveTo(Hex.corners[i][0] + Hex.outpostCorners[i][0].dx, Hex.corners[i][1] + Hex.outpostCorners[
+          i][0].dy);
+        ctx.lineTo(Hex.corners[i][0] + Hex.outpostCorners[i][1].dx, Hex.corners[i][1] + Hex.outpostCorners[
+          i][1].dy);
+        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][1].dx, Hex.corners[j][1] + Hex.outpostCorners[
+          i][1].dy);
+        ctx.lineTo(Hex.corners[j][0] + Hex.outpostCorners[i][0].dx, Hex.corners[j][1] + Hex.outpostCorners[
+          i][0].dy);
         ctx.closePath();
         ctx.stroke();
         ctx.fill();
@@ -165,28 +169,28 @@ var Hex = {
     return (6 + segment) % 6;
   },
 
-  newOutpostValid: function (segment, colourCode) {
-	// checks if a new outpost can be built on this segment
-	// (by checking x2 neighbours of both relevant hexes)
-	if (this.getOutpostAt(this.fixSegment(segment-1)) == colourCode ||
-	  this.getOutpostAt(this.fixSegment(segment+1)) == colourCode) {
-	  return false;
-	}
-	var oppHex = this.neighbours[segment];
-	if (oppHex && (oppHex.getOutpostAt(this.fixSegment(segment+2)) == colourCode ||
-	oppHex.getOutpostAt(this.fixSegment(segment+4)) == colourCode)) {
-	  return false;
-	}
-	return true;
+  newOutpostValid: function(segment, colourCode) {
+    // checks if a new outpost can be built on this segment
+    // (by checking x2 neighbours of both relevant hexes)
+    if (this.getOutpostAt(this.fixSegment(segment - 1)) == colourCode ||
+      this.getOutpostAt(this.fixSegment(segment + 1)) == colourCode) {
+      return false;
+    }
+    var oppHex = this.neighbours[segment];
+    if (oppHex && (oppHex.getOutpostAt(this.fixSegment(segment + 2)) == colourCode ||
+        oppHex.getOutpostAt(this.fixSegment(segment + 4)) == colourCode)) {
+      return false;
+    }
+    return true;
   },
-  
+
   getOutpostAt: function(segment) {
-	// checks the colourCode of the outpost at this position
-	// (by checking both relevant hexes)
-	// - returns '' if no outpost is present
-	// - returns 'invalid' if no outpost would be valid (hex is
-	//   at edge of board or segment borders a water hex)
-	if (this.outposts[segment] != '') {
+    // checks the colourCode of the outpost at this position
+    // (by checking both relevant hexes)
+    // - returns '' if no outpost is present
+    // - returns 'invalid' if no outpost would be valid (hex is
+    //   at edge of board or segment borders a water hex)
+    if (this.outposts[segment] != '') {
       return this.outposts[segment];
     }
     if (this.colourCode == 0) {
@@ -215,19 +219,20 @@ var Hex = {
   removeOutpostAt: function(segment) {
     this.setOutpostAt(segment, "");
   },
-  
-  
+
+
   getObjectForClient: function() {
-    return { centre: this.centre,
-             colourCode: this.colourCode,
-             waterOffset: this.waterOffset,
-             waterRotate: this.waterRotate,
-             regionName: this.regionName,
-             hasBriefcase: this.hasBriefcase,
-             briefcaseValue: this.briefcaseValue,
-             tokensOnHex: this.tokensOnHex,
-             outposts: this.outposts
-           };
+    return {
+      centre: this.centre,
+      colourCode: this.colourCode,
+      waterOffset: this.waterOffset,
+      waterRotate: this.waterRotate,
+      regionName: this.regionName,
+      hasBriefcase: this.hasBriefcase,
+      briefcaseValue: this.briefcaseValue,
+      tokensOnHex: this.tokensOnHex,
+      outposts: this.outposts
+    };
   }
 };
 module.exports = Hex;

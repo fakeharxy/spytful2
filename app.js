@@ -6,14 +6,16 @@ var io = require('socket.io')(http);
 var Session = require('express-session');
 var SessionStore = require('session-file-store')(Session);
 var session = Session({
-      store: new SessionStore({ path: './tmp/sessions' }),
-      secret: 'secreshizzle',
-      resave: true,
-      saveUninitialized: true
-    });
-        
-        
-        
+  store: new SessionStore({
+    path: './tmp/sessions'
+  }),
+  secret: 'secreshizzle',
+  resave: true,
+  saveUninitialized: true
+});
+
+
+
 var Game = require('./private/game.js');
 
 var clients = []; // this is the list of connected clients
@@ -28,8 +30,14 @@ app.get('/', function(req, res) {
   res.sendfile('public/lobby.html');
 });
 
+app.get('/paulwins', function(req, res) {
+  checkSessionId(req);
+  game = null;
+  res.sendfile('public/lobby.html');
+});
+
 app.get('/game', function(req, res) {
-  if(checkSessionId(req)) {
+  if (checkSessionId(req)) {
     if (!game) {
       //need to create a game
       game = Object.create(Game);
@@ -50,7 +58,7 @@ io.on('connection', function(socket) {
   var uid = socket.handshake.session.uid;
   console.log('io connection started using session id ' + uid);
   if (clients[uid]) { //check the client is still in memory
- 
+
     socket.on('setname', function(newname) {
       var uid = this.handshake.session.uid;
       var oldname = clients[uid].name;
@@ -58,35 +66,37 @@ io.on('connection', function(socket) {
       clients[uid].name = newname;
       io.emit('lobby', oldname + ' changed name to ' + newname);
     });
-    
+
     socket.on('getname', function() {
       var uid = this.handshake.session.uid;
       console.log('getname from uid ' + uid + ' (' + clients[uid].name + ')');
       socket.emit('setname', clients[uid].name);
     });
-    
+
     socket.on('lobby', function(msg) {
       var uid = this.handshake.session.uid;
       //if (msg.indexOf('sweary')==-1) {
-        console.log('lobby message from client ' + uid + ' (' + clients[uid].name + ') : ' + msg);
-        io.emit('lobby', clients[uid].name + ': ' + msg);
+      console.log('lobby message from client ' + uid + ' (' + clients[uid].name + ') : ' +
+        msg);
+      io.emit('lobby', clients[uid].name + ': ' + msg);
       //} else {
       //  console.log('client ' + uid + ' swore');
       //  socket.emit('lobby', 'message rejected you rudey');
       //}
     });
-    
+
     socket.on('game', function(msg) {
       var uid = this.handshake.session.uid;
-      console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' + msg);
+      console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' +
+        msg);
       io.emit('game', clients[uid].name + ': ' + msg);
     });
-    
+
     socket.on('disconnect', function() {
       var uid = this.handshake.session.uid;
       console.log('io disconnect with session id ' + uid);
     });
-    
+
     socket.on('requestGame', function() {
       if (game) {
         var uid = this.handshake.session.uid;
@@ -96,7 +106,7 @@ io.on('connection', function(socket) {
         socket.emit('gameState', data);
       }
     });
-    
+
     socket.on('ready', function() {
       if (game) {
         var uid = this.handshake.session.uid;
@@ -113,16 +123,17 @@ io.on('connection', function(socket) {
         }
       }
     });
-    
+
     socket.on('startGame', function() {
       if (game) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' has pressed start game');
-        if (game.getPlayerIndex(uid)>-1) {
-          if (game.prepareGame(function (alertMsg) {
+        if (game.getPlayerIndex(uid) > -1) {
+          if (game.prepareGame(function(alertMsg) {
               socket.emit('game', alertMsg);
-            } )) {
-            io.emit('game', clients[uid].name + " starts the game; it's " + game.players[game.currentPlayer].name + "'s turn");
+            })) {
+            io.emit('game', clients[uid].name + " starts the game; it's " + game.players[
+              game.currentPlayer].name + "'s turn");
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -134,21 +145,21 @@ io.on('connection', function(socket) {
             */
             data = game.getObjectForClient();
             io.emit('gameState', data);
-          //} else {
-          //  socket.emit('game', 'could not start the game');
+            //} else {
+            //  socket.emit('game', 'could not start the game');
           }
         } else {
           socket.emit('game', "you aren't a player so you can't start the game");
         }
       }
     });
-    
+
     socket.on('mouseDown', function(data) {
       if (game) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' clicked something');
         if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.onclick(data.x, data.y, function (alertMsg) {
+          if (game.onclick(data.x, data.y, function(alertMsg) {
               socket.emit('game', alertMsg);
             })) {
             data = game.getObjectForClient();
@@ -159,37 +170,38 @@ io.on('connection', function(socket) {
         }
       }
     });
-    
+
     socket.on('endTurn', function() {
       if (game) {
         var uid = this.handshake.session.uid;
         if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.endTurn(function (alertMsg) {
+          if (game.endTurn(function(alertMsg) {
               socket.emit('game', alertMsg);
             })) {
-              
+
             data = game.getObjectForClient();
             io.emit('gameState', data);
-            
+
             if (game.state != 'finished') {
               game.nextTurn();
-              io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name + "'s turn");
+              io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
+                "'s turn");
             } else {
               io.emit('game', game.determineWinner());
             }
           }
-          
+
         } else {
           socket.emit('game', "it's not your turn");
         }
       }
     });
-    
+
     socket.on('clearRoute', function() {
       if (game) {
         var uid = this.handshake.session.uid;
         if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.clearRoute(function (alertMsg) {
+          if (game.clearRoute(function(alertMsg) {
               socket.emit('game', alertMsg);
             })) {
             data = game.getObjectForClient();
@@ -200,12 +212,12 @@ io.on('connection', function(socket) {
         }
       }
     });
-    
+
     socket.on('completeExtraction', function() {
       if (game) {
         var uid = this.handshake.session.uid;
         if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.completeExtraction(function (alertMsg) {
+          if (game.completeExtraction(function(alertMsg) {
               socket.emit('game', alertMsg);
             })) {
             data = game.getObjectForClient();
@@ -227,12 +239,15 @@ http.listen(process.env.PORT || 3000, function() {
 
 function checkSessionId(req) {
   if (req.session.uid && clients[req.session.uid]) {
-    console.log('request using active session ' + req.session.uid + " (" + clients[req.session.uid].name + ")");
+    console.log('request using active session ' + req.session.uid + " (" + clients[req.session.uid]
+      .name + ")");
     return true;
   } else {
     var uid = Date.now();
     req.session.uid = uid;
-    var newplayer = { name: "annnnnonnn" };
+    var newplayer = {
+      name: "annnnnonnn"
+    };
     clients[uid] = newplayer;
     console.log('new session! assigned id ' + uid);
     return false;

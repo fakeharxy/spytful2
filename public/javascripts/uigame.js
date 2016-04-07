@@ -8,18 +8,15 @@ function drawGame(ctx) {
     ctx.strokeStyle = "black";
     ctx.fillStyle = "black";
     ctx.fillText("Waiting for players...", w / 2, h / 2);
-    if (this.players && this.players.length>0) {
+    if (this.players && this.players.length > 0) {
       for (var i in this.players) {
-        ctx.fillText(this.players[i].name + " is ready", w / 2, h / 2 + i*15 + 20);
+        ctx.fillText(this.players[i].name + " is ready", w / 2, h / 2 + i * 15 + 20);
       }
     }
-    
-    
-  
-  
+
   } else {
     //draw everything
-  
+
     //draw hexes
     drawBoard.call(this.board, ctx);
 

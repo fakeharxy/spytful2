@@ -52,11 +52,11 @@ var Game = {
       console.log("error: game not in player setup stage");
       return false;
     }
-    if (this.getPlayerIndex(uid)>-1) {
+    if (this.getPlayerIndex(uid) > -1) {
       console.log("error: player already in game");
       return false;
     }
-    
+
     var player = Object.create(Player);
     player.uid = uid;
     player.name = name;
@@ -74,7 +74,7 @@ var Game = {
     }
     return -1;
   },
-  
+
   prepareGame: function(alert) {
     if (this.state != "setupPlayers") {
       alert("error: game not in setup stage");
@@ -123,7 +123,7 @@ var Game = {
     this.turnState = "playing";
     this.turnOutpostsSet = 0;
     this.state = "started";
-    
+
     return true;
   },
 
@@ -207,10 +207,14 @@ var Game = {
                   //this.draw();
                   return true;
                 } else {
-                  alert("the next hex must match the colour of the next card in your movement stack");
+                  alert(
+                    "the next hex must match the colour of the next card in your movement stack"
+                  );
                 }
               } else {
-                alert("You cannot move through another player's outpost (the rules dictate this)");
+                alert(
+                  "You cannot move through another player's outpost (the rules dictate this)"
+                );
               }
             } else {
               alert("you can only continue movement to an adjacent hex");
@@ -253,10 +257,10 @@ var Game = {
             } else if (outpost == this.players[this.currentPlayer].colour) {
               //TODO: add confirmation mechanism
               //if (confirm("Are you sure you want to permanently remove this outpost?")) {
-                clickedHex.removeOutpostAt(segmentClicked);
-                this.players[this.currentPlayer].outposts--;
-                //this.draw();
-                return true;
+              clickedHex.removeOutpostAt(segmentClicked);
+              this.players[this.currentPlayer].outposts--;
+              //this.draw();
+              return true;
               //}
             } else {
               alert("The rules dictate that you cannot conquer existing outposts! ");
@@ -296,7 +300,8 @@ var Game = {
       }
     } else if (loc == "hand") {
       if (this.turnState == "playing") {
-        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y - this.handY);
+        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
+          this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           this.updateFocus(null);
           this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
@@ -318,7 +323,9 @@ var Game = {
             //this.draw();
             return true;
           } else {
-            alert("I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again.");
+            alert(
+              "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
+            );
           }
         }
       } else {
@@ -333,7 +340,9 @@ var Game = {
           //this.draw();
           return true;
         } else {
-          alert("The rules don't even need to specify that you can't start extraction without a movement stack");
+          alert(
+            "The rules don't even need to specify that you can't start extraction without a movement stack"
+          );
         }
       }
     } else {
@@ -349,9 +358,10 @@ var Game = {
       alert("The game rules dictate you must draw cards before ending your turn...");
     }
   },
-  
+
   checkIfGameEnd: function() {
-    if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
+    if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount ===
+      0) {
       this.state = 'finished';
     }
   },
@@ -515,39 +525,40 @@ var Game = {
 
 
   getObjectForClient: function() {
-    return { board: this.board.getObjectForClient(),
-             state: this.state,
-             turnState: this.turnState,
-             extractionRoute: this.getExtractionRouteForClient(),
-             deck: this.deck.getObjectForClient(),
-             deckX: this.deckX,
-             deckY: this.deckY,
-             handX: this.handX,
-             handY: this.handY,
-             stackX: this.stackX,
-             stackY: this.stackY,
-             players: this.getPlayersForClient(),
-             
-             currentPlayer: this.currentPlayer
-           };
+    return {
+      board: this.board.getObjectForClient(),
+      state: this.state,
+      turnState: this.turnState,
+      extractionRoute: this.getExtractionRouteForClient(),
+      deck: this.deck.getObjectForClient(),
+      deckX: this.deckX,
+      deckY: this.deckY,
+      handX: this.handX,
+      handY: this.handY,
+      stackX: this.stackX,
+      stackY: this.stackY,
+      players: this.getPlayersForClient(),
+
+      currentPlayer: this.currentPlayer
+    };
   },
-  
+
   getPlayersForClient: function() {
     var out = [];
-    for (var i=0; i<this.players.length; i++) {
+    for (var i = 0; i < this.players.length; i++) {
       out.push(this.players[i].getObjectForClient()); //TODO select here so that the full player data is only sent to each player?
     }
     return out;
   },
-  
+
   getExtractionRouteForClient: function() {
     var out = [];
-    for (var i=0; i<this.extractionRoute.length; i++) {
+    for (var i = 0; i < this.extractionRoute.length; i++) {
       out.push(this.extractionRoute[i].getObjectForClient());
     }
     return out;
   }
-  
+
 };
 
 module.exports = Game;
