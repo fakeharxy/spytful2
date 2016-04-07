@@ -10,13 +10,13 @@
 <body>
   <input id='nameEntry' autocomplete='off' />
   <button onclick="onSetName()">Set name</button>
-
-  <ul id="messages"></ul>
+  <div id="chatarea" style="height: 150px; overflow: auto">
+    <ul id="messages"></ul>
+  </div>  
   <form action="" id='message_form'>
     <input id="m" autocomplete="off" />
     <button>Send</button>
   </form>
-
   <br/>
   <a href="./game">Join game</a>
   
@@ -39,6 +39,7 @@
   
   socket.on('lobby', function(msg) {
     $('#messages').append($('<li>').text(msg));
+    $("#chatarea").scrollTop($("#chatarea")[0].scrollHeight);
   });
 
   socket.on('setname', function(newname) {

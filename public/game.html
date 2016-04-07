@@ -23,8 +23,10 @@
   <button id="butFinishRoute">Finish extraction</button>
   <button id="butReady">Ready</button>
   <button id="butStartGame">Start Game</button>
-  <ul id="messages"></ul>
-  <form action="">
+  <div id="chatarea" style="height: 150px; overflow: auto">
+    <ul id="messages"></ul>
+  </div>
+  <form action="" id='message_form'>
     <input id="m" autocomplete="off" />
     <button>Send</button>
   </form>
@@ -35,13 +37,17 @@
   function startSocket() {
     socket = io();
     socket.emit("game", "joined the game");
-    $('form').submit(function() {
-      socket.emit('game', $('#m').val());
-      $('#m').val('');
+    $('#message_form').submit(function() {
+      var m = $('#m');
+      if (m.val()) {
+        socket.emit('game', m.val());
+        m.val('');
+      }
       return false;
     });
     socket.on('game', function(msg) {
       $('#messages').append($('<li>').text(msg));
+      $("#chatarea").scrollTop($("#chatarea")[0].scrollHeight);
     });
     socket.on('gameState', function(gameData) {
       game = gameData;
