@@ -1,4 +1,6 @@
-var Player = {
+var Deck = require('./deck.js');
+
+module.exports = {
   playerColours: {
     1: '#E80000',
     2: '#0000FF',
@@ -76,9 +78,9 @@ var Player = {
     this.dropInToken(undefined);
   },
 
-  playCardToStack: function(index) {
+  playCardToStack: function(index, alert) {
     var validCardCheck = this.hand[index];
-    if (this.validHandClick(validCardCheck)) {
+    if (this.validHandClick(validCardCheck, alert)) {
       var card = this.hand.splice(index, 1);
       this.stack.push(card[0]);
       if (this.stack.length == 1) {
@@ -87,7 +89,7 @@ var Player = {
     }
   },
 
-  validHandClick: function(card) {
+  validHandClick: function(card, alert) {
     if (card) {
       if (this.stack.length !== 0) {
         return true;
@@ -100,12 +102,23 @@ var Player = {
     return false;
   },
 
-  drawCardFromDeck: function() {
+  drawCardFromDeck: function(game) {
     game.deck.deal(this.hand, 1);
   },
 
-  drawCardsFromPool: function() {
+  drawCardsFromPool: function(game) {
     game.deck.takePool(this.hand);
+  },
+  
+  getObjectForClient: function() {
+    return { name: this.name,
+             colour: this.colour,
+             score: this.score,
+             briefcaseCount: this.briefcaseCount,
+             outposts: this.outposts,
+             hand: Deck.getCardsForClient.call(this.hand),
+             stack: Deck.getCardsForClient.call(this.stack)
+    };
   }
 
 };

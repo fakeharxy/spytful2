@@ -1,3 +1,8 @@
+var Board = require('./board.js');
+var Deck = require('./deck.js');
+var Player = require('./player.js');
+var Hex = require('./hex.js');
+
 var Game = {
   briefcasesPerPlayer: 4,
   startCardsPool: 2,
@@ -42,26 +47,42 @@ var Game = {
     this.stackY = this.deckY + 2 * (this.deck.cardHeight + 2 * this.deck.cardSpacing);
   },
 
-  addPlayer: function(name) {
+  addPlayer: function(uid, name) {
     if (this.state != "setupPlayers") {
-      alert("error: game not in player setup stage");
-      return;
+      console.log("error: game not in player setup stage");
+      return false;
     }
+    if (this.getPlayerIndex(uid)>-1) {
+      console.log("error: player already in game");
+      return false;
+    }
+    
     var player = Object.create(Player);
+    player.uid = uid;
     player.name = name;
     player.number = this.players.length + 1;
     player.setup();
     this.players.push(player);
+    return true;
   },
 
-  prepareGame: function() {
+  getPlayerIndex: function(uid) {
+    for (var i in this.players) {
+      if (this.players[i].uid == uid) {
+        return i;
+      }
+    }
+    return -1;
+  },
+  
+  prepareGame: function(alert) {
     if (this.state != "setupPlayers") {
       alert("error: game not in setup stage");
-      return;
+      return false;
     }
     if (this.players.length < 2) {
       alert("error: not enough players to start game");
-      return;
+      return false;
     }
 
     //add briefcases
@@ -76,7 +97,7 @@ var Game = {
     this.briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
     if (validHexes.length < this.briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
-      return;
+      return false;
     }
     Deck.shuffle(validHexes);
     var briefcaseValue = 1;
@@ -102,6 +123,8 @@ var Game = {
     this.turnState = "playing";
     this.turnOutpostsSet = 0;
     this.state = "started";
+    
+    return true;
   },
 
   nextTurn: function() {
@@ -161,36 +184,39 @@ var Game = {
       "extracting");
   },
 
-  onclick: function(x, y) {
+  onclick: function(x, y, alert) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
       if (this.turnState == "extracting") {
         var clickedHex = this.board.determineClick(x, y);
         if (clickedHex != undefined) {
-          //check if clicked hex is a neighbour of the previous
-          var hexNeighbourSegment = this.extractionRoute[this.extractionRoute.length - 1].getNeighbourSegment(
-            clickedHex);
-          if (hexNeighbourSegment !== -1) {
-            //check if there is an outpost
-            var outpostColour = this.extractionRoute[this.extractionRoute.length - 1].getOutpostAt(
-              hexNeighbourSegment);
-            if (outpostColour == '' || outpostColour == this.players[this.currentPlayer].colour) {
-              //check if it matches next card in movement stack
-              if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
-                .hex.colourCode == clickedHex.colourCode) {
-                this.extractionRoute.push(clickedHex);
-                this.draw();
+          //check if there is another card in the player's stack
+          if (this.players[this.currentPlayer].stack.length > this.extractionRoute.length) {
+            //check if clicked hex is a neighbour of the previous
+            var hexNeighbourSegment = this.extractionRoute[this.extractionRoute.length - 1].getNeighbourSegment(
+              clickedHex);
+            if (hexNeighbourSegment !== -1) {
+              //check if there is an outpost
+              var outpostColour = this.extractionRoute[this.extractionRoute.length - 1].getOutpostAt(
+                hexNeighbourSegment);
+              if (outpostColour == '' || outpostColour == this.players[this.currentPlayer].colour) {
+                //check if it matches next card in movement stack
+                if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
+                  .hex.colourCode == clickedHex.colourCode) {
+                  this.extractionRoute.push(clickedHex);
+                  //this.draw();
+                  return true;
+                } else {
+                  alert("the next hex must match the colour of the next card in your movement stack");
+                }
               } else {
-                alert(
-                  "the next hex must match the colour of the next card in your movement stack"
-                );
+                alert("You cannot move through another player's outpost (the rules dictate this)");
               }
             } else {
-              alert(
-                " You cannot move through another player's outpost (the rules dictate this)");
+              alert("you can only continue movement to an adjacent hex");
             }
           } else {
-            alert("you can only continue movement to an adjacent hex");
+            alert("you don't have any more cards in your movement stack");
           }
         }
       } else if (this.turnState == 'playing') {
@@ -207,7 +233,8 @@ var Game = {
                     this.turnState = "outposting";
                     this.outpostHex = clickedHex;
                     this.outpostSegment = segmentClicked;
-                    this.draw();
+                    //this.draw();
+                    return true;
                   } else {
                     alert(
                       "The rules preclude having too many outposts. You must remove an existing outpost before you can place another."
@@ -224,11 +251,13 @@ var Game = {
                 );
               }
             } else if (outpost == this.players[this.currentPlayer].colour) {
-              if (confirm("Are you sure you want to permanently remove this outpost?")) {
+              //TODO: add confirmation mechanism
+              //if (confirm("Are you sure you want to permanently remove this outpost?")) {
                 clickedHex.removeOutpostAt(segmentClicked);
                 this.players[this.currentPlayer].outposts--;
-                this.draw();
-              }
+                //this.draw();
+                return true;
+              //}
             } else {
               alert("The rules dictate that you cannot conquer existing outposts! ");
             }
@@ -240,13 +269,15 @@ var Game = {
           var segmentClicked = clickedHex.determineSegment(x, y);
           if (segmentClicked == this.outpostSegment && this.outpostHex == clickedHex) {
             clickedHex.removeOutpostAt(segmentClicked);
-            this.draw();
             this.turnState = 'playing';
+            //this.draw();
+            return true;
           } else if (clickedHex.neighbours[segmentClicked] == this.outpostHex && Hex.fixSegment(
               segmentClicked + 3) == this.outpostSegment) {
             clickedHex.removeOutpostAt(segmentClicked);
-            this.draw();
             this.turnState = 'playing';
+            //this.draw();
+            return true;
           }
         }
       }
@@ -255,23 +286,22 @@ var Game = {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
         if (poolDeckCardIndex < this.deck.cardPool.length) {
           this.updateFocus(null);
-          this.drawCardsFromPool();
+          return this.drawCardsFromPool(alert);
         } else if (poolDeckCardIndex === this.deck.cardPool.length) {
           this.updateFocus(null);
-          this.drawCardFromDeck();
+          return this.drawCardFromDeck(alert);
         }
       } else {
         alert("The rules state that you can only draw cards once a turn");
       }
     } else if (loc == "hand") {
       if (this.turnState == "playing") {
-        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
-          y -
-          this.handY);
+        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           this.updateFocus(null);
-          this.players[this.currentPlayer].playCardToStack(handCardIndex);
-          this.draw();
+          this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
+          //this.draw();
+          return true;
         }
       } else if (this.turnState == "outposting") {
         var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
@@ -282,20 +312,17 @@ var Game = {
             .neighbours[this.outpostSegment].colourCode) {
             this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
             this.outpostHex.setOutpostAt(this.outpostSegment, this.players[this.currentPlayer].colour); //finalise outpost
-            this.draw();
             this.players[this.currentPlayer].outposts++;
             this.turnOutpostsSet++;
             this.turnState = "playing";
+            //this.draw();
+            return true;
           } else {
-            alert(
-              "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
-            );
+            alert("I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again.");
           }
         }
       } else {
-        alert(
-          "The rules state that once you have drawn cards, you can no longer play actions"
-        );
+        alert("The rules state that once you have drawn cards, you can no longer play actions");
       }
     } else if (loc == "stack") {
       if (this.turnState == "playing") {
@@ -303,11 +330,10 @@ var Game = {
           //TODO confirm start of extraction with user?
           this.turnState = "extracting";
           this.extractionRoute = [this.players[this.currentPlayer].stack[0].hex];
-          this.draw();
+          //this.draw();
+          return true;
         } else {
-          alert(
-            "The rules don't even need to specify that you can't start extraction without a movement stack"
-          );
+          alert("The rules don't even need to specify that you can't start extraction without a movement stack");
         }
       }
     } else {
@@ -315,6 +341,15 @@ var Game = {
     }
   },
 
+  endTurn: function(alert) {
+    if (this.turnState == 'finished') {
+      this.checkIfGameEnd();
+      return true;
+    } else {
+      alert("The game rules dictate you must draw cards before ending your turn...");
+    }
+  },
+  
   checkIfGameEnd: function() {
     if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
       this.state = 'finished';
@@ -350,14 +385,13 @@ var Game = {
     } else {
       message = topPlayer.name + " has won. They";
     }
-    message += " got " + highest + " points (" + topPlayer.briefcaseCount +
-      " briefcases).";
+    message += " got " + highest + " points (" + topPlayer.briefcaseCount + " briefcases).";
 
-    alert(message);
+    return message;
 
   },
 
-  completeExtraction: function() {
+  completeExtraction: function(alert) {
     if (this.turnState == "extracting") {
       if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
         .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
@@ -378,7 +412,8 @@ var Game = {
         alert("you just collected " + points + " points, bringing your total to " + this.players[
           this.currentPlayer].score);
         this.clearRoute();
-        this.draw();
+        //this.draw();
+        return true;
       } else {
         alert("the rules require the correct region card to extract");
       }
@@ -448,30 +483,71 @@ var Game = {
   },
 
   clearRoute: function() {
-    game.players[game.currentPlayer].clearRoute();
+    this.players[this.currentPlayer].clearRoute();
     if (this.turnState == "extracting") {
       //cancel extraction
       this.turnState = "playing";
     }
+    return true;
   },
 
-  drawCardFromDeck: function() {
-    if (game.players[game.currentPlayer].hand.length < Player.maxHandSize) {
-      game.players[game.currentPlayer].drawCardFromDeck();
+  drawCardFromDeck: function(alert) {
+    if (this.players[this.currentPlayer].hand.length < Player.maxHandSize) {
+      this.players[this.currentPlayer].drawCardFromDeck(this);
       this.turnState = "finished";
-      this.draw();
+      //this.draw();
+      return true;
     } else {
       alert("There is no room in your hand. Play some cards first");
     }
   },
 
-  drawCardsFromPool: function() {
-    if (game.players[game.currentPlayer].hand.length < Player.maxHandSize - 1) {
-      game.players[game.currentPlayer].drawCardsFromPool();
+  drawCardsFromPool: function(alert) {
+    if (this.players[this.currentPlayer].hand.length < Player.maxHandSize - 1) {
+      this.players[this.currentPlayer].drawCardsFromPool(this);
       this.turnState = "finished";
-      this.draw();
+      //this.draw();
+      return true;
     } else {
       alert("There is no room in your hand. Play some cards first");
     }
+  },
+
+
+  getObjectForClient: function() {
+    return { board: this.board.getObjectForClient(),
+             state: this.state,
+             turnState: this.turnState,
+             extractionRoute: this.getExtractionRouteForClient(),
+             deck: this.deck.getObjectForClient(),
+             deckX: this.deckX,
+             deckY: this.deckY,
+             handX: this.handX,
+             handY: this.handY,
+             stackX: this.stackX,
+             stackY: this.stackY,
+             players: this.getPlayersForClient(),
+             
+             currentPlayer: this.currentPlayer
+           };
+  },
+  
+  getPlayersForClient: function() {
+    var out = [];
+    for (var i=0; i<this.players.length; i++) {
+      out.push(this.players[i].getObjectForClient()); //TODO select here so that the full player data is only sent to each player?
+    }
+    return out;
+  },
+  
+  getExtractionRouteForClient: function() {
+    var out = [];
+    for (var i=0; i<this.extractionRoute.length; i++) {
+      out.push(this.extractionRoute[i].getObjectForClient());
+    }
+    return out;
   }
+  
 };
+
+module.exports = Game;

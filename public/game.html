@@ -2,22 +2,16 @@
 <html>
 
 <head>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script-->
+  <script src="./javascripts/jquery.min.js" type="text/javascript"></script>
   <script src="./socket.io/socket.io.js"></script>
-  <script src='./javascripts/main.js'>
-  </script>
-  <script src='./javascripts/game.js'>
-  </script>
-  <script src='./javascripts/board.js'>
-  </script>
-  <script src='./javascripts/hex.js'>
-  </script>
-  <script src='./javascripts/deck.js'>
-  </script>
-  <script src='./javascripts/player.js'>
-  </script>
-  <script src='./javascripts/card.js'>
-  </script>
+  <script src='./javascripts/uimain.js'></script>
+  <script src='./javascripts/uigame.js'></script>
+  <script src='./javascripts/uiboard.js'></script>
+  <script src='./javascripts/uihex.js'></script>
+  <script src='./javascripts/uideck.js'></script>
+  <script src='./javascripts/uicard.js'></script>
+  <script src='./javascripts/uiplayer.js'></script>
   <link rel="SHORTCUT ICON" href="images/favicon.ico">
 </head>
 
@@ -27,6 +21,8 @@
   <button id="butEndTurn">End the current turn</button>
   <button id="butClearRoute">Clear your current route</button>
   <button id="butFinishRoute">Finish extraction</button>
+  <button id="butReady">Ready</button>
+  <button id="butStartGame">Start Game</button>
   <ul id="messages"></ul>
   <form action="">
     <input id="m" autocomplete="off" />
@@ -35,7 +31,9 @@
 
 
   <script>
-    var socket = io();
+  var socket;
+  function startSocket() {
+    socket = io();
     socket.emit("game", "joined the game");
     $('form').submit(function() {
       socket.emit('game', $('#m').val());
@@ -45,6 +43,21 @@
     socket.on('game', function(msg) {
       $('#messages').append($('<li>').text(msg));
     });
+    socket.on('gameState', function(gameData) {
+      game = gameData;
+      if (game.playerIndex) {
+        playerIndex = game.playerIndex;
+        console.log('setting playerIndex: ' + playerIndex);
+      }
+      draw();
+    });
+    socket.on('gameUpdate', function(mergeData) {
+      console.log(mergeData);
+      for (var attr in mergeData) { game[attr] = mergeData[attr]; }
+      draw();
+    });
+    socket.emit("requestGame", "");
+  }
   </script>
 </body>
 

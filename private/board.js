@@ -1,4 +1,6 @@
-var Board = {
+var Hex = require('./hex.js');
+
+module.exports = {
   hexSize: 32,
   hexRoundingRadius: 4,
   hexDrawPoints: [],
@@ -6,7 +8,6 @@ var Board = {
   firstHexY: 50,
   offset: 10,
   outpostOffset: 5,
-
   buildBoard: function(width, height) {
     this.width = width;
     this.height = height;
@@ -24,10 +25,11 @@ var Board = {
       point[0] = this.hexSize * Math.cos(angle_rad);
       point[1] = this.hexSize * Math.sin(angle_rad);
       Hex.corners[c] = point;
-      point2.dx = (this.outpostOffset) * Math.cos(angle_rad+0.52359877559829887307710723054658);
-      point2.dy = (this.outpostOffset) * Math.sin(angle_rad+0.52359877559829887307710723054658);
-      point3.dx = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.cos(angle_rad+0.52359877559829887307710723054658);
-      point3.dy = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.sin(angle_rad+0.52359877559829887307710723054658);
+      angle_rad += 0.52359877559829887307710723054658;
+      point2.dx = (this.outpostOffset) * Math.cos(angle_rad);
+      point2.dy = (this.outpostOffset) * Math.sin(angle_rad);
+      point3.dx = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.cos(angle_rad);
+      point3.dy = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.sin(angle_rad);
       Hex.outpostCorners[c] = [ point2, point3 ];
     }
     this.hexDrawPoints = this.getRoundedPoints(Hex.corners, this.hexRoundingRadius);
@@ -178,5 +180,30 @@ var Board = {
       x: col,
       y: row
     };
+  },
+  
+  
+  getObjectForClient: function() {
+    return { //width: this.width,
+              //height: this.height,
+              offset: this.offset,
+              hexSize: this.hexSize,
+              hexArray: this.getHexArrayForClient(),
+              hexDrawPoints: this.hexDrawPoints,
+              hexColourMap: Hex.colourMap,
+              hexCorners: Hex.corners,
+              hexOutpostCorners: Hex.outpostCorners,
+              
+           };
+  },
+  
+  getHexArrayForClient: function() {
+    var out = [];
+    for (var j = 0; j < this.height; j++) {
+      for (var i = 0; i < this.width; i++) {
+        out.push(this.hexArray[j][i].getObjectForClient()); //hexes pushed as flat array to clients
+      }
+    }
+    return out;
   }
 };

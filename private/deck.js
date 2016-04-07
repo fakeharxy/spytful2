@@ -1,3 +1,6 @@
+var Board = require('./board.js');
+var Card = require('./card.js');
+
 var Deck = {
   cardArray: [],
   deckSizeMultiple: 2,
@@ -37,7 +40,7 @@ var Deck = {
       [Deck.cardWidth, Deck.cardHeight],
       [0, Deck.cardHeight]
     ];
-    drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
+    Deck.drawPoints = Board.getRoundedPoints(points, Deck.cardRoundingRadius);
 
     for (var j = 0; j < hexArray.length; j++) {
       for (var i = 0; i < hexArray[j].length; i++) {
@@ -95,5 +98,29 @@ var Deck = {
   
   determineClick: function(x, y) {
     return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
+  },
+  
+  getObjectForClient: function() {
+    return { cardWidth: Deck.cardWidth,
+             cardHeight: Deck.cardHeight,
+             cardSpacing: Deck.cardSpacing,
+             cardPool: Deck.getCardsForClient.call(this.cardPool),
+             cardArray: Deck.getCardsForClient.call(this.cardArray),
+             drawPoints: Deck.drawPoints
+           };
+  },
+  getCardsForClient: function() {
+    out = [];
+    for (var i=0; i<this.length; i++) {
+      out.push( { wobble: { x: this[i].wobble.x, y: this[i].wobble.y },
+                  focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
+                  focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
+                  rotation: this[i].rotation,
+                  hex: this[i].hex.getObjectForClient()
+                }
+      );
+    }
+    return out;
   }
 };
+module.exports = Deck;
