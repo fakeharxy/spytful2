@@ -9,8 +9,8 @@ module.exports = {
     5: '#663300'
   },
 
-  maxHandSize: 5,
-  maxOutposts: 5,
+  maxHandSize: 3,
+  maxOutposts: 9,
   
   setup: function() {
     this.hand = [];
