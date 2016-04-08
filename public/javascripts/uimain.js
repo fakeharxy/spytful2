@@ -95,6 +95,7 @@ function startSocket() {
       playerIndex = game.playerIndex;
       console.log('setting playerIndex: ' + playerIndex);
     }
+    showControls();
     draw();
   });
   socket.on('gameUpdate', function(mergeData) {
@@ -103,6 +104,20 @@ function startSocket() {
     draw();
   });
   socket.emit("requestGame", "");
+}
+
+function showControls() {
+  if (game.state == "setupPlayers") {
+    $('#prepareControls').show();
+    $('#turnControls').hide();
+  } else {
+    $('#prepareControls').hide();
+    if (playerIndex == game.currentPlayer) {
+      $('#turnControls').show();
+    } else {
+      $('#turnControls').hide();
+    }
+  }
 }
 
 function draw() {
@@ -127,34 +142,15 @@ function startGame() {
 
 function clearRoute() {
   if (confirm('Are you sure you want to clear your route? \n This can not be undone.')) {
-    //game.clearRoute();
-    //draw();
-    //TODO: send the request to the server
     socket.emit('clearRoute', '');
   }
 }
 
 function finishRoute() {
-  //game.completeExtraction();
-  //send the request to the server
   socket.emit('completeExtraction', '');
 }
 
 function endTurn() {
-  /*
-  if (game.turnState == 'finished') {
-    game.checkIfGameEnd();
-    if (game.state != 'finished') {
-      game.nextTurn();
-      draw();
-    } else {
-      game.determineWinner();
-    }
-  } else {
-    alert("The game rules dictate you must draw cards before ending your turn...");
-  }
-  */
-  //send the request to the server
   socket.emit('endTurn', '');
 }
 
@@ -164,7 +160,6 @@ function onMouseMove(event) {
 }
 
 function onMouseDown(event) {
-  //game.onclick(event.pageX - canvasX, event.pageY - canvasY);
   //send the calculated co-ords to the server
   socket.emit('mouseDown', {x: event.pageX - canvasX, y: event.pageY - canvasY});
 }

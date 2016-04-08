@@ -168,8 +168,6 @@ io.on('connection', function(socket) {
         if (game.endTurn(function(alertMsg) {
             socket.emit('game', alertMsg);
           })) {
-          data = game.getObjectForClient();
-          io.emit('gameState', data);
 
           if (game.state != 'finished') {
             game.nextTurn();
@@ -178,6 +176,8 @@ io.on('connection', function(socket) {
           } else {
             io.emit('game', game.determineWinner());
           }
+          data = game.getObjectForClient();
+          io.emit('gameState', data);
         }
       }
     });

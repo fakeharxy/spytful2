@@ -18,11 +18,15 @@
 <body>
   <canvas id="canvas" width="1200" height="478"></canvas>
   <br/>
-  <button id="butEndTurn">End the current turn</button>
-  <button id="butClearRoute">Clear your current route</button>
-  <button id="butFinishRoute">Finish extraction</button>
-  <button id="butReady">Ready</button>
-  <button id="butStartGame">Start Game</button>
+  <div id="turnControls" style="display: none">
+    <button id="butEndTurn">End the current turn</button>
+    <button id="butClearRoute">Clear your current route</button>
+    <button id="butFinishRoute">Finish extraction</button>
+  </div>
+  <div id="prepareControls" style="display: none">
+    <button id="butReady">Ready</button>
+    <button id="butStartGame">Start Game</button>
+  </div>
   
   <div id="chatarea" style="height: 150px; overflow: auto">
     <ul id="messages"></ul>
