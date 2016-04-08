@@ -8,6 +8,7 @@ module.exports = {
   firstHexY: 50,
   offset: 10,
   outpostOffset: 5,
+  
   buildBoard: function(width, height) {
     this.width = width;
     this.height = height;
@@ -58,14 +59,6 @@ module.exports = {
         hex.tokensOnHex = [];
         hex.setValidColour();
         hex.outposts = ['','','','','',''];
-      }
-    }
-  },
-
-  drawBoard: function(ctx) {
-    for (var j = 0; j < this.height; j++) {
-      for (var i = 0; i < this.width; i++) {
-        this.hexArray[j][i].draw(ctx, this.hexDrawPoints);
       }
     }
   },
