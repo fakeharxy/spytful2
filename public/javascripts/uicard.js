@@ -1,9 +1,10 @@
 var Card = {
-  draw: function (ctx, x, y, faceUp) {
+  draw: function (ctx, x, y, faceUp, scale) {
     ctx.save();
 
     ctx.strokeStyle = "rgba(0,0,0,0.7)";
     ctx.translate(x + this.wobble.x + this.focusOffsetX, y + this.wobble.y + this.focusOffsetY);
+    if (scale) ctx.scale(scale, scale);
     ctx.rotate(this.rotation);
     ctx.shadowColor = "transparent";
 
