@@ -10,7 +10,7 @@ var Player = {
     //cards
     y += game.deck.cardSpacing;
     for (var i = 0; i < this.hand.length; i++) {
-      Card.draw.call(this.hand[i], ctx, x + i * (game.deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), faceup, scale);
+      Card.draw.call(this.hand[i], ctx, x + i * (game.deck.cardWidth * 0.75) * (scale ? scale : 1), y + (i & 1 ? 3 : 0), faceup, scale);
     }
   },
 
@@ -26,7 +26,7 @@ var Player = {
     y += game.deck.cardSpacing;
 
     for (var i = 0; i < this.stack.length; i++) {
-      Card.draw.call(this.stack[i], ctx, x + i * (game.deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 || faceup ? true : false, scale);
+      Card.draw.call(this.stack[i], ctx, x + i * (game.deck.cardWidth * 0.75) * (scale ? scale : 1), y + (i & 1 ? 3 : 0), i === 0 || faceup ? true : false, scale);
     }
   }
 };
