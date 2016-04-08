@@ -69,33 +69,6 @@ var Deck = {
     return o;
   },
 
-  draw: function(ctx, x, y) {
-    //draw card pool
-    if (this.cardPool.length > 0) {
-      this.cardPool[0].draw(ctx, x + this.cardPool.focusOffsetX, y + this.cardPool.focusOffsetY,
-        true);
-      if (this.cardPool.length > 1) {
-        this.cardPool[1].draw(ctx, x + Deck.cardWidth +
-          Deck.cardSpacing + this.cardPool.focusOffsetX,
-          y + this.cardPool.focusOffsetY, true);
-      }
-    }
-
-    //draw deck
-    var xHeap = x + 2 * (Deck.cardWidth + Deck.cardSpacing);
-    for (var i = this.cardArray.length - 1; i >= 0; i--) {
-      this.cardArray[i].draw(ctx, xHeap, y, false);
-    }
-    //remaining cards label
-    if(this.cardArray.length > 0) {
-      ctx.font = '8pt Arial';
-      ctx.textBaseline = "top";
-      ctx.textAlign = "right";
-      ctx.fillStyle = "#000";
-      ctx.fillText(this.cardArray.length, xHeap + Deck.cardWidth, y + Deck.cardHeight + Deck.cardSpacing/2);
-    }
-  },
-  
   determineClick: function(x, y) {
     return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
   },

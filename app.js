@@ -145,8 +145,6 @@ io.on('connection', function(socket) {
             */
             data = game.getObjectForClient();
             io.emit('gameState', data);
-            //} else {
-            //  socket.emit('game', 'could not start the game');
           }
         } else {
           socket.emit('game', "you aren't a player so you can't start the game");
@@ -155,76 +153,53 @@ io.on('connection', function(socket) {
     });
 
     socket.on('mouseDown', function(data) {
-      if (game) {
-        var uid = this.handshake.session.uid;
-        //console.log('client with id ' + uid + ' clicked something');
-        if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.onclick(data.x, data.y, function(alertMsg) {
-              socket.emit('game', alertMsg);
-            })) {
-            data = game.getObjectForClient();
-            io.emit('gameState', data);
-          }
-        } else {
-          socket.emit('game', "it's not your turn");
+      if (checkTurn(socket)) {
+        if (game.onclick(data.x, data.y, function(alertMsg) {
+            socket.emit('game', alertMsg);
+          })) {
+          data = game.getObjectForClient();
+          io.emit('gameState', data);
         }
       }
     });
 
     socket.on('endTurn', function() {
-      if (game) {
-        var uid = this.handshake.session.uid;
-        if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.endTurn(function(alertMsg) {
-              socket.emit('game', alertMsg);
-            })) {
+      if (checkTurn(socket)) {
+        if (game.endTurn(function(alertMsg) {
+            socket.emit('game', alertMsg);
+          })) {
+          data = game.getObjectForClient();
+          io.emit('gameState', data);
 
-            data = game.getObjectForClient();
-            io.emit('gameState', data);
-
-            if (game.state != 'finished') {
-              game.nextTurn();
-              io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
-                "'s turn");
-            } else {
-              io.emit('game', game.determineWinner());
-            }
+          if (game.state != 'finished') {
+            game.nextTurn();
+            io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
+              "'s turn");
+          } else {
+            io.emit('game', game.determineWinner());
           }
-
-        } else {
-          socket.emit('game', "it's not your turn");
         }
       }
     });
 
     socket.on('clearRoute', function() {
-      if (game) {
-        var uid = this.handshake.session.uid;
-        if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.clearRoute(function(alertMsg) {
-              socket.emit('game', alertMsg);
-            })) {
-            data = game.getObjectForClient();
-            io.emit('gameState', data);
-          }
-        } else {
-          socket.emit('game', "it's not your turn");
+      if (checkTurn(socket)) {
+        if (game.clearRoute(function(alertMsg) {
+            socket.emit('game', alertMsg);
+          })) {
+          data = game.getObjectForClient();
+          io.emit('gameState', data);
         }
       }
     });
 
     socket.on('completeExtraction', function() {
-      if (game) {
-        var uid = this.handshake.session.uid;
-        if (game.getPlayerIndex(uid) == game.currentPlayer) {
-          if (game.completeExtraction(function(alertMsg) {
-              socket.emit('game', alertMsg);
-            })) {
-            data = game.getObjectForClient();
-            io.emit('gameState', data);
-          }
-        } else {
-          socket.emit('game', "it's not your turn");
+      if (checkTurn(socket)) {
+        if (game.completeExtraction(function(alertMsg) {
+            socket.emit('game', alertMsg);
+          })) {
+          data = game.getObjectForClient();
+          io.emit('gameState', data);
         }
       }
     });
@@ -252,4 +227,15 @@ function checkSessionId(req) {
     console.log('new session! assigned id ' + uid);
     return false;
   }
+}
+
+function checkTurn(socket) {
+  if (game) {
+    if (game.getPlayerIndex(socket.handshake.session.uid) == game.currentPlayer) {
+      return true;
+    } else {
+      socket.emit('game', "it's not your turn");
+    }
+  }
+  return false;
 }

@@ -21,21 +21,6 @@ module.exports = {
     this.outposts = 0;
   },
 
-  drawHand: function(ctx, x, y) {
-    //label
-    ctx.font = '8pt Arial';
-    ctx.textBaseline = "top";
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#000";
-    ctx.fillText(this.name + "'s hand:", x, y);
-
-    //cards
-    y += Deck.cardSpacing;
-    for (var i = 0; i < this.hand.length; i++) {
-      this.hand[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), true);
-    }
-  },
-
   determineClick: function(x, y) {
     var index = Math.floor(x / (Deck.cardWidth * 0.75));
     if (index >= this.hand.length) {
@@ -44,23 +29,6 @@ module.exports = {
       }
     }
     return index;
-  },
-
-  drawStack: function(ctx, x, y, faceup) {
-    //label
-    ctx.font = '8pt Arial';
-    ctx.textBaseline = "top";
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#000";
-    ctx.fillText(this.name + "'s movement stack:", x, y);
-
-    //cards
-    y += Deck.cardSpacing;
-
-    for (var i = 0; i < this.stack.length; i++) {
-      this.stack[i].draw(ctx, x + i * (Deck.cardWidth * 0.75), y + (i & 1 ? 3 : 0), i === 0 ||
-        faceup ? true : false);
-    }
   },
 
   dropInToken: function(hex) {

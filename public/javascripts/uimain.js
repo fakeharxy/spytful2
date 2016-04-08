@@ -1,3 +1,9 @@
+var socket;
+var ctx, w, h, canvasX, canvasY;
+var imagesToLoad;
+var game;
+var playerIndex;
+
 $(document).ready(function() {
 
   var canvas = $("#canvas")[0];
@@ -68,11 +74,36 @@ function imagesReady() {
   startSocket();
 }
 
-var ctx, w, h, canvasX, canvasY;
-var imagesToLoad;
-var game;
-var playerIndex;
-
+function startSocket() {
+  socket = io();
+  socket.emit("game", "joined the game");
+  $('#message_form').submit(function() {
+    var m = $('#m');
+    if (m.val()) {
+      socket.emit('game', m.val());
+      m.val('');
+    }
+    return false;
+  });
+  socket.on('game', function(msg) {
+    $('#messages').append($('<li>').text(msg));
+    $("#chatarea").scrollTop($("#chatarea")[0].scrollHeight);
+  });
+  socket.on('gameState', function(gameData) {
+    game = gameData;
+    if (game.playerIndex) {
+      playerIndex = game.playerIndex;
+      console.log('setting playerIndex: ' + playerIndex);
+    }
+    draw();
+  });
+  socket.on('gameUpdate', function(mergeData) {
+    console.log(mergeData);
+    for (var attr in mergeData) { game[attr] = mergeData[attr]; }
+    draw();
+  });
+  socket.emit("requestGame", "");
+}
 
 function draw() {
   //reset canvas
@@ -82,7 +113,8 @@ function draw() {
   ctx.strokeRect(0, 0, w, h);
 
   //draw objects
-  drawGame.call(game, ctx);
+  //drawGame.call(game, ctx);
+  Game.draw.call(game, ctx);
 }
 
 function playerReady() {

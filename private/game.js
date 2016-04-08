@@ -135,55 +135,6 @@ var Game = {
     this.turnState = 'playing';
   },
 
-  draw: function() {
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, w, h);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
-    ctx.strokeRect(0, 0, w, h);
-
-    //draw hexes
-    this.board.drawBoard(ctx);
-
-    //draw extraction route
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(50,50,255,0.7)';
-    if (this.turnState == "extracting") {
-      if (this.extractionRoute.length > 1) {
-        ctx.beginPath();
-        ctx.moveTo(this.extractionRoute[0].centre.x, this.extractionRoute[0].centre.y);
-        for (var i = 1; i < this.extractionRoute.length; i++) {
-          ctx.lineTo(this.extractionRoute[i].centre.x, this.extractionRoute[i].centre.y);
-        }
-        ctx.stroke();
-      }
-    }
-
-    //draw deck
-    this.deck.draw(ctx, this.deckX, this.deckY);
-
-    //draw scores
-    var scoreX = this.deckX + (Deck.cardWidth + Deck.cardSpacing) * 3;
-    var scoreY = this.deckY;
-    ctx.font = 'bold 8pt Arial';
-    ctx.textBaseline = "top";
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#000";
-    ctx.fillText("Scores", scoreX, scoreY);
-    scoreY += 5;
-    ctx.font = '8pt Arial';
-    for (var i = 0; i < this.players.length; i++) {
-      scoreY += 15;
-      ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
-    }
-
-    //draw current player's hand
-    this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
-    this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState ==
-      "extracting");
-  },
-
   onclick: function(x, y, alert) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
