@@ -284,6 +284,8 @@ var Game = {
             return true;
           }
         }
+      } else {
+        alert('you cannot do this now; perhaps you have already drawn cards');
       }
     } else if (loc == "deck") {
       if (this.turnState == "playing") {
@@ -344,6 +346,8 @@ var Game = {
             "The rules don't even need to specify that you can't start extraction without a movement stack"
           );
         }
+      } else {
+        alert('you cannot do this now; perhaps you have already drawn cards');
       }
     } else {
       console.log("clicked somewhere unknown");
