@@ -3,6 +3,7 @@ var Board = require('./board.js');
 var Card = require('./card.js');
 
 var Deck = {
+  maxCardsInPool: 3,
   cardArray: [],
   cardWidth: 60,
   cardHeight: 100,
@@ -15,6 +16,11 @@ var Deck = {
   deal: function(dealTarget, dealNumber) {
     Array.prototype.push.apply(dealTarget, this.cardArray.splice(
       0, dealNumber));
+  },
+
+  takeOneFromPool: function(target, index) {
+    Array.prototype.push.apply(target, this.cardPool.splice(
+      index, 1));
   },
 
   takePool: function(target) {
@@ -72,26 +78,31 @@ var Deck = {
   determineClick: function(x, y) {
     return Math.floor(x / (Deck.cardWidth + Deck.cardSpacing));
   },
-  
+
   getObjectForClient: function() {
-    return { cardWidth: Deck.cardWidth,
-             cardHeight: Deck.cardHeight,
-             cardSpacing: Deck.cardSpacing,
-             cardPool: Deck.getCardsForClient.call(this.cardPool),
-             cardArray: Deck.getCardsForClient.call(this.cardArray),
-             drawPoints: Deck.drawPoints
-           };
+    return {
+      maxCardsInPool: Deck.maxCardsInPool,
+      cardWidth: Deck.cardWidth,
+      cardHeight: Deck.cardHeight,
+      cardSpacing: Deck.cardSpacing,
+      cardPool: Deck.getCardsForClient.call(this.cardPool),
+      cardArray: Deck.getCardsForClient.call(this.cardArray),
+      drawPoints: Deck.drawPoints
+    };
   },
   getCardsForClient: function() {
     out = [];
-    for (var i=0; i<this.length; i++) {
-      out.push( { wobble: { x: this[i].wobble.x, y: this[i].wobble.y },
-                  focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
-                  focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
-                  rotation: this[i].rotation,
-                  hex: this[i].hex.getObjectForClient()
-                }
-      );
+    for (var i = 0; i < this.length; i++) {
+      out.push({
+        wobble: {
+          x: this[i].wobble.x,
+          y: this[i].wobble.y
+        },
+        focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
+        focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
+        rotation: this[i].rotation,
+        hex: this[i].hex.getObjectForClient()
+      });
     }
     return out;
   }

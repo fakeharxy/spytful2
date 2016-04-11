@@ -5,6 +5,8 @@ var Player = require('./player.js');
 var Hex = require('./hex.js');
 
 var Game = {
+  deckCardDrawn: false,
+  cardDrawnCount: 0,
   state: "setupBoard",
   turnState: "pre-start",
   extractionRoute: [],
@@ -128,8 +130,11 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
+    this.deck.deal(this.deck.cardPool, Rules.maxCardsInPool - this.deck.cardPool.length);
     this.turnOutpostsSet = 0;
     this.turnState = 'playing';
+    this.deckCardDrawn = false;
+    this.cardDrawnCount = 0;
   },
 
   onclick: function(x, y, alert) {
@@ -236,12 +241,13 @@ var Game = {
         alert('you cannot do this now; perhaps you have already drawn cards');
       }
     } else if (loc == "deck") {
-      if (this.turnState == "playing") {
+      if (this.turnState == "playing" || this.turnState == "drawing") {
         var poolDeckCardIndex = this.deck.determineClick(x - this.deckX, y - this.deckY);
         if (poolDeckCardIndex < this.deck.cardPool.length) {
           this.updateFocus(null);
-          return this.drawCardsFromPool(alert);
-        } else if (poolDeckCardIndex === this.deck.cardPool.length) {
+          // return this.drawCardsFromPool(alert);
+          return this.drawCardFromPool(poolDeckCardIndex, alert);
+        } else if (poolDeckCardIndex == Rules.maxCardsInPool) {
           this.updateFocus(null);
           return this.drawCardFromDeck(alert);
         }
@@ -303,7 +309,7 @@ var Game = {
   },
 
   endTurn: function(alert) {
-    if (this.turnState == 'finished') {
+    if (this.turnState == 'finished' || this.turnState == 'drawing') {
       this.checkIfGameEnd();
       return true;
     } else {
@@ -452,33 +458,56 @@ var Game = {
     }
     return true;
   },
-  
+
   clearHand: function() {
     this.players[this.currentPlayer].clearHand();
     return true;
   },
-    
+
   drawCardFromDeck: function(alert) {
+    if (this.deckCardDrawn == false) {
+      if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
+        this.players[this.currentPlayer].drawCardFromDeck(this);
+        this.deckCardDrawn = true;
+        if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
+          this.turnState = "finished";
+        } else {
+          this.turnState = "drawing";
+        }
+        //this.draw();
+        return true;
+      } else {
+        alert("There is no room in your hand. Play some cards first");
+      }
+    } else {
+      alert("You may only take one card from the face down pile, peasant.");
+    }
+  },
+
+  drawCardFromPool: function(index, alert) {
     if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
-      this.players[this.currentPlayer].drawCardFromDeck(this);
-      this.turnState = "finished";
-      //this.draw();
+      this.players[this.currentPlayer].drawCardFromPool(index, this);
+      if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
+        this.turnState = "finished";
+      } else {
+        this.turnState = "drawing";
+      }
       return true;
     } else {
       alert("There is no room in your hand. Play some cards first");
     }
   },
 
-  drawCardsFromPool: function(alert) {
-    if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize - 1) {
-      this.players[this.currentPlayer].drawCardsFromPool(this);
-      this.turnState = "finished";
-      //this.draw();
-      return true;
-    } else {
-      alert("There is no room in your hand. Play some cards first");
-    }
-  },
+  //drawCardsFromPool: function(alert) {
+  //  if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize - 1) {
+  //    this.players[this.currentPlayer].drawCardsFromPool(this);
+  //    this.turnState = "finished";
+  //    //this.draw();
+  //    return true;
+  //  } else {
+  //    alert("There is no room in your hand. Play some cards first");
+  //  }
+  //},
 
 
   getObjectForClient: function() {

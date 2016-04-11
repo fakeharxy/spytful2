@@ -1,15 +1,20 @@
 var Deck = {
+
   draw: function (ctx, x, y) {
     //draw card pool
-    if (this.cardPool.length > 0) {
-      Card.draw.call(this.cardPool[0], ctx, x + this.cardPool[0].focusOffsetX, y + this.cardPool[0].focusOffsetY, true);
-      if (this.cardPool.length > 1) {
-        Card.draw.call(this.cardPool[1], ctx, x + this.cardWidth + this.cardSpacing + this.cardPool[1].focusOffsetX, y + this.cardPool[1].focusOffsetY, true);
-      }
+    // if (this.cardPool.length > 0) {
+    //   Card.draw.call(this.cardPool[0], ctx, x + this.cardPool[0].focusOffsetX, y + this.cardPool[0].focusOffsetY, true);
+    //   if (this.cardPool.length > 1) {
+    //     Card.draw.call(this.cardPool[1], ctx, x + this.cardWidth + this.cardSpacing + this.cardPool[1].focusOffsetX, y + this.cardPool[1].focusOffsetY, true);
+    //   }
+    // }
+
+    for (var i = 0 ; i < this.cardPool.length ; i++) {
+      Card.draw.call(this.cardPool[i], ctx, x + (this.cardWidth + this.cardSpacing) * i + this.cardPool[i].focusOffsetX, y + this.cardPool[i].focusOffsetY, true);
     }
 
     //draw deck
-    var xHeap = x + 2 * (this.cardWidth + this.cardSpacing);
+    var xHeap = x + this.maxCardsInPool * (this.cardWidth + this.cardSpacing);
     for (var i = this.cardArray.length - 1; i >= 0; i--) {
       Card.draw.call(this.cardArray[i], ctx, xHeap, y, false);
     }

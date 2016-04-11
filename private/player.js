@@ -74,6 +74,9 @@ module.exports = {
   drawCardFromDeck: function(game) {
     game.deck.deal(this.hand, 1);
   },
+  drawCardFromPool: function(index, game) {
+    game.deck.takeOneFromPool(this.hand, index);
+  },
 
   drawCardsFromPool: function(game) {
     game.deck.takePool(this.hand);

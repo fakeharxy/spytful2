@@ -38,7 +38,7 @@ var Game = {
       Deck.draw.call(this.deck, ctx, this.deckX, this.deckY);
 
       //draw scores
-      var scoreX = this.deckX + (this.deck.cardWidth + this.deck.cardSpacing) * 3;
+      var scoreX = this.deckX + (this.deck.cardWidth + this.deck.cardSpacing) * (this.deck.maxCardsInPool + 1);
       var scoreY = this.deckY;
       ctx.font = 'bold 8pt Arial';
       ctx.textBaseline = "top";
