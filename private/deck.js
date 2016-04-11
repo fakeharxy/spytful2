@@ -1,9 +1,9 @@
+var Rules = require('./rules.js');
 var Board = require('./board.js');
 var Card = require('./card.js');
 
 var Deck = {
   cardArray: [],
-  deckSizeMultiple: 2,
   cardWidth: 60,
   cardHeight: 100,
   cardRoundingRadius: 10,
@@ -44,7 +44,7 @@ var Deck = {
 
     for (var j = 0; j < hexArray.length; j++) {
       for (var i = 0; i < hexArray[j].length; i++) {
-        for (var n = 0; n < this.deckSizeMultiple; n++) {
+        for (var n = 0; n < Rules.cardsPerHex; n++) {
           if (hexArray[j][i].colourCode !== 0) {
             var card = Object.create(Card);
             card.hex = hexArray[j][i];
