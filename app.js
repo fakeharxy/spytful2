@@ -18,8 +18,8 @@ var session = Session({
 
 var Game = require('./private/game.js');
 
-var clients = []; // this is the list of connected clients
-var game;
+var clients = []; // map of connected clients; key is client id
+var games = {}; //map addressable games; key is game id
 
 app.use(session);
 
@@ -30,23 +30,51 @@ app.get('/', function(req, res) {
   res.sendfile('public/lobby.html');
 });
 
+app.get('/creategame', function(req, res) { //TODO send a new page with the game setup form, and only create the game when it is submitted 
+  var newgameid = Date.now();
+  var game = Object.create(Game);
+  game.setup(5, 5);
+  games[newgameid] = game;
+  res.send("Created game: <a href='/game" + newgameid + "'>" + newgameid + "</a>");
+});
+  
+/*
 app.get('/paulwins', function(req, res) {
   checkSessionId(req);
   game = null;
   res.sendfile('public/lobby.html');
 });
+*/
 
-app.get('/game', function(req, res) {
+app.get('/game', function(req, res) { //TODO: make a template (Jade?) so that this dynamic list is part of the lobby page
   if (checkSessionId(req)) {
-    if (!game) {
-      //need to create a game
-      game = Object.create(Game);
-      game.setup(5, 5);
+    //list current games
+    var response = "Games:<br/><br/>";
+    for (var gameid in games) {
+      if (games.hasOwnProperty(gameid)) {
+        response += "<a href='/game" + gameid + "'>" + gameid + "</a><br/>";
+      }
     }
-    res.sendfile('public/game.html');
+    response += "<br/>a href='/'>Back to lobby</a>";
+    res.send(response);
   } else {
     //redirect to lobby if session is invalid
-    res.sendfile('public/lobby.html');
+    res.redirect('/');
+  }
+});
+
+app.get('/game:gameid', function(req, res) {
+  if (checkSessionId(req)) {
+    var game = checkGameId(req);
+    if (game) {
+      res.sendfile('public/game.html');
+    } else {
+      //not a valid game
+      res.status(404).send("No such game<br><a href='/'>Back to lobby</a>");
+    }
+  } else {
+    //redirect to lobby if session is invalid
+    res.redirect('/');
   }
 });
 
@@ -55,10 +83,19 @@ io.use(function(socket, next) {
 });
 
 io.on('connection', function(socket) {
-  var uid = socket.handshake.session.uid;
-  console.log('io connection started using session id ' + uid);
-  if (clients[uid]) { //check the client is still in memory
+  console.log('io connection started using session id ' + socket.handshake.session.uid);  
+  
+  socket.on('disconnect', function() {
+    var uid = this.handshake.session.uid;
+    console.log('io disconnect with session id ' + uid);
+    //TODO: should remove from client list
+  });
+  
+  if (clients[socket.handshake.session.uid]) { //check the client is still in memory
 
+
+    //---------- lobby methods ----------
+  
     socket.on('setname', function(newname) {
       var uid = this.handshake.session.uid;
       var oldname = clients[uid].name;
@@ -85,20 +122,16 @@ io.on('connection', function(socket) {
       //}
     });
 
-    socket.on('game', function(msg) {
-      var uid = this.handshake.session.uid;
-      console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' +
-        msg);
-      io.emit('game', clients[uid].name + ': ' + msg);
-    });
-
-    socket.on('disconnect', function() {
-      var uid = this.handshake.session.uid;
-      console.log('io disconnect with session id ' + uid);
-    });
-
+    
+    //---------- game methods ----------
+    
     socket.on('requestGame', function() {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
       if (game) {
+        //must join the game channel
+        socket.join(gameid);
+        
         var uid = this.handshake.session.uid;
         //console.log("sending game state to client with id " + uid);
         var data = game.getObjectForClient();
@@ -107,15 +140,30 @@ io.on('connection', function(socket) {
       }
     });
 
+    socket.on('game', function(msg) {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (game) {
+        var uid = this.handshake.session.uid;
+        console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' +
+          msg);
+        io.to(gameid).emit('game', clients[uid].name + ': ' + msg);
+      }
+    });
+
     socket.on('ready', function() {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
       if (game) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' has pressed ready');
         if (game.addPlayer(uid, clients[uid].name)) {
-          io.emit('game', clients[uid].name + " is ready to play");
+          io.to(gameid).emit('game', clients[uid].name + " is ready to play");
+          //io.emit('game', clients[uid].name + " is ready to play");
           //io.emit('gameUpdate', { players: game.players }); //TODO: see below
           var data = game.getObjectForClient();
-          socket.broadcast.emit('gameState', data);
+          socket.broadcast.to(gameid).emit('gameState', data);
+          //socket.broadcast.emit('gameState', data);
           data.playerIndex = game.getPlayerIndex(uid);
           socket.emit('gameState', data);
         } else {
@@ -125,6 +173,8 @@ io.on('connection', function(socket) {
     });
 
     socket.on('startGame', function() {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
       if (game) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' has pressed start game');
@@ -132,8 +182,10 @@ io.on('connection', function(socket) {
           if (game.prepareGame(function(alertMsg) {
               socket.emit('game', alertMsg);
             })) {
-            io.emit('game', clients[uid].name + " starts the game; it's " + game.players[
-              game.currentPlayer].name + "'s turn");
+            io.to(gameid).emit('game', clients[uid].name + " starts the game; it's " + game.players[
+            game.currentPlayer].name + "'s turn");
+            //io.emit('game', clients[uid].name + " starts the game; it's " + game.players[
+            //  game.currentPlayer].name + "'s turn");
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -144,7 +196,8 @@ io.on('connection', function(socket) {
             io.emit('gameUpdate', data); 
             */
             data = game.getObjectForClient();
-            io.emit('gameState', data);
+            io.to(gameid).emit('gameState', data);
+            //io.emit('gameState', data);
           }
         } else {
           socket.emit('game', "you aren't a player so you can't start the game");
@@ -164,45 +217,58 @@ io.on('connection', function(socket) {
     });
 
     socket.on('endTurn', function() {
-      if (checkTurn(socket)) {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
         if (game.endTurn(function(alertMsg) {
             socket.emit('game', alertMsg);
           })) {
 
           if (game.state != 'finished') {
             game.nextTurn();
-            io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
+            io.to(gameid).emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
               "'s turn");
+            //io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
+            //  "'s turn");
           } else {
-            io.emit('game', game.determineWinner());
+            io.to(gameid).emit('game', game.determineWinner());
+            //io.emit('game', game.determineWinner());
           }
           data = game.getObjectForClient();
-          io.emit('gameState', data);
+          io.to(gameid).emit('gameState', data);
+          //io.emit('gameState', data);
         }
       }
     });
 
     socket.on('clearRoute', function() {
-      if (checkTurn(socket)) {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
         if (game.clearRoute(function(alertMsg) {
             socket.emit('game', alertMsg);
           })) {
           data = game.getObjectForClient();
-          io.emit('gameState', data);
+          io.to(gameid).emit('gameState', data);
+          //io.emit('gameState', data);
         }
       }
     });
 
     socket.on('completeExtraction', function() {
-      if (checkTurn(socket)) {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
         if (game.completeExtraction(function(alertMsg) {
             socket.emit('game', alertMsg);
           })) {
           data = game.getObjectForClient();
-          io.emit('gameState', data);
+          io.to(gameid).emit('gameState', data);
+          //io.emit('gameState', data);
         }
       }
     });
+    
   } else {
     console.log("(session no longer active; connection ignored)"); //should send an expiration message to client to refresh the page
   }
@@ -229,7 +295,15 @@ function checkSessionId(req) {
   }
 }
 
-function checkTurn(socket) {
+function checkGameId(req) {
+  var id = req.params.gameid;
+  console.log("game requested with id " + id);
+  var game = games[id];
+  req.session.gameid = id; //write game id into session
+  return game; //returns undefined if doesn't exist
+}
+
+function checkTurn(socket, game) {
   if (game) {
     if (game.getPlayerIndex(socket.handshake.session.uid) == game.currentPlayer) {
       return true;
