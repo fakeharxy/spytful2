@@ -5,8 +5,7 @@ var Hex = {
     "#FFD1DC",
     "#FDFD7D",
     "#96CAFD",
-    "#FFB347",
-    "#BF94E4"
+    "#FFB347"
   ],
 
   addToken: function(colour) {
