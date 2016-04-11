@@ -458,6 +458,7 @@ var Game = {
   
   clearHand: function() {
     this.players[this.currentPlayer].clearHand();
+    return true;
   },
     
   drawCardFromDeck: function(alert) {
