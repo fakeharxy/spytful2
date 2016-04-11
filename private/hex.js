@@ -25,7 +25,7 @@ var Hex = {
     }
   },
 
-  setValidColour: function() {
+  setValidColour: function(hexSize) {
     //find invalid colours based on neighbours
     var invalid = [];
     for (var i = 0; i < this.neighbours.length; i++) {
@@ -47,6 +47,14 @@ var Hex = {
       //pick randomly from remaining valid colour codes
       var index = Math.floor(Math.random() * valid.length);
       this.colourCode = valid[index];
+      if (this.colourCode==0) {
+        //set water drawing parameters
+        this.waterOffset = {
+          x: -hexSize - Math.random() * hexSize,
+          y: -hexSize - Math.random() * hexSize
+        };
+        this.waterRotate = Math.random() * 2 * Math.PI;
+      }
     } else {
       console.log("error: no valid colours left for a hex");
     }

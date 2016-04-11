@@ -26,13 +26,6 @@ var Hex = {
     //for water, draw the background image
     if (this.colourCode === 0) {
       ctx.clip(); // clip to the hex path on the context
-      if (!this.waterOffset) {
-        this.waterOffset = {
-          x: -game.board.hexSize - Math.random() * game.board.hexSize,
-          y: -game.board.hexSize - Math.random() * game.board.hexSize
-        };
-        this.waterRotate = Math.random() * 2 * Math.PI;
-      }
       ctx.rotate(this.waterRotate);
       ctx.drawImage(ctx.imageCache.water, this.waterOffset.x, this.waterOffset.y, game.board.hexSize *
         3, game.board.hexSize * 3);

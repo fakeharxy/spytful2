@@ -57,7 +57,7 @@ module.exports = {
         var hex = this.hexArray[j][i];
         hex.neighbours = this.getHexNeighbours(i, j);
         hex.tokensOnHex = [];
-        hex.setValidColour();
+        hex.setValidColour(this.hexSize);
         hex.outposts = ['','','','','',''];
       }
     }
