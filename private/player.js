@@ -10,7 +10,7 @@ module.exports = {
   },
 
   maxHandSize: 3,
-  maxOutposts: 9,
+  maxOutposts: 3,
   
   setup: function() {
     this.hand = [];
