@@ -55,7 +55,7 @@ app.get('/game', function(req, res) { //TODO: make a template (Jade?) so that th
         response += "<a href='/game" + gameid + "'>" + gameid + "</a><br/>";
       }
     }
-    response += "<br/>a href='/'>Back to lobby</a>";
+    response += "<br/><a href='/'>Back to lobby</a>";
     res.send(response);
   } else {
     //redirect to lobby if session is invalid
@@ -206,12 +206,14 @@ io.on('connection', function(socket) {
     });
 
     socket.on('mouseDown', function(data) {
-      if (checkTurn(socket)) {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
         if (game.onclick(data.x, data.y, function(alertMsg) {
             socket.emit('game', alertMsg);
           })) {
           data = game.getObjectForClient();
-          io.emit('gameState', data);
+          io.to(gameid).emit('gameState', data);
         }
       }
     });
