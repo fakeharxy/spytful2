@@ -455,7 +455,11 @@ var Game = {
     }
     return true;
   },
-
+  
+  clearHand: function() {
+    this.players[this.currentPlayer].clearHand();
+  },
+    
   drawCardFromDeck: function(alert) {
     if (this.players[this.currentPlayer].hand.length < Player.maxHandSize) {
       this.players[this.currentPlayer].drawCardFromDeck(this);

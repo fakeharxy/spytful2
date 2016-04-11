@@ -45,6 +45,10 @@ module.exports = {
     this.stack = [];
     this.dropInToken(undefined);
   },
+  
+  clearHand: function() {
+    this.hand = [];
+  },
 
   playCardToStack: function(index, alert) {
     var validCardCheck = this.hand[index];

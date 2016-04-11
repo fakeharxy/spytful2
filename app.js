@@ -256,6 +256,20 @@ io.on('connection', function(socket) {
         }
       }
     });
+    
+    socket.on('clearHand', function() {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
+        if (game.clearHand(function(alertMsg) {
+            socket.emit('game', alertMsg);
+          })) {
+          data = game.getObjectForClient();
+          io.to(gameid).emit('gameState', data);
+          //io.emit('gameState', data);
+        }
+      }
+    });
 
     socket.on('completeExtraction', function() {
       var gameid = this.handshake.session.gameid;

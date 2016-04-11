@@ -48,6 +48,8 @@ $(document).ready(function() {
   button.onclick = endTurn;
   button = $("#butClearRoute")[0];
   button.onclick = clearRoute;
+  button = $("#butClearHand")[0];
+  button.onclick = clearHand;
   button = $("#butFinishRoute")[0];
   button.onclick = finishRoute;
   button = $("#butReady")[0];
@@ -143,6 +145,12 @@ function startGame() {
 function clearRoute() {
   if (confirm('Are you sure you want to clear your route? \n This can not be undone.')) {
     socket.emit('clearRoute', '');
+  }
+}
+
+function clearHand() {
+  if (confirm('Are you sure you want to clear your hand? \n This can not be undone.')) {
+    socket.emit('clearHand', '');
   }
 }
 
