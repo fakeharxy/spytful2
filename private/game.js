@@ -1,13 +1,10 @@
+var Rules = require('./rules.js');
 var Board = require('./board.js');
 var Deck = require('./deck.js');
 var Player = require('./player.js');
 var Hex = require('./hex.js');
 
 var Game = {
-  briefcasesPerPlayer: 4,
-  startCardsPool: 2,
-  startCardsPlayer: 2,
-  maxOutpostsPerTurn: 1,
   state: "setupBoard",
   turnState: "pre-start",
   extractionRoute: [],
@@ -94,7 +91,7 @@ var Game = {
         }
       }
     }
-    this.briefcaseCount = this.players.length * Game.briefcasesPerPlayer;
+    this.briefcaseCount = this.players.length * Rules.briefcasesPerPlayer;
     if (validHexes.length < this.briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
       return false;
@@ -111,11 +108,11 @@ var Game = {
     }
 
     //deal cards into the card pool
-    this.deck.deal(this.deck.cardPool, this.startCardsPool);
+    this.deck.deal(this.deck.cardPool, Rules.startCardsPool);
 
     // deal cards to each player
     for (var i = 0; i < this.players.length; i++) {
-      this.deck.deal(this.players[i].hand, this.startCardsPlayer);
+      this.deck.deal(this.players[i].hand, Rules.startCardsPlayer);
     }
 
     //start first turn
@@ -182,8 +179,8 @@ var Game = {
           if (outpost !== 'invalid') {
             if (outpost == '') {
               if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
-                if (this.turnOutpostsSet < this.maxOutpostsPerTurn) {
-                  if (this.players[this.currentPlayer].outposts < Player.maxOutposts) {
+                if (this.turnOutpostsSet < Rules.maxOutpostsPerTurn) {
+                  if (this.players[this.currentPlayer].outposts < Rules.maxOutpostsPerPlayer) {
                     clickedHex.setOutpostAt(segmentClicked, "#FFFFFF"); //provisional outpost
                     this.turnState = "outposting";
                     this.outpostHex = clickedHex;
@@ -462,7 +459,7 @@ var Game = {
   },
     
   drawCardFromDeck: function(alert) {
-    if (this.players[this.currentPlayer].hand.length < Player.maxHandSize) {
+    if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
       this.players[this.currentPlayer].drawCardFromDeck(this);
       this.turnState = "finished";
       //this.draw();
@@ -473,7 +470,7 @@ var Game = {
   },
 
   drawCardsFromPool: function(alert) {
-    if (this.players[this.currentPlayer].hand.length < Player.maxHandSize - 1) {
+    if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize - 1) {
       this.players[this.currentPlayer].drawCardsFromPool(this);
       this.turnState = "finished";
       //this.draw();
