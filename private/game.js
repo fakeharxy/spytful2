@@ -99,13 +99,13 @@ var Game = {
       return false;
     }
     Deck.shuffle(validHexes);
-    var briefcaseValue = 1;
+    var briefcaseValue = Rules.minPointsPerBriefcase;
     for (var i = 0; i < this.briefcaseCount; i++) {
       var hex = validHexes.shift();
       hex.hasBriefcase = true;
       hex.briefcaseValue = briefcaseValue;
-      if (++briefcaseValue > 3) {
-        briefcaseValue = 1;
+      if (++briefcaseValue > Rules.maxPointsPerBriefcase) {
+        briefcaseValue = Rules.minPointsPerBriefcase;
       }
     }
 

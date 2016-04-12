@@ -16,6 +16,8 @@ module.exports = {
   startCardsPlayer: 2,
   
   //scoring
-  pointsPerHex: 1
-  
+  pointsPerHex: 1,
+  minPointsPerBriefcase: 1,
+  maxPointsPerBriefcase: 3
+    
 }
