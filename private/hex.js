@@ -1,3 +1,5 @@
+var Rules = require('./rules.js');
+
 var Hex = {
   colourMap: ["#000099",
     "#78FF78",
@@ -5,7 +7,8 @@ var Hex = {
     "#FFD1DC",
     "#FDFD7D",
     "#96CAFD",
-    "#FFB347"
+    "#FFB347",
+    "#BF94E4"
   ],
 
   addToken: function(colour) {
@@ -37,7 +40,7 @@ var Hex = {
     }
     //build valid list
     var valid = [];
-    for (var i = 0; i < Hex.colourMap.length; i++) {
+    for (var i = 0; i < Rules.hexColours; i++) {
       if (invalid.indexOf(i) == -1) {
         valid.push(i);
       }

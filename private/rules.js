@@ -14,10 +14,11 @@ module.exports = {
   cardsPerHex: 2,
   startCardsPool: 3,
   startCardsPlayer: 2,
+  hexColours: 7,  //must not be less than 6 or greater than length of Hex.colourMap
   
   //scoring
   pointsPerHex: 1,
   minPointsPerBriefcase: 1,
   maxPointsPerBriefcase: 3
-    
+  
 }
