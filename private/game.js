@@ -243,7 +243,7 @@ var Game = {
           }
         }
       } else {
-        alert('you cannot do this now; perhaps you have already drawn cards');
+        alert('you cannot do this now; you are ' + this.turnState);
       }
     } else if (loc == "deck") {
       if (this.turnState == "playing" || this.turnState == "drawing") {
@@ -257,7 +257,11 @@ var Game = {
           return this.drawCardFromDeck(alert);
         }
       } else {
-        alert("The rules state that you can only draw cards once a turn");
+        if (this.turnState == "extracting") {
+          alert("you cannot do this now; you are " + this.turnState);
+        } else {
+          alert("The rules state that you can only draw cards once a turn");
+        }
       }
     } else if (loc == "hand") {
       if (this.turnState == "playing") {
@@ -290,7 +294,11 @@ var Game = {
           }
         }
       } else {
-        alert("The rules state that once you have drawn cards, you can no longer play actions");
+        if (this.turnState == "extracting") {
+          alert("you cannot do this now; you are " + this.turnState);
+        } else {
+          alert("The rules state that once you have drawn cards, you can no longer play actions");
+        }
       }
     } else if (loc == "stack") {
       if (this.turnState == "playing") {
@@ -305,8 +313,13 @@ var Game = {
             "The rules don't even need to specify that you can't start extraction without a movement stack"
           );
         }
+      } else if (this.turnState == "extracting") {
+          //TODO confirm cancel extraction?
+          this.turnState = "playing";
+          this.extractionRoute = [];
+          return true;
       } else {
-        alert('you cannot do this now; perhaps you have already drawn cards');
+          alert('you cannot do this now; perhaps you have already drawn cards');
       }
     } else {
       console.log("clicked somewhere unknown");
@@ -379,6 +392,9 @@ var Game = {
             hex.hasBriefcase = false;
             this.briefcaseCount--;
           }
+        }
+        if (briefcases>0) { //add points for route length
+          points += Rules.pointsPerHex * this.extractionRoute.length;
         }
         this.players[this.currentPlayer].score += points; //add points to player's total
         this.players[this.currentPlayer].briefcaseCount += briefcases;

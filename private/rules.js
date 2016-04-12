@@ -1,16 +1,21 @@
 module.exports = {
-  //from Game:
-  briefcasesPerPlayer: 4,
-  startCardsPool: 3,
-  startCardsPlayer: 2,
+
+  //turn limits
   maxOutpostsPerTurn: 1,
   maxCardsDrawnPerTurn: 2,
-  maxCardsInPool: 3,
   
-  //from Deck
-  cardsPerHex: 2,
-  
-  //from Player
+  //general limits
+  maxCardsInPool: 3,  
   maxHandSize: 3,
-  maxOutpostsPerPlayer: 3
+  maxOutpostsPerPlayer: 3,
+  
+  //setup
+  briefcasesPerPlayer: 4,
+  cardsPerHex: 2,
+  startCardsPool: 3,
+  startCardsPlayer: 2,
+  
+  //scoring
+  pointsPerHex: 1
+  
 }
