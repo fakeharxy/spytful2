@@ -19,10 +19,18 @@ var Deck = {
   },
 
   takeOneFromPool: function(target, index) {
-    Array.prototype.push.apply(target, this.cardPool.splice(
-      index, 1));
+    //Array.prototype.push.apply(target, this.cardPool.splice(index, 1));
+    var poolCard = this.cardPool[index];
+    if (poolCard) {
+      target.push(poolCard);
+      this.cardPool[index] = null;
+      return true;
+    } else {
+      return false;
+    }
   },
-
+  
+  /*
   takePool: function(target) {
     var poolCard = this.cardPool.shift();
     if (poolCard) {
@@ -34,7 +42,8 @@ var Deck = {
       }
     }
   },
-
+  */
+  
   buildDeck: function(hexArray) {
     this.cardPool = [];
     this.cardPool.focusOffsetX = 0;
@@ -93,16 +102,20 @@ var Deck = {
   getCardsForClient: function() {
     out = [];
     for (var i = 0; i < this.length; i++) {
-      out.push({
-        wobble: {
-          x: this[i].wobble.x,
-          y: this[i].wobble.y
-        },
-        focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
-        focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
-        rotation: this[i].rotation,
-        hex: this[i].hex.getObjectForClient()
-      });
+      if (this[i]) {
+        out.push({
+          wobble: {
+            x: this[i].wobble.x,
+            y: this[i].wobble.y
+          },
+          focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
+          focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
+          rotation: this[i].rotation,
+          hex: this[i].hex.getObjectForClient()
+        });
+      } else {
+        out.push(this[i]);
+      }
     }
     return out;
   }

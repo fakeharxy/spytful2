@@ -75,12 +75,14 @@ module.exports = {
     game.deck.deal(this.hand, 1);
   },
   drawCardFromPool: function(index, game) {
-    game.deck.takeOneFromPool(this.hand, index);
+    return game.deck.takeOneFromPool(this.hand, index);
   },
 
+  /*
   drawCardsFromPool: function(game) {
     game.deck.takePool(this.hand);
   },
+  */
   
   getObjectForClient: function() {
     return { name: this.name,

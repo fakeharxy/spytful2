@@ -130,7 +130,12 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
-    this.deck.deal(this.deck.cardPool, Rules.maxCardsInPool - this.deck.cardPool.length);
+    //this.deck.deal(this.deck.cardPool, Rules.maxCardsInPool - this.deck.cardPool.length);
+    for (var i=0; i<Rules.maxCardsInPool; i++) {
+      if (!this.deck.cardPool[i]) {
+        this.deck.cardPool[i] = this.deck.cardArray.splice(0,1)[0];
+      }
+    }
     this.turnOutpostsSet = 0;
     this.turnState = 'playing';
     this.deckCardDrawn = false;
@@ -486,13 +491,14 @@ var Game = {
 
   drawCardFromPool: function(index, alert) {
     if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
-      this.players[this.currentPlayer].drawCardFromPool(index, this);
-      if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
-        this.turnState = "finished";
-      } else {
-        this.turnState = "drawing";
+      if (this.players[this.currentPlayer].drawCardFromPool(index, this)) {
+        if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
+          this.turnState = "finished";
+        } else {
+          this.turnState = "drawing";
+        }
+        return true;
       }
-      return true;
     } else {
       alert("There is no room in your hand. Play some cards first");
     }

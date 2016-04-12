@@ -10,7 +10,9 @@ var Deck = {
     // }
 
     for (var i = 0 ; i < this.cardPool.length ; i++) {
-      Card.draw.call(this.cardPool[i], ctx, x + (this.cardWidth + this.cardSpacing) * i + this.cardPool[i].focusOffsetX, y + this.cardPool[i].focusOffsetY, true);
+      if (this.cardPool[i]) {
+        Card.draw.call(this.cardPool[i], ctx, x + (this.cardWidth + this.cardSpacing) * i + this.cardPool[i].focusOffsetX, y + this.cardPool[i].focusOffsetY, true);
+      }
     }
 
     //draw deck
