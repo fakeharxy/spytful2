@@ -55,8 +55,10 @@ var Game = {
       //draw THIS player's hand (not the current player's)
       //this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
       //this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState == "extracting");
-      Player.drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY, true);
-      Player.drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
+      if (this.players[playerIndex]) {
+        Player.drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY, true);
+        Player.drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
+      }
       
       var oppScale = 0.75;
       var oppX = scoreX + (this.deck.cardWidth + this.deck.cardSpacing) * 2;

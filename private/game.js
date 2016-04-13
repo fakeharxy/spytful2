@@ -336,8 +336,14 @@ var Game = {
   },
 
   checkIfGameEnd: function() {
-    if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount ===
-      0) {
+    var poolIsEmpty = true;
+    for (var i=0; i<this.deck.cardPool.length; i++) {
+      if (this.deck.cardPool.length) {
+        poolIsEmpty = false;
+        break;
+      }
+    }
+    if ((poolIsEmpty && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
       this.state = 'finished';
     }
   },
