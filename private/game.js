@@ -338,7 +338,7 @@ var Game = {
   checkIfGameEnd: function() {
     var poolIsEmpty = true;
     for (var i=0; i<this.deck.cardPool.length; i++) {
-      if (this.deck.cardPool.length) {
+      if (this.deck.cardPool[i]) {
         poolIsEmpty = false;
         break;
       }
