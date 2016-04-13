@@ -10,7 +10,7 @@ module.exports = {
   maxOutpostsPerPlayer: 3,
   
   //setup
-  briefcasesPerPlayer: 4,
+  briefcasesPerPlayer: 5,
   cardsPerHex: 2,
   startCardsPool: 3,
   startCardsPlayer: 2,
