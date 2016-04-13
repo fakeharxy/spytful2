@@ -17,8 +17,8 @@ module.exports = {
   hexColours: 7,  //must not be less than 6 or greater than length of Hex.colourMap
   
   //scoring
-  pointsPerHex: 1,
+  pointsPerHex: 0,
   minPointsPerBriefcase: 1,
-  maxPointsPerBriefcase: 3
-  
+  maxPointsPerBriefcase: 1, //don't forget to provide images for the briefcase values
+  briefcaseBonusAccumulator: 1 //incrementor for bonus for every additional briefcase
 }

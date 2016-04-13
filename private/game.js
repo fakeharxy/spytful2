@@ -382,20 +382,26 @@ var Game = {
       if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
         .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
         //go through extraction route and collect points, reset hexes
+        var scoreSummary = "Scoring";
         var points = 0;
         var briefcases = 0;
+        var briefcaseBonus = 0;
         for (var i = 0; i < this.extractionRoute.length; i++) {
           var hex = this.extractionRoute[i];
           if (hex.hasBriefcase) {
             briefcases++;
-            points += hex.briefcaseValue;
+            points += hex.briefcaseValue + briefcaseBonus;
+            scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue + " bonus: " + briefcaseBonus + " points: " + (hex.briefcaseValue + briefcaseBonus);
+            briefcaseBonus += Rules.briefcaseBonusAccumulator;
             hex.hasBriefcase = false;
             this.briefcaseCount--;
           }
         }
         if (briefcases>0) { //add points for route length
           points += Rules.pointsPerHex * this.extractionRoute.length;
+          scoreSummary += " // route length: " + this.extractionRoute.length + " points: " + (Rules.pointsPerHex * this.extractionRoute.length);
         }
+        alert(scoreSummary + " // total: " + points);
         this.players[this.currentPlayer].score += points; //add points to player's total
         this.players[this.currentPlayer].briefcaseCount += briefcases;
         alert("you just collected " + points + " points, bringing your total to " + this.players[
