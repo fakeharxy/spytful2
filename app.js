@@ -342,13 +342,46 @@ function createNewGame(params) {
   var game = Object.create(Game);
   var rules = Object.create(Rules);
   if (params.w) {
-    rules.boardWidth = params.w;
+    rules.boardWidth = parseInt(params.w);
     console.log("set boardWidth");
   }
   if (params.h) {
-    rules.boardHeight = params.h;
+    rules.boardHeight = parseInt(params.h);
     console.log("set boardHeight");
   }
+  if (params.c) {
+    rules.hexColours = parseInt(params.c);
+    console.log("set hexColours");
+  }
+  if (params.bpp) {
+    rules.briefcasesPerPlayer = parseInt(params.bpp);
+    console.log("set briefcasesPerPlayer");
+  }
+  if (params.cph) {
+    rules.cardsPerHex = parseInt(params.cph);
+    console.log("set cardsPerHex");
+  }
+  if (params.sr) {
+    rules.pointsPerHex = parseInt(params.sr);
+    console.log("set pointsPerHex");
+  }    
+  if (params.sbs) {
+    rules.minPointsPerBriefcase = parseInt(params.sbs);
+    console.log("set minPointsPerBriefcase");
+  }
+  if (params.sbl) {
+    rules.maxPointsPerBriefcase = parseInt(params.sbl);
+    console.log("set maxPointsPerBriefcase");
+  }   
+  if (params.sba) {
+    rules.briefcaseBonusAccumulator = parseInt(params.sba);
+    console.log("set briefcaseBonusAccumulator");
+  } 
+  if (params.sbp) {
+    rules.firstBriefcasePenalty = parseInt(params.sbp);
+    console.log("set firstBriefcasePenalty");
+  } 
+ 
   game.rules = rules;
   game.setup();
   games[newgameid] = game;
