@@ -1,4 +1,3 @@
-var Rules = require('./rules.js');
 var Board = require('./board.js');
 var Deck = require('./deck.js');
 var Player = require('./player.js');
@@ -12,16 +11,16 @@ var Game = {
   extractionRoute: [],
   focusObj: null,
 
-  setup: function(boardWidth, boardHeight) {
+  setup: function() {
     if (this.state != "setupBoard") {
       alert("error: board already set up");
       return;
     }
     this.board = Object.create(Board);
-    this.board.buildBoard(boardWidth, boardHeight);
+    this.board.buildBoard(this.rules.boardWidth, this.rules.boardHeight, this.rules.hexColours);
 
     this.deck = Object.create(Deck);
-    this.deck.buildDeck(this.board.hexArray);
+    this.deck.buildDeck(this.board.hexArray, this.rules.cardsPerHex);
     Deck.shuffle(this.deck.cardArray);
 
     this.players = [];
@@ -93,28 +92,28 @@ var Game = {
         }
       }
     }
-    this.briefcaseCount = this.players.length * Rules.briefcasesPerPlayer;
+    this.briefcaseCount = this.players.length * this.rules.briefcasesPerPlayer;
     if (validHexes.length < this.briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
       return false;
     }
     Deck.shuffle(validHexes);
-    var briefcaseValue = Rules.minPointsPerBriefcase;
+    var briefcaseValue = this.rules.minPointsPerBriefcase;
     for (var i = 0; i < this.briefcaseCount; i++) {
       var hex = validHexes.shift();
       hex.hasBriefcase = true;
       hex.briefcaseValue = briefcaseValue;
-      if (++briefcaseValue > Rules.maxPointsPerBriefcase) {
-        briefcaseValue = Rules.minPointsPerBriefcase;
+      if (++briefcaseValue > this.rules.maxPointsPerBriefcase) {
+        briefcaseValue = this.rules.minPointsPerBriefcase;
       }
     }
 
     //deal cards into the card pool
-    this.deck.deal(this.deck.cardPool, Rules.startCardsPool);
+    this.deck.deal(this.deck.cardPool, this.rules.startCardsPool);
 
     // deal cards to each player
     for (var i = 0; i < this.players.length; i++) {
-      this.deck.deal(this.players[i].hand, Rules.startCardsPlayer);
+      this.deck.deal(this.players[i].hand, this.rules.startCardsPlayer);
     }
 
     //start first turn
@@ -130,8 +129,8 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
-    //this.deck.deal(this.deck.cardPool, Rules.maxCardsInPool - this.deck.cardPool.length);
-    for (var i=0; i<Rules.maxCardsInPool; i++) {
+    //this.deck.deal(this.deck.cardPool, this.rules.maxCardsInPool - this.deck.cardPool.length);
+    for (var i=0; i<this.rules.maxCardsInPool; i++) {
       if (!this.deck.cardPool[i]) {
         this.deck.cardPool[i] = this.deck.cardArray.splice(0,1)[0];
       }
@@ -189,8 +188,8 @@ var Game = {
           if (outpost !== 'invalid') {
             if (outpost == '') {
               if (clickedHex.newOutpostValid(segmentClicked, this.players[this.currentPlayer].colour)) {
-                if (this.turnOutpostsSet < Rules.maxOutpostsPerTurn) {
-                  if (this.players[this.currentPlayer].outposts < Rules.maxOutpostsPerPlayer) {
+                if (this.turnOutpostsSet < this.rules.maxOutpostsPerTurn) {
+                  if (this.players[this.currentPlayer].outposts < this.rules.maxOutpostsPerPlayer) {
                     clickedHex.setOutpostAt(segmentClicked, "#FFFFFF"); //provisional outpost
                     this.turnState = "outposting";
                     this.outpostHex = clickedHex;
@@ -252,7 +251,7 @@ var Game = {
           this.updateFocus(null);
           // return this.drawCardsFromPool(alert);
           return this.drawCardFromPool(poolDeckCardIndex, alert);
-        } else if (poolDeckCardIndex == Rules.maxCardsInPool) {
+        } else if (poolDeckCardIndex == this.rules.maxCardsInPool) {
           this.updateFocus(null);
           return this.drawCardFromDeck(alert);
         }
@@ -336,8 +335,14 @@ var Game = {
   },
 
   checkIfGameEnd: function() {
-    if ((this.deck.cardPool.length === 0 && this.deck.cardArray.length === 0) || this.briefcaseCount ===
-      0) {
+    var poolIsEmpty = true;
+    for (var i=0; i<this.deck.cardPool.length; i++) {
+      if (this.deck.cardPool[i]) {
+        poolIsEmpty = false;
+        break;
+      }
+    }
+    if ((poolIsEmpty && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
       this.state = 'finished';
     }
   },
@@ -390,16 +395,17 @@ var Game = {
           var hex = this.extractionRoute[i];
           if (hex.hasBriefcase) {
             briefcases++;
-            points += hex.briefcaseValue + briefcaseBonus;
-            scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue + " bonus: " + briefcaseBonus + " points: " + (hex.briefcaseValue + briefcaseBonus);
-            briefcaseBonus += Rules.briefcaseBonusAccumulator;
+            var newPoints = hex.briefcaseValue + briefcaseBonus - (briefcases==1 ? this.rules.firstBriefcasePenalty : 0);
+            points += newPoints;
+            scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue + (briefcases==1 ? (" penalty: -" + this.rules.firstBriefcasePenalty) : "") + " bonus: " + briefcaseBonus + " points: " + newPoints;
+            briefcaseBonus += this.rules.briefcaseBonusAccumulator;
             hex.hasBriefcase = false;
             this.briefcaseCount--;
           }
         }
         if (briefcases>0) { //add points for route length
-          points += Rules.pointsPerHex * this.extractionRoute.length;
-          scoreSummary += " // route length: " + this.extractionRoute.length + " points: " + (Rules.pointsPerHex * this.extractionRoute.length);
+          points += this.rules.pointsPerHex * this.extractionRoute.length;
+          scoreSummary += " // route length: " + this.extractionRoute.length + " points: " + (this.rules.pointsPerHex * this.extractionRoute.length);
         }
         alert(scoreSummary + " // total: " + points);
         this.players[this.currentPlayer].score += points; //add points to player's total
@@ -493,10 +499,10 @@ var Game = {
 
   drawCardFromDeck: function(alert) {
     if (this.deckCardDrawn == false) {
-      if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
+      if (this.players[this.currentPlayer].hand.length < this.rules.maxHandSize) {
         this.players[this.currentPlayer].drawCardFromDeck(this);
         this.deckCardDrawn = true;
-        if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
+        if (++this.cardDrawnCount == this.rules.maxCardsDrawnPerTurn) {
           this.turnState = "finished";
         } else {
           this.turnState = "drawing";
@@ -512,9 +518,9 @@ var Game = {
   },
 
   drawCardFromPool: function(index, alert) {
-    if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize) {
+    if (this.players[this.currentPlayer].hand.length < this.rules.maxHandSize) {
       if (this.players[this.currentPlayer].drawCardFromPool(index, this)) {
-        if (++this.cardDrawnCount == Rules.maxCardsDrawnPerTurn) {
+        if (++this.cardDrawnCount == this.rules.maxCardsDrawnPerTurn) {
           this.turnState = "finished";
         } else {
           this.turnState = "drawing";
@@ -527,7 +533,7 @@ var Game = {
   },
 
   //drawCardsFromPool: function(alert) {
-  //  if (this.players[this.currentPlayer].hand.length < Rules.maxHandSize - 1) {
+  //  if (this.players[this.currentPlayer].hand.length < this.rules.maxHandSize - 1) {
   //    this.players[this.currentPlayer].drawCardsFromPool(this);
   //    this.turnState = "finished";
   //    //this.draw();

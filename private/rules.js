@@ -5,6 +5,8 @@ module.exports = {
   maxCardsDrawnPerTurn: 2,
   
   //general limits
+  boardWidth: 5,
+  boardHeight: 5,
   maxCardsInPool: 3,  
   maxHandSize: 3,
   maxOutpostsPerPlayer: 3,
@@ -18,7 +20,8 @@ module.exports = {
   
   //scoring
   pointsPerHex: 0,
-  minPointsPerBriefcase: 1,
-  maxPointsPerBriefcase: 1, //don't forget to provide images for the briefcase values
-  briefcaseBonusAccumulator: 1 //incrementor for bonus for every additional briefcase
+  minPointsPerBriefcase: 2,
+  maxPointsPerBriefcase: 2, //don't forget to provide images for the briefcase values
+  briefcaseBonusAccumulator: 0, //incrementor for bonus for every additional briefcase
+  firstBriefcasePenalty: 1
 }

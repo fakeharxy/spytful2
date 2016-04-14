@@ -1,5 +1,3 @@
-var Rules = require('./rules.js');
-
 var Hex = {
   colourMap: ["#000099",
     "#78FF78",
@@ -27,7 +25,7 @@ var Hex = {
     }
   },
 
-  setValidColour: function(hexSize) {
+  setValidColour: function(hexSize, hexColours) {
     //find invalid colours based on neighbours
     var invalid = [];
     for (var i = 0; i < this.neighbours.length; i++) {
@@ -40,7 +38,7 @@ var Hex = {
     }
     //build valid list
     var valid = [];
-    for (var i = 0; i < Rules.hexColours; i++) {
+    for (var i = 0; i < hexColours; i++) {
       if (invalid.indexOf(i) == -1) {
         valid.push(i);
       }

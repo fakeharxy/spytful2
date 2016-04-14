@@ -9,7 +9,7 @@ module.exports = {
   offset: 10,
   outpostOffset: 5,
   
-  buildBoard: function(width, height) {
+  buildBoard: function(width, height, hexColours) {
     this.width = width;
     this.height = height;
     this.hexArray = [];
@@ -48,16 +48,16 @@ module.exports = {
         this.hexArray[j][i] = newHex;
       }
     }
-    this.prepareHexes();
+    this.prepareHexes(hexColours);
   },
 
-  prepareHexes: function() {
+  prepareHexes: function(hexColours) {
     for (var j = 0; j < this.height; j++) {
       for (var i = 0; i < this.width; i++) {
         var hex = this.hexArray[j][i];
         hex.neighbours = this.getHexNeighbours(i, j);
         hex.tokensOnHex = [];
-        hex.setValidColour(this.hexSize);
+        hex.setValidColour(this.hexSize, hexColours);
         hex.outposts = ['','','','','',''];
       }
     }

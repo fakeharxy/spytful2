@@ -17,6 +17,7 @@ var session = Session({
 
 
 var Game = require('./private/game.js');
+var Rules = require('./private/rules.js');
 
 var clients = []; // map of connected clients; key is client id
 var games = {}; //map addressable games; key is game id
@@ -30,14 +31,20 @@ app.get('/', function(req, res) {
   res.sendfile('public/lobby.html');
 });
 
-app.get('/creategame', function(req, res) { //TODO send a new page with the game setup form, and only create the game when it is submitted 
-  var newgameid = Date.now();
-  var game = Object.create(Game);
-  game.setup(5, 5);
-  games[newgameid] = game;
-  res.send("Created game: <a href='/game" + newgameid + "'>" + newgameid + "</a>");
+app.get('/creategame', function(req, res) {
+  if (checkSessionId(req)) {
+    if (req.query.go) {
+      var newgameid = createNewGame(req.query);
+      res.send("<div id='actionarea'>Created game: <a href='/game" + newgameid + "'>" + newgameid + "</a></div>");
+    } else {
+      res.sendfile('public/creategame.html');
+    }
+  } else {
+    //redirect to lobby if session is invalid
+    res.redirect('/');
+  }
 });
-  
+
 /*
 app.get('/paulwins', function(req, res) {
   checkSessionId(req);
@@ -328,4 +335,22 @@ function checkTurn(socket, game) {
     }
   }
   return false;
+}
+
+function createNewGame(params) {
+  var newgameid = Date.now();
+  var game = Object.create(Game);
+  var rules = Object.create(Rules);
+  if (params.w) {
+    rules.boardWidth = params.w;
+    console.log("set boardWidth");
+  }
+  if (params.h) {
+    rules.boardHeight = params.h;
+    console.log("set boardHeight");
+  }
+  game.rules = rules;
+  game.setup();
+  games[newgameid] = game;
+  return newgameid;
 }

@@ -1,4 +1,3 @@
-var Rules = require('./rules.js');
 var Board = require('./board.js');
 var Card = require('./card.js');
 
@@ -44,7 +43,7 @@ var Deck = {
   },
   */
   
-  buildDeck: function(hexArray) {
+  buildDeck: function(hexArray, cardsPerHex) {
     this.cardPool = [];
     this.cardPool.focusOffsetX = 0;
     this.cardPool.focusOffsetY = 0;
@@ -59,7 +58,7 @@ var Deck = {
 
     for (var j = 0; j < hexArray.length; j++) {
       for (var i = 0; i < hexArray[j].length; i++) {
-        for (var n = 0; n < Rules.cardsPerHex; n++) {
+        for (var n = 0; n < cardsPerHex; n++) {
           if (hexArray[j][i].colourCode !== 0) {
             var card = Object.create(Card);
             card.hex = hexArray[j][i];
