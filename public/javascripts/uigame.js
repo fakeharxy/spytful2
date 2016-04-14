@@ -55,16 +55,19 @@ var Game = {
       //draw THIS player's hand (not the current player's)
       //this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
       //this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState == "extracting");
-      if (this.players[playerIndex]) {
-        Player.drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY, true);
-        Player.drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
-      }
+      //if (this.players[playerIndex]) {
+      //  Player.drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY, true);
+      //  Player.drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
+      //}
       
       var oppScale = 0.75;
       var oppX = scoreX + (this.deck.cardWidth + this.deck.cardSpacing) * 2;
       var oppY = this.deckY;
       for (var i = 0; i < this.players.length; i++) {
-        if (i != playerIndex) {
+        if (i == playerIndex) {
+          Player.drawHand.call(this.players[i], ctx, this.handX, this.handY, true);
+          Player.drawStack.call(this.players[i], ctx, this.stackX, this.stackY, true); //can now always see your own stack
+        } else {
           Player.drawHand.call(this.players[i], ctx, oppX, oppY, false, oppScale);
           Player.drawStack.call(this.players[i], ctx, oppX, oppY + (this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 1.5, false, oppScale);
           oppY += ((this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 2) * 2;
