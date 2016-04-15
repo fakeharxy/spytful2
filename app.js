@@ -174,7 +174,7 @@ io.on('connection', function(socket) {
           data.playerIndex = game.getPlayerIndex(uid);
           socket.emit('gameState', data);
         } else {
-          socket.emit('game', "you can't say you're ready for the game now");
+          socket.emit('alert', "you can't say you're ready for the game now");
         }
       }
     });
@@ -207,7 +207,7 @@ io.on('connection', function(socket) {
             //io.emit('gameState', data);
           }
         } else {
-          socket.emit('game', "you aren't a player so you can't start the game");
+          socket.emit('alert', "you aren't a player so you can't start the game");
         }
       }
     });
@@ -331,7 +331,7 @@ function checkTurn(socket, game) {
     if (game.getPlayerIndex(socket.handshake.session.uid) == game.currentPlayer) {
       return true;
     } else {
-      socket.emit('game', "it's not your turn");
+      socket.emit('alert', "it's not your turn");
     }
   }
   return false;
