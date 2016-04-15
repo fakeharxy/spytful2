@@ -91,6 +91,9 @@ function startSocket() {
     $('#messages').append($('<li>').text(msg));
     $("#chatarea").scrollTop($("#chatarea")[0].scrollHeight);
   });
+  socket.on('alert', function(msg) {
+    $('#alertMessage').stop(true, true).html(msg).show().delay(4000).fadeOut(1500);
+  });
   socket.on('gameState', function(gameData) {
     game = gameData;
     if (game.playerIndex) {

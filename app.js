@@ -187,7 +187,7 @@ io.on('connection', function(socket) {
         //console.log('client with id ' + uid + ' has pressed start game');
         if (game.getPlayerIndex(uid) > -1) {
           if (game.prepareGame(function(alertMsg) {
-              socket.emit('game', alertMsg);
+              socket.emit('alert', alertMsg);
             })) {
             io.to(gameid).emit('game', clients[uid].name + " starts the game; it's " + game.players[
             game.currentPlayer].name + "'s turn");
@@ -217,7 +217,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.onclick(data.x, data.y, function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -230,7 +230,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.endTurn(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
 
           if (game.state != 'finished') {
@@ -255,7 +255,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.clearRoute(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -269,7 +269,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.clearHand(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -283,7 +283,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.completeExtraction(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
