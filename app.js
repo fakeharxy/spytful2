@@ -174,7 +174,7 @@ io.on('connection', function(socket) {
           data.playerIndex = game.getPlayerIndex(uid);
           socket.emit('gameState', data);
         } else {
-          socket.emit('game', "you can't say you're ready for the game now");
+          socket.emit('alert', "you can't say you're ready for the game now");
         }
       }
     });
@@ -187,7 +187,7 @@ io.on('connection', function(socket) {
         //console.log('client with id ' + uid + ' has pressed start game');
         if (game.getPlayerIndex(uid) > -1) {
           if (game.prepareGame(function(alertMsg) {
-              socket.emit('game', alertMsg);
+              socket.emit('alert', alertMsg);
             })) {
             io.to(gameid).emit('game', clients[uid].name + " starts the game; it's " + game.players[
             game.currentPlayer].name + "'s turn");
@@ -207,7 +207,7 @@ io.on('connection', function(socket) {
             //io.emit('gameState', data);
           }
         } else {
-          socket.emit('game', "you aren't a player so you can't start the game");
+          socket.emit('alert', "you aren't a player so you can't start the game");
         }
       }
     });
@@ -217,7 +217,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.onclick(data.x, data.y, function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -230,7 +230,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.endTurn(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
 
           if (game.state != 'finished') {
@@ -255,7 +255,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.clearRoute(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -269,7 +269,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.clearHand(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -283,7 +283,7 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (checkTurn(socket, game)) {
         if (game.completeExtraction(function(alertMsg) {
-            socket.emit('game', alertMsg);
+            socket.emit('alert', alertMsg);
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
@@ -331,7 +331,7 @@ function checkTurn(socket, game) {
     if (game.getPlayerIndex(socket.handshake.session.uid) == game.currentPlayer) {
       return true;
     } else {
-      socket.emit('game', "it's not your turn");
+      socket.emit('alert', "it's not your turn");
     }
   }
   return false;
@@ -342,13 +342,46 @@ function createNewGame(params) {
   var game = Object.create(Game);
   var rules = Object.create(Rules);
   if (params.w) {
-    rules.boardWidth = params.w;
+    rules.boardWidth = parseInt(params.w);
     console.log("set boardWidth");
   }
   if (params.h) {
-    rules.boardHeight = params.h;
+    rules.boardHeight = parseInt(params.h);
     console.log("set boardHeight");
   }
+  if (params.c) {
+    rules.hexColours = parseInt(params.c);
+    console.log("set hexColours");
+  }
+  if (params.bpp) {
+    rules.briefcasesPerPlayer = parseInt(params.bpp);
+    console.log("set briefcasesPerPlayer");
+  }
+  if (params.cph) {
+    rules.cardsPerHex = parseInt(params.cph);
+    console.log("set cardsPerHex");
+  }
+  if (params.sr) {
+    rules.pointsPerHex = parseInt(params.sr);
+    console.log("set pointsPerHex");
+  }    
+  if (params.sbs) {
+    rules.minPointsPerBriefcase = parseInt(params.sbs);
+    console.log("set minPointsPerBriefcase");
+  }
+  if (params.sbl) {
+    rules.maxPointsPerBriefcase = parseInt(params.sbl);
+    console.log("set maxPointsPerBriefcase");
+  }   
+  if (params.sba) {
+    rules.briefcaseBonusAccumulator = parseInt(params.sba);
+    console.log("set briefcaseBonusAccumulator");
+  } 
+  if (params.sbp) {
+    rules.firstBriefcasePenalty = parseInt(params.sbp);
+    console.log("set firstBriefcasePenalty");
+  } 
+ 
   game.rules = rules;
   game.setup();
   games[newgameid] = game;

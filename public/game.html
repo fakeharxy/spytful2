@@ -2,6 +2,12 @@
 <html>
 
 <head>
+  <style>
+    .alertMessage {color:red; font-family:verdana; font-weight: bold; font-size:9pt}
+    .chatMessage {font-family:verdana; font-size:9pt}
+    .controlsContainer {width: 100%; overflow:hidden}
+    .controls {display: none; float: left}
+  </style>
   <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script-->
   <script src="./javascripts/jquery.min.js" type="text/javascript"></script>
   <script src="./socket.io/socket.io.js"></script>
@@ -18,19 +24,23 @@
 <body>
   <canvas id="canvas" width="1200" height="478"></canvas>
   <br/>
-  <div id="turnControls" style="display: none">
-    <button id="butEndTurn">End the current turn</button>
-    <button id="butClearRoute">Clear your current route</button>
-    <button id="butClearHand">Discard hand</button>
-    <button id="butFinishRoute">Finish extraction</button>
+  <div class="controlsContainer">
+    <div id="turnControls" class="controls">
+      <button id="butEndTurn">End the current turn</button>
+      <button id="butClearRoute">Clear your current route</button>
+      <button id="butClearHand">Discard hand</button>
+      <button id="butFinishRoute">Finish extraction</button>
+    </div>
+    <div id="prepareControls" class="controls">
+      <button id="butReady">Ready</button>
+      <button id="butStartGame">Start Game</button>
+    </div>
+    <div class="controls" style="display: block">
+      <span id="alertMessage" class="alertMessage"></span>  
+    </div>
   </div>
-  <div id="prepareControls" style="display: none">
-    <button id="butReady">Ready</button>
-    <button id="butStartGame">Start Game</button>
-  </div>
-  
   <div id="chatarea" style="height: 150px; overflow: auto">
-    <ul id="messages"></ul>
+    <ul id="messages" class="chatMessage"></ul>
   </div>
   <form action="" id='message_form'>
     <input id="m" autocomplete="off" />
