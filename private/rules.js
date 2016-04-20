@@ -23,5 +23,6 @@ module.exports = {
   minPointsPerBriefcase: 2,
   maxPointsPerBriefcase: 2, //don't forget to provide images for the briefcase values
   briefcaseBonusAccumulator: 0, //incrementor for bonus for every additional briefcase
-  firstBriefcasePenalty: 1
+  firstBriefcasePenalty: 1,
+  briefcaseRespawn: -1 //briefcases will respawn where picked up with this change in value (until value is 0)
 }
