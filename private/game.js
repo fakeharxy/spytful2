@@ -399,8 +399,18 @@ var Game = {
             points += newPoints;
             scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue + (briefcases==1 ? (" penalty: -" + this.rules.firstBriefcasePenalty) : "") + " bonus: " + briefcaseBonus + " points: " + newPoints;
             briefcaseBonus += this.rules.briefcaseBonusAccumulator;
-            hex.hasBriefcase = false;
-            this.briefcaseCount--;
+            if (this.rules.briefcaseRespawn) {
+              var newValue = hex.briefcaseValue + this.rules.briefcaseRespawn;
+              if (newValue > 0) {
+                hex.briefcaseValue = newValue;
+              } else {
+                hex.hasBriefcase = false;
+                this.briefcaseCount--;
+              }
+            } else {
+              hex.hasBriefcase = false;
+              this.briefcaseCount--;
+            }
           }
         }
         if (briefcases>0) { //add points for route length
