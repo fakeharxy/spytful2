@@ -10,6 +10,7 @@ module.exports = {
   maxCardsInPool: 3,  
   maxHandSize: 3,
   maxOutpostsPerPlayer: 3,
+  extractOnBriefcase: false,
   
   //setup
   briefcasesPerPlayer: 5,

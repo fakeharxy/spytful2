@@ -130,9 +130,9 @@ var Game = {
       this.currentPlayer = 0;
     }
     //this.deck.deal(this.deck.cardPool, this.rules.maxCardsInPool - this.deck.cardPool.length);
-    for (var i=0; i<this.rules.maxCardsInPool; i++) {
+    for (var i = 0; i < this.rules.maxCardsInPool; i++) {
       if (!this.deck.cardPool[i]) {
-        this.deck.cardPool[i] = this.deck.cardArray.splice(0,1)[0];
+        this.deck.cardPool[i] = this.deck.cardArray.splice(0, 1)[0];
       }
     }
     this.turnOutpostsSet = 0;
@@ -296,7 +296,8 @@ var Game = {
         if (this.turnState == "extracting") {
           alert("you cannot do this now; you are " + this.turnState);
         } else {
-          alert("The rules state that once you have drawn cards, you can no longer play actions");
+          alert(
+            "The rules state that once you have drawn cards, you can no longer play actions");
         }
       }
     } else if (loc == "stack") {
@@ -313,12 +314,12 @@ var Game = {
           );
         }
       } else if (this.turnState == "extracting") {
-          //TODO confirm cancel extraction?
-          this.turnState = "playing";
-          this.extractionRoute = [];
-          return true;
+        //TODO confirm cancel extraction?
+        this.turnState = "playing";
+        this.extractionRoute = [];
+        return true;
       } else {
-          alert('you cannot do this now; perhaps you have already drawn cards');
+        alert('you cannot do this now; perhaps you have already drawn cards');
       }
     } else {
       console.log("clicked somewhere unknown");
@@ -336,7 +337,7 @@ var Game = {
 
   checkIfGameEnd: function() {
     var poolIsEmpty = true;
-    for (var i=0; i<this.deck.cardPool.length; i++) {
+    for (var i = 0; i < this.deck.cardPool.length; i++) {
       if (this.deck.cardPool[i]) {
         poolIsEmpty = false;
         break;
@@ -386,45 +387,53 @@ var Game = {
     if (this.turnState == "extracting") {
       if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
         .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
-        //go through extraction route and collect points, reset hexes
-        var scoreSummary = "Scoring";
-        var points = 0;
-        var briefcases = 0;
-        var briefcaseBonus = 0;
-        for (var i = 0; i < this.extractionRoute.length; i++) {
-          var hex = this.extractionRoute[i];
-          if (hex.hasBriefcase) {
-            briefcases++;
-            var newPoints = hex.briefcaseValue + briefcaseBonus - (briefcases==1 ? this.rules.firstBriefcasePenalty : 0);
-            points += newPoints;
-            scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue + (briefcases==1 ? (" penalty: -" + this.rules.firstBriefcasePenalty) : "") + " bonus: " + briefcaseBonus + " points: " + newPoints;
-            briefcaseBonus += this.rules.briefcaseBonusAccumulator;
-            if (this.rules.briefcaseRespawn) {
-              var newValue = hex.briefcaseValue + this.rules.briefcaseRespawn;
-              if (newValue > 0) {
-                hex.briefcaseValue = newValue;
+        if (!this.extractionRoute[this.extractionRoute.length - 1].hasBriefcase && this.rules.extractOnBriefcase) {
+          //go through extraction route and collect points, reset hexes
+          var scoreSummary = "Scoring";
+          var points = 0;
+          var briefcases = 0;
+          var briefcaseBonus = 0;
+          for (var i = 0; i < this.extractionRoute.length; i++) {
+            var hex = this.extractionRoute[i];
+            if (hex.hasBriefcase) {
+              briefcases++;
+              var newPoints = hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
+                .firstBriefcasePenalty : 0);
+              points += newPoints;
+              scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue +
+                (briefcases == 1 ? (" penalty: -" + this.rules.firstBriefcasePenalty) : "") +
+                " bonus: " + briefcaseBonus + " points: " + newPoints;
+              briefcaseBonus += this.rules.briefcaseBonusAccumulator;
+              if (this.rules.briefcaseRespawn) {
+                var newValue = hex.briefcaseValue + this.rules.briefcaseRespawn;
+                if (newValue > 0) {
+                  hex.briefcaseValue = newValue;
+                } else {
+                  hex.hasBriefcase = false;
+                  this.briefcaseCount--;
+                }
               } else {
                 hex.hasBriefcase = false;
                 this.briefcaseCount--;
               }
-            } else {
-              hex.hasBriefcase = false;
-              this.briefcaseCount--;
             }
           }
+          if (briefcases > 0) { //add points for route length
+            points += this.rules.pointsPerHex * this.extractionRoute.length;
+            scoreSummary += " // route length: " + this.extractionRoute.length + " points: " +
+              (this.rules.pointsPerHex * this.extractionRoute.length);
+          }
+          alert(scoreSummary + " // total: " + points);
+          this.players[this.currentPlayer].score += points; //add points to player's total
+          this.players[this.currentPlayer].briefcaseCount += briefcases;
+          alert("you just collected " + points + " points, bringing your total to " + this.players[
+            this.currentPlayer].score);
+          this.clearRoute();
+          //this.draw();
+          return true;
+        } else {
+          alert("The rules clearly dictate that you cannot extract on a briefcase");
         }
-        if (briefcases>0) { //add points for route length
-          points += this.rules.pointsPerHex * this.extractionRoute.length;
-          scoreSummary += " // route length: " + this.extractionRoute.length + " points: " + (this.rules.pointsPerHex * this.extractionRoute.length);
-        }
-        alert(scoreSummary + " // total: " + points);
-        this.players[this.currentPlayer].score += points; //add points to player's total
-        this.players[this.currentPlayer].briefcaseCount += briefcases;
-        alert("you just collected " + points + " points, bringing your total to " + this.players[
-          this.currentPlayer].score);
-        this.clearRoute();
-        //this.draw();
-        return true;
       } else {
         alert("the rules require the correct region card to extract");
       }
