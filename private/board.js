@@ -8,7 +8,7 @@ module.exports = {
   firstHexY: 50,
   offset: 10,
   outpostOffset: 5,
-  
+
   buildBoard: function(width, height, hexColours) {
     this.width = width;
     this.height = height;
@@ -20,7 +20,8 @@ module.exports = {
     for (var c = 0; c < 6; c++) {
       Hex.corners[c] = [];
       var point = [];
-      var point2 = {}, point3 = {};
+      var point2 = {},
+        point3 = {};
       var angle_deg = 60 * c + 270;
       var angle_rad = Math.PI / 180 * angle_deg;
       point[0] = this.hexSize * Math.cos(angle_rad);
@@ -29,38 +30,48 @@ module.exports = {
       angle_rad += 0.52359877559829887307710723054658;
       point2.dx = (this.outpostOffset) * Math.cos(angle_rad);
       point2.dy = (this.outpostOffset) * Math.sin(angle_rad);
-      point3.dx = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.cos(angle_rad);
-      point3.dy = (this.offset*Math.sqrt(3)-this.outpostOffset) * Math.sin(angle_rad);
-      Hex.outpostCorners[c] = [ point2, point3 ];
+      point3.dx = (this.offset * Math.sqrt(3) - this.outpostOffset) * Math.cos(angle_rad);
+      point3.dy = (this.offset * Math.sqrt(3) - this.outpostOffset) * Math.sin(angle_rad);
+      Hex.outpostCorners[c] = [point2, point3];
     }
     this.hexDrawPoints = this.getRoundedPoints(Hex.corners, this.hexRoundingRadius);
-    
+
     //build hex objects
-    for (var j = 0; j < this.height; j++) {
-      this.hexArray[j] = [];
-      for (var i = 0; i < this.width; i++) {
-        var newHex = Object.create(Hex);
-        newHex.regionName = String.fromCharCode(65 + j) + (i + 1);
-        newHex.centre = {
-          x: this.calculateHexCentreX(i, j),
-          y: this.calculateHexCentreY(j)
-        };
-        this.hexArray[j][i] = newHex;
+    do {
+      console.log("I tried!");
+      for (var j = 0; j < this.height; j++) {
+        this.hexArray[j] = [];
+        for (var i = 0; i < this.width; i++) {
+          var newHex = Object.create(Hex);
+          newHex.regionName = String.fromCharCode(65 + j) + (i + 1);
+          newHex.centre = {
+            x: this.calculateHexCentreX(i, j),
+            y: this.calculateHexCentreY(j)
+          };
+          this.hexArray[j][i] = newHex;
+        }
       }
-    }
-    this.prepareHexes(hexColours);
+    } while (!this.prepareHexes(hexColours));
   },
 
   prepareHexes: function(hexColours) {
+    var waterCount = 0;
     for (var j = 0; j < this.height; j++) {
       for (var i = 0; i < this.width; i++) {
         var hex = this.hexArray[j][i];
         hex.neighbours = this.getHexNeighbours(i, j);
         hex.tokensOnHex = [];
         hex.setValidColour(this.hexSize, hexColours);
-        hex.outposts = ['','','','','',''];
+        hex.outposts = ['', '', '', '', '', ''];
+        if (hex.colourCode == 0) {
+          waterCount++
+          if (waterCount >= 4) {
+            return false;
+          }
+        }
       }
     }
+    return true;
   },
 
   getHexAt: function(x, y) {
@@ -74,7 +85,8 @@ module.exports = {
   },
 
   calculateHexCentreX: function(i, j) {
-    return this.firstHexX + (i+ (j&1 ? 0.5 : 0)) * (this.hexSize + this.offset) * Math.sqrt(3);
+    return this.firstHexX + (i + (j & 1 ? 0.5 : 0)) * (this.hexSize + this.offset) * Math.sqrt(
+      3);
   },
 
   getRoundedPoints: function(pts, radius) {
@@ -174,22 +186,22 @@ module.exports = {
       y: row
     };
   },
-  
-  
+
+
   getObjectForClient: function() {
     return { //width: this.width,
-              //height: this.height,
-              offset: this.offset,
-              hexSize: this.hexSize,
-              hexArray: this.getHexArrayForClient(),
-              hexDrawPoints: this.hexDrawPoints,
-              hexColourMap: Hex.colourMap,
-              hexCorners: Hex.corners,
-              hexOutpostCorners: Hex.outpostCorners,
-              
-           };
+      //height: this.height,
+      offset: this.offset,
+      hexSize: this.hexSize,
+      hexArray: this.getHexArrayForClient(),
+      hexDrawPoints: this.hexDrawPoints,
+      hexColourMap: Hex.colourMap,
+      hexCorners: Hex.corners,
+      hexOutpostCorners: Hex.outpostCorners,
+
+    };
   },
-  
+
   getHexArrayForClient: function() {
     var out = [];
     for (var j = 0; j < this.height; j++) {
