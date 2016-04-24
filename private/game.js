@@ -387,7 +387,7 @@ var Game = {
     if (this.turnState == "extracting") {
       if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
         .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
-        if (!this.extractionRoute[this.extractionRoute.length - 1].hasBriefcase && this.rules.extractOnBriefcase) {
+        if (!this.extractionRoute[this.extractionRoute.length - 1].hasBriefcase || this.rules.extractOnBriefcase) {
           //go through extraction route and collect points, reset hexes
           var scoreSummary = "Scoring";
           var points = 0;
