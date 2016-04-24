@@ -160,9 +160,16 @@ var Game = {
                 //check if it matches next card in movement stack
                 if (this.players[this.currentPlayer].stack[this.extractionRoute.length]
                   .hex.colourCode == clickedHex.colourCode) {
-                  this.extractionRoute.push(clickedHex);
-                  //this.draw();
-                  return true;
+                  //check if they have already been to this hex in their route
+                  if (this.rules.crossStreams || !this.isHexInRoute(clickedHex)) {
+                    this.extractionRoute.push(clickedHex);
+                    //this.draw();
+                    return true;
+                  } else {
+                    alert(
+                        "It is not possible to cross your own route"
+                        );
+                  }
                 } else {
                   alert(
                     "the next hex must match the colour of the next card in your movement stack"
@@ -324,6 +331,15 @@ var Game = {
     } else {
       console.log("clicked somewhere unknown");
     }
+  },
+
+  isHexInRoute: function(clickedHex) {
+    for (var hex in this.extractionRoute) {
+      if (clickedHex == this.extractionRoute[hex]) {
+        return true;
+      }
+    }
+    return false;
   },
 
   endTurn: function(alert) {

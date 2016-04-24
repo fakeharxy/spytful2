@@ -11,6 +11,7 @@ module.exports = {
   maxHandSize: 3,
   maxOutpostsPerPlayer: 3,
   extractOnBriefcase: false,
+  crossStreams: false,
   
   //setup
   briefcasesPerPlayer: 5,
