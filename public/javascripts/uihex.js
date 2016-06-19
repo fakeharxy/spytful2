@@ -64,7 +64,7 @@ var Hex = {
     }
     if (this.ownerColour != -1) {
       ctx.beginPath();
-      ctx.arc(0, 0, 5, 0, 2 * Math.PI, false);
+      ctx.rect(-7, -7, 14, 14);
       ctx.fillStyle = this.ownerColour;
       ctx.fill();
       ctx.stroke();
