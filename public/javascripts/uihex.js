@@ -36,7 +36,7 @@ var Hex = {
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
       ctx.fillStyle = "#000";
-      ctx.fillText(this.regionName, game.board.offset - game.board.hexSize, -game.board.hexSize / 2);
+      ctx.fillText(this.regionName, game.board.offset - game.board.hexSize + 14, (-game.board.hexSize / 2) - 7);
     }
 
     //draw overlays
@@ -45,10 +45,10 @@ var Hex = {
       overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
     }
     if (overlayImg) {
-      var iconWidth = game.board.hexSize * 0.75;
+      var iconWidth = game.board.hexSize * 0.56;
       var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
       ctx.shadowColor = "transparent";
-      ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);
+      ctx.drawImage(overlayImg, (-iconWidth / 2) -1, -iconHeight / 2, iconWidth, iconHeight);
     }
     for (var i = 0; i < this.tokensOnHex.length; i++) {
       ctx.beginPath();
@@ -64,7 +64,7 @@ var Hex = {
     }
     if (this.ownerColour != -1) {
       ctx.beginPath();
-      ctx.rect(-7, -7, 14, 14);
+      ctx.rect(-8, -7, 14, 14);
       ctx.fillStyle = this.ownerColour;
       ctx.fill();
       ctx.stroke();
