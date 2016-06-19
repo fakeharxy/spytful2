@@ -87,8 +87,9 @@ var Game = {
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
       for (var i = 0; i < this.board.width; i++) {
-        if (this.board.hexArray[j][i].colourCode !== 0) {
-          validHexes.push(this.board.hexArray[j][i]);
+        var thisHex = this.board.hexArray[j][i];
+        if (thisHex.colourCode !== 0) {
+          validHexes.push(thisHex);
         }
       }
     }
@@ -100,7 +101,18 @@ var Game = {
     Deck.shuffle(validHexes);
     var briefcaseValue = this.rules.minPointsPerBriefcase;
     for (var i = 0; i < this.briefcaseCount; i++) {
-      var hex = validHexes.shift();
+      var foundValid = false;
+      var hex;
+      while (!foundValid) {
+        hex = validHexes.shift();
+        if (!hex) {
+          alert("too many players on too small a board; tests don't count");
+          return false;
+        }
+        if (hex.hasEnoughValidExits()) {
+          foundValid = true;
+        }
+      }
       hex.hasBriefcase = true;
       hex.briefcaseValue = briefcaseValue;
       if (++briefcaseValue > this.rules.maxPointsPerBriefcase) {
@@ -415,7 +427,7 @@ var Game = {
               briefcases++;
               var newPoints = 0;
               if (hex.owner) {
-                if (hex.owner != this.players[this.currentPlayer]) { 
+                if (hex.owner != this.players[this.currentPlayer]) {
                   hex.owner.score -= hex.briefcaseValue;
                   hex.owner = this.players[this.currentPlayer];
                   newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
