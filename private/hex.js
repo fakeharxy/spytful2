@@ -97,14 +97,20 @@ var Hex = {
     return true;
   },
 
-  hasEnoughValidExits: function() {
+  hasEnoughValidExits: function(checkNeighboursExits) {
     var validExits = 0;
     for (var z = 0; z < this.neighbours.length; z++) {
       if (this.neighbours[z] && this.neighbours[z].colourCode != 0 && !this.neighbours[z].hasBriefcase) {
-        validExits++;
+        if (checkNeighboursExits) {
+          if (this.neighbours[z].hasEnoughValidExits(false)) {
+            validExits++;
+          }
+        } else {
+          validExits++;
+        }
       }
     }
-    return validExits > 2;
+    return validExits > (checkNeighboursExits ?  2 : 3);
   },
 
   getOutpostAt: function(segment) {

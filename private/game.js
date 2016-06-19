@@ -109,7 +109,7 @@ var Game = {
           alert("too many players on too small a board; tests don't count");
           return false;
         }
-        if (hex.hasEnoughValidExits()) {
+        if (hex.hasEnoughValidExits(true)) {
           foundValid = true;
         }
       }
