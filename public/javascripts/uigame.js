@@ -48,7 +48,13 @@ var Game = {
       scoreY += 5;
       ctx.font = '8pt Arial';
       for (var i = 0; i < this.players.length; i++) {
-        scoreY += 15;
+	scoreY += 15;	
+	ctx.beginPath();
+        ctx.arc(scoreX, scoreY, 5, 0, 2 * Math.PI, false);
+        ctx.fillStyle = this.players[i].colour;
+        ctx.fill();
+        ctx.stroke();
+	
         ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
       }
 
