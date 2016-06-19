@@ -167,8 +167,8 @@ var Game = {
                     return true;
                   } else {
                     alert(
-                        "It is not possible to cross your own route"
-                        );
+                      "It is not possible to cross your own route"
+                    );
                   }
                 } else {
                   alert(
@@ -413,15 +413,27 @@ var Game = {
             var hex = this.extractionRoute[i];
             if (hex.hasBriefcase) {
               briefcases++;
-              var newPoints = hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
-                .firstBriefcasePenalty : 0);
+              var newPoints = 0;
+              if (hex.owner) {
+                if (hex.owner != this.players[this.currentPlayer]) { 
+                  hex.owner.score -= hex.briefcaseValue;
+                  hex.owner = this.players[this.currentPlayer];
+                  newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
+                    .firstBriefcasePenalty : 0);
+                }
+              } else {
+                hex.owner = this.players[this.currentPlayer];
+                newPoints += this.rules.markBonus;
+                newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
+                  .firstBriefcasePenalty : 0);
+              }
               points += newPoints;
               scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue +
                 (briefcases == 1 ? (" penalty: -" + this.rules.firstBriefcasePenalty) : "") +
                 " bonus: " + briefcaseBonus + " points: " + newPoints;
               briefcaseBonus += this.rules.briefcaseBonusAccumulator;
               if (this.rules.briefcaseRespawn) {
-                var newValue = hex.briefcaseValue + this.rules.briefcaseRespawn;
+                var newValue = hex.briefcaseValue + this.rules.briefcaseRespawnValue;
                 if (newValue > 0) {
                   hex.briefcaseValue = newValue;
                 } else {

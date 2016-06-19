@@ -144,7 +144,8 @@ var Hex = {
       hasBriefcase: this.hasBriefcase,
       briefcaseValue: this.briefcaseValue,
       tokensOnHex: this.tokensOnHex,
-      outposts: this.outposts
+      outposts: this.outposts,
+      ownerColour: (this.owner) ? this.owner.colour : -1
     };
   }
 };
