@@ -1,5 +1,5 @@
 var Game = {
-  draw: function (ctx) {
+  draw: function(ctx) {
     if (this.state == "setupPlayers") {
       //waiting for players
       ctx.font = "8pt Arial";
@@ -38,7 +38,8 @@ var Game = {
       Deck.draw.call(this.deck, ctx, this.deckX, this.deckY);
 
       //draw scores
-      var scoreX = this.deckX + (this.deck.cardWidth + this.deck.cardSpacing) * (this.deck.maxCardsInPool + 1);
+      var scoreX = this.deckX + (this.deck.cardWidth + this.deck.cardSpacing) * (this.deck.maxCardsInPool +
+        1);
       var scoreY = this.deckY;
       ctx.font = 'bold 8pt Arial';
       ctx.textBaseline = "top";
@@ -49,9 +50,16 @@ var Game = {
       ctx.font = '8pt Arial';
       for (var i = 0; i < this.players.length; i++) {
         scoreY += 15;
+//        ctx.beginPath();
+ //       ctx.arc(scoreX, scoreY, 5, 0, 2 * Math.PI, false);
+        ctx.fillStyle = this.players[i].colour;
+        // ctx.fill();
+        // ctx.stroke();
+
         ctx.fillText(this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
       }
 
+      ctx.fillStyle = "#000";
       //draw THIS player's hand (not the current player's)
       //this.players[this.currentPlayer].drawHand(ctx, this.handX, this.handY);
       //this.players[this.currentPlayer].drawStack(ctx, this.stackX, this.stackY, this.turnState == "extracting");
@@ -59,7 +67,7 @@ var Game = {
       //  Player.drawHand.call(this.players[playerIndex], ctx, this.handX, this.handY, true);
       //  Player.drawStack.call(this.players[playerIndex], ctx, this.stackX, this.stackY, true); //can now always see your own stack
       //}
-      
+
       var oppScale = 0.75;
       var oppX = scoreX + (this.deck.cardWidth + this.deck.cardSpacing) * 2;
       var oppY = this.deckY;
@@ -69,7 +77,8 @@ var Game = {
           Player.drawStack.call(this.players[i], ctx, this.stackX, this.stackY, true); //can now always see your own stack
         } else {
           Player.drawHand.call(this.players[i], ctx, oppX, oppY, false, oppScale);
-          Player.drawStack.call(this.players[i], ctx, oppX, oppY + (this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 1.5, false, oppScale);
+          Player.drawStack.call(this.players[i], ctx, oppX, oppY + (this.deck.cardHeight *
+            oppScale) + this.deck.cardSpacing * 1.5, false, oppScale);
           oppY += ((this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 2) * 2;
         }
       }

@@ -14,17 +14,19 @@ module.exports = {
   crossStreams: false,
   
   //setup
-  briefcasesPerPlayer: 5,
+  briefcasesPerPlayer: 3,
   cardsPerHex: 2,
   startCardsPool: 3,
   startCardsPlayer: 2,
   hexColours: 8,  //must not be less than 6 or greater than length of Hex.colourMap
   
   //scoring
+  markBonus: 1,
   pointsPerHex: 0,
-  minPointsPerBriefcase: 2,
-  maxPointsPerBriefcase: 2, //don't forget to provide images for the briefcase values
+  minPointsPerBriefcase: 1,
+  maxPointsPerBriefcase: 1, //don't forget to provide images for the briefcase values
   briefcaseBonusAccumulator: 0, //incrementor for bonus for every additional briefcase
-  firstBriefcasePenalty: 1,
-  briefcaseRespawn: -1 //briefcases will respawn where picked up with this change in value (until value is 0)
+  firstBriefcasePenalty: 0,
+  briefcaseRespawn: true,
+  briefcaseRespawnValue: 0 //briefcases will respawn where picked up with this change in value (until value is 0)
 }

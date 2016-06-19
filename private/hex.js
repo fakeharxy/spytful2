@@ -47,7 +47,7 @@ var Hex = {
       //pick randomly from remaining valid colour codes
       var index = Math.floor(Math.random() * valid.length);
       this.colourCode = valid[index];
-      if (this.colourCode==0) {
+      if (this.colourCode == 0) {
         //set water drawing parameters
         this.waterOffset = {
           x: -hexSize - Math.random() * hexSize,
@@ -97,6 +97,24 @@ var Hex = {
     return true;
   },
 
+  hasEnoughValidExits: function(checkNeighboursExits) {
+    var validExits = 0;
+    for (var z = 0; z < this.neighbours.length; z++) {
+      if (this.neighbours[z]) {
+        if (this.neighbours[z].hasBriefcase) {
+          if (checkNeighboursExits) {
+            if (!this.neighbours[z].hasEnoughValidExits(false)) {
+              return false;
+            }
+          }
+        } else if (this.neighbours[z].colourCode != 0) {
+          validExits++;
+        }
+      }
+    }
+    return validExits > (checkNeighboursExits ? 2 : 3);
+  },
+
   getOutpostAt: function(segment) {
     // checks the colourCode of the outpost at this position
     // (by checking both relevant hexes)
@@ -144,7 +162,8 @@ var Hex = {
       hasBriefcase: this.hasBriefcase,
       briefcaseValue: this.briefcaseValue,
       tokensOnHex: this.tokensOnHex,
-      outposts: this.outposts
+      outposts: this.outposts,
+      ownerColour: (this.owner) ? this.owner.colour : -1
     };
   }
 };

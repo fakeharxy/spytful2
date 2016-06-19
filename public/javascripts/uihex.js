@@ -62,6 +62,13 @@ var Hex = {
       ctx.fill();
       ctx.stroke();
     }
+    if (this.ownerColour != -1) {
+      ctx.beginPath();
+      ctx.rect(-7, -7, 14, 14);
+      ctx.fillStyle = this.ownerColour;
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.lineWidth = 1;
     ctx.shadowColor = "rgba(100,100,100,.7)";
     ctx.shadowOffsetX = 1;
