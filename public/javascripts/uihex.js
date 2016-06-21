@@ -48,7 +48,17 @@ var Hex = {
       var iconWidth = game.board.hexSize * 0.5625;
       var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
       //ctx.shadowColor = "transparent";
-      ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);
+      var iconX = -iconWidth / 2;
+      var iconY = -iconHeight / 2;
+      ctx.drawImage(overlayImg, iconX, iconY, iconWidth, iconHeight);
+      if (this.ownerColour != -1) {
+        ctx.beginPath();
+        var pinSize = 2;
+        ctx.rect(iconX + pinSize, iconY + pinSize, iconWidth - pinSize*2, iconHeight - pinSize*2);
+        ctx.fillStyle = this.ownerColour;
+        ctx.fill();
+        ctx.stroke();
+      }
     }
     for (var i = 0; i < this.tokensOnHex.length; i++) {
       ctx.beginPath();
@@ -59,13 +69,6 @@ var Hex = {
       //console.log("y: " + y);
       //console.log("token: " + this.tokensOnHex[i]);
       ctx.fillStyle = this.tokensOnHex[i];
-      ctx.fill();
-      ctx.stroke();
-    }
-    if (this.ownerColour != -1) {
-      ctx.beginPath();
-      ctx.rect(-7, -7, 14, 14);
-      ctx.fillStyle = this.ownerColour;
       ctx.fill();
       ctx.stroke();
     }
