@@ -1,7 +1,7 @@
 var Hex = {
   draw: function (ctx, drawPoints) {
     ctx.save();
-    ctx.translate(this.centre.x, this.centre.y);
+    ctx.translate(Math.round(this.centre.x), Math.round(this.centre.y));
     ctx.beginPath();
     for (var i = 0; i < drawPoints.length; i++) {
       var pt = drawPoints[i];
@@ -33,10 +33,10 @@ var Hex = {
       //otherwise write the region name
     } else {
       ctx.shadowColor = "transparent";
-      ctx.textAlign = "left";
-      ctx.textBaseline = "top";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "center";
       ctx.fillStyle = "#000";
-      ctx.fillText(this.regionName, game.board.offset - game.board.hexSize + 14, (-game.board.hexSize / 2) - 7);
+      ctx.fillText(this.regionName, 0, -game.board.hexSize / 7 * 4);
     }
 
     //draw overlays
@@ -45,10 +45,10 @@ var Hex = {
       overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
     }
     if (overlayImg) {
-      var iconWidth = game.board.hexSize * 0.56;
+      var iconWidth = game.board.hexSize * 0.5625;
       var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
-      ctx.shadowColor = "transparent";
-      ctx.drawImage(overlayImg, (-iconWidth / 2) -1, -iconHeight / 2, iconWidth, iconHeight);
+      //ctx.shadowColor = "transparent";
+      ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);
     }
     for (var i = 0; i < this.tokensOnHex.length; i++) {
       ctx.beginPath();
