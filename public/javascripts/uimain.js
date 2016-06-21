@@ -88,7 +88,7 @@ function startSocket() {
     return false;
   });
   socket.on('game', function(msg) {
-    $('#messages').append($('<li>').text(msg));
+    $('#messages').append($('<li style="color:' + msg.colour + '">').text(msg.msg));
     $("#chatarea").scrollTop($("#chatarea")[0].scrollHeight);
   });
   socket.on('alert', function(msg) {

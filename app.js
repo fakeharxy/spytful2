@@ -152,9 +152,9 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' +
-          msg);
-        io.to(gameid).emit('game', clients[uid].name + ': ' + msg);
+        console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' + msg);
+        var colIndex = game.getPlayerIndex(uid);
+        io.to(gameid).emit('game', { colour: colIndex && colIndex>-1 ? game.players[colIndex].colour : '#666666', msg: clients[uid].name + ': ' + msg });
       }
     });
 
