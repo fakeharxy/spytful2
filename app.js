@@ -165,8 +165,7 @@ io.on('connection', function(socket) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' has pressed ready');
         if (game.addPlayer(uid, clients[uid].name)) {
-          io.to(gameid).emit('game', clients[uid].name + " is ready to play");
-          //io.emit('game', clients[uid].name + " is ready to play");
+          io.to(gameid).emit('game', { colour: '#000000', msg: clients[uid].name + " is ready to play" });
           //io.emit('gameUpdate', { players: game.players }); //TODO: see below
           var data = game.getObjectForClient();
           socket.broadcast.to(gameid).emit('gameState', data);
@@ -189,10 +188,7 @@ io.on('connection', function(socket) {
           if (game.prepareGame(function(alertMsg) {
               socket.emit('alert', alertMsg);
             })) {
-            io.to(gameid).emit('game', clients[uid].name + " starts the game; it's " + game.players[
-            game.currentPlayer].name + "'s turn");
-            //io.emit('game', clients[uid].name + " starts the game; it's " + game.players[
-            //  game.currentPlayer].name + "'s turn");
+            io.to(gameid).emit('game', { colour: '#000000', msg: clients[uid].name + " starts the game; it's " + game.players[game.currentPlayer].name + "'s turn" } );
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -235,17 +231,13 @@ io.on('connection', function(socket) {
 
           if (game.state != 'finished') {
             game.nextTurn();
-            io.to(gameid).emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
-              "'s turn");
-            //io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
-            //  "'s turn");
+            io.to(gameid).emit('game', { colour: '#000000', msg: "turn ended; it's " + game.players[game.currentPlayer].name + "'s turn" });
+
           } else {
-            io.to(gameid).emit('game', game.determineWinner());
-            //io.emit('game', game.determineWinner());
+            io.to(gameid).emit('game', { colour: '#000000',  msg: game.determineWinner() });
           }
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -259,7 +251,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -273,7 +264,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -287,7 +277,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
