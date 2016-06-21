@@ -34,7 +34,7 @@ var Hex = {
     } else {
       ctx.shadowColor = "transparent";
       ctx.textAlign = "center";
-      ctx.textBaseline = "center";
+      ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
       ctx.fillText(this.regionName, 0, -game.board.hexSize / 7 * 4);
     }
@@ -64,7 +64,7 @@ var Hex = {
     }
     if (this.ownerColour != -1) {
       ctx.beginPath();
-      ctx.rect(-8, -7, 14, 14);
+      ctx.rect(-7, -7, 14, 14);
       ctx.fillStyle = this.ownerColour;
       ctx.fill();
       ctx.stroke();
