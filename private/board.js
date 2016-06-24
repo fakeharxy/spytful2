@@ -43,7 +43,7 @@ module.exports = {
         this.hexArray[j] = [];
         for (var i = 0; i < this.width; i++) {
           var newHex = Object.create(Hex);
-          newHex.regionName = String.fromCharCode(65 + j) + (i + 1);
+          newHex.regionName = String.fromCharCode(65 + i) + (j + 1);
           newHex.centre = {
             x: this.calculateHexCentreX(i, j),
             y: this.calculateHexCentreY(j)
