@@ -90,8 +90,8 @@ module.exports = {
              score: this.score,
              briefcaseCount: this.briefcaseCount,
              outposts: this.outposts,
-             hand: Deck.getCardsForClient.call(this.hand),
-             stack: Deck.getCardsForClient.call(this.stack)
+             hand: Deck.getCardsForClient.call(this.hand, true),
+             stack: Deck.getCardsForClient.call(this.stack, true)
     };
   }
 

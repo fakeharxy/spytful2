@@ -11,14 +11,14 @@ var Deck = {
 
     for (var i = 0 ; i < this.cardPool.length ; i++) {
       if (this.cardPool[i]) {
-        Card.draw.call(this.cardPool[i], ctx, x + (this.cardWidth + this.cardSpacing) * i + this.cardPool[i].focusOffsetX, y + this.cardPool[i].focusOffsetY, true);
+        Card.draw.call(this.cardPool[i], ctx, x + (this.cardWidth + this.cardSpacing) * i + this.cardPool[i].focusOffsetX, y + this.cardPool[i].focusOffsetY);
       }
     }
 
     //draw deck
     var xHeap = x + this.maxCardsInPool * (this.cardWidth + this.cardSpacing);
     for (var i = this.cardArray.length - 1; i >= 0; i--) {
-      Card.draw.call(this.cardArray[i], ctx, xHeap, y, false);
+      Card.draw.call(this.cardArray[i], ctx, xHeap, y);
     }
     //remaining cards label
     if(this.cardArray.length > 0) {

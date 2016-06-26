@@ -140,10 +140,17 @@ io.on('connection', function(socket) {
         socket.join(gameid);
         
         var uid = this.handshake.session.uid;
-        //console.log("sending game state to client with id " + uid);
+        console.log("sending game state to client with id " + uid);
         var data = game.getObjectForClient();
         data.playerIndex = game.getPlayerIndex(uid);
         socket.emit('gameState', data);
+		var room = io.sockets.adapter.rooms[gameid];
+		/*console.log("room: " + room);
+		for (var id in room.sockets) {
+			console.log("user: " + id);
+			console.log("session: " + id.handshake.session.uid);
+		}
+		*/
       }
     });
 
