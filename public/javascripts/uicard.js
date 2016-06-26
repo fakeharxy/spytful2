@@ -1,5 +1,5 @@
 var Card = {
-  draw: function (ctx, x, y, faceUp, scale) {
+  draw: function (ctx, x, y, scale) {
     ctx.save();
 
     ctx.strokeStyle = "rgba(0,0,0,0.7)";
@@ -22,12 +22,12 @@ var Card = {
 
     ctx.lineWidth = 2;
     ctx.stroke();
-    ctx.fillStyle = faceUp ? game.board.hexColourMap[this.hex.colourCode] :
+    ctx.fillStyle = this.hex ? game.board.hexColourMap[this.hex.colourCode] :
       "#FFF";
     ctx.fill();
 
     //write region name
-    if (faceUp) {
+    if (this.hex) {
       ctx.fillStyle = "#000";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
