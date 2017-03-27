@@ -9,7 +9,7 @@ module.exports = {
   boardHeight: 5,
   maxCardsInPool: 3,  
   maxHandSize: 3,
-  maxOutpostsPerPlayer: 3,
+  maxOutpostsPerPlayer: 1,
   extractOnBriefcase: false,
   crossStreams: false,
   

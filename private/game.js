@@ -142,12 +142,12 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
-		//reset face-up cards in player's hand
-		for (var i = 0; i < this.players[this.currentPlayer].hand.length; i++) {
-			this.players[this.currentPlayer].hand[i].newlyDrawn = false;
-		}
+    //reset face-up cards in player's hand
+    for (var i = 0; i < this.players[this.currentPlayer].hand.length; i++) {
+      this.players[this.currentPlayer].hand[i].newlyDrawn = false;
+    }
 
-		
+
     //this.deck.deal(this.deck.cardPool, this.rules.maxCardsInPool - this.deck.cardPool.length);
     for (var i = 0; i < this.rules.maxCardsInPool; i++) {
       if (!this.deck.cardPool[i]) {
@@ -365,6 +365,10 @@ var Game = {
     if (this.turnState == 'finished' || this.turnState == 'drawing') {
       this.checkIfGameEnd();
       return true;
+    } else if (this.finalTurn == true) {
+      this.turnState = 'finished';
+      this.checkIfGameEnd();
+      return true;
     } else {
       alert("The game rules dictate you must draw cards before ending your turn...");
     }
@@ -381,7 +385,9 @@ var Game = {
     if ((poolIsEmpty && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
       if (this.turnsLeft <= 0) {
         this.state = 'finished';
+        this.finalTurn = false;
       } else {
+        this.finalTurn = true;
         this.turnsLeft--;
       }
     }
