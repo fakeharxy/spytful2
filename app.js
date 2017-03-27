@@ -140,10 +140,17 @@ io.on('connection', function(socket) {
         socket.join(gameid);
         
         var uid = this.handshake.session.uid;
-        //console.log("sending game state to client with id " + uid);
+        console.log("sending game state to client with id " + uid);
         var data = game.getObjectForClient();
         data.playerIndex = game.getPlayerIndex(uid);
         socket.emit('gameState', data);
+		var room = io.sockets.adapter.rooms[gameid];
+		/*console.log("room: " + room);
+		for (var id in room.sockets) {
+			console.log("user: " + id);
+			console.log("session: " + id.handshake.session.uid);
+		}
+		*/
       }
     });
 
@@ -152,9 +159,9 @@ io.on('connection', function(socket) {
       var game = games[gameid];
       if (game) {
         var uid = this.handshake.session.uid;
-        console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' +
-          msg);
-        io.to(gameid).emit('game', clients[uid].name + ': ' + msg);
+        console.log('game message from client ' + uid + ' (' + clients[uid].name + '): ' + msg);
+        var colIndex = game.getPlayerIndex(uid);
+        io.to(gameid).emit('game', { colour: colIndex && colIndex>-1 ? game.players[colIndex].colour : '#666666', msg: clients[uid].name + ': ' + msg });
       }
     });
 
@@ -165,8 +172,7 @@ io.on('connection', function(socket) {
         var uid = this.handshake.session.uid;
         //console.log('client with id ' + uid + ' has pressed ready');
         if (game.addPlayer(uid, clients[uid].name)) {
-          io.to(gameid).emit('game', clients[uid].name + " is ready to play");
-          //io.emit('game', clients[uid].name + " is ready to play");
+          io.to(gameid).emit('game', { colour: '#000000', msg: clients[uid].name + " is ready to play" });
           //io.emit('gameUpdate', { players: game.players }); //TODO: see below
           var data = game.getObjectForClient();
           socket.broadcast.to(gameid).emit('gameState', data);
@@ -189,10 +195,7 @@ io.on('connection', function(socket) {
           if (game.prepareGame(function(alertMsg) {
               socket.emit('alert', alertMsg);
             })) {
-            io.to(gameid).emit('game', clients[uid].name + " starts the game; it's " + game.players[
-            game.currentPlayer].name + "'s turn");
-            //io.emit('game', clients[uid].name + " starts the game; it's " + game.players[
-            //  game.currentPlayer].name + "'s turn");
+            io.to(gameid).emit('game', { colour: '#000000', msg: clients[uid].name + " starts the game; it's " + game.players[game.currentPlayer].name + "'s turn" } );
             //TODO: find a neater way to update small changes instead of sending everything
             /*
             var data = { state: game.state,
@@ -235,17 +238,13 @@ io.on('connection', function(socket) {
 
           if (game.state != 'finished') {
             game.nextTurn();
-            io.to(gameid).emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
-              "'s turn");
-            //io.emit('game', "turn ended; it's " + game.players[game.currentPlayer].name +
-            //  "'s turn");
+            io.to(gameid).emit('game', { colour: '#000000', msg: "turn ended; it's " + game.players[game.currentPlayer].name + "'s turn" });
+
           } else {
-            io.to(gameid).emit('game', game.determineWinner());
-            //io.emit('game', game.determineWinner());
+            io.to(gameid).emit('game', { colour: '#000000',  msg: game.determineWinner() });
           }
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -259,7 +258,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -273,7 +271,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });
@@ -287,7 +284,6 @@ io.on('connection', function(socket) {
           })) {
           data = game.getObjectForClient();
           io.to(gameid).emit('gameState', data);
-          //io.emit('gameState', data);
         }
       }
     });

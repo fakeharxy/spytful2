@@ -142,6 +142,12 @@ var Game = {
     if (++this.currentPlayer >= this.players.length) {
       this.currentPlayer = 0;
     }
+		//reset face-up cards in player's hand
+		for (var i = 0; i < this.players[this.currentPlayer].hand.length; i++) {
+			this.players[this.currentPlayer].hand[i].newlyDrawn = false;
+		}
+
+		
     //this.deck.deal(this.deck.cardPool, this.rules.maxCardsInPool - this.deck.cardPool.length);
     for (var i = 0; i < this.rules.maxCardsInPool; i++) {
       if (!this.deck.cardPool[i]) {

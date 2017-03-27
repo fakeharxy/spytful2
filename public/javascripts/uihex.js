@@ -1,7 +1,7 @@
 var Hex = {
   draw: function (ctx, drawPoints) {
     ctx.save();
-    ctx.translate(this.centre.x, this.centre.y);
+    ctx.translate(Math.round(this.centre.x), Math.round(this.centre.y));
     ctx.beginPath();
     for (var i = 0; i < drawPoints.length; i++) {
       var pt = drawPoints[i];
@@ -33,10 +33,10 @@ var Hex = {
       //otherwise write the region name
     } else {
       ctx.shadowColor = "transparent";
-      ctx.textAlign = "left";
-      ctx.textBaseline = "top";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
-      ctx.fillText(this.regionName, game.board.offset - game.board.hexSize, -game.board.hexSize / 2);
+      ctx.fillText(this.regionName, 0, -game.board.hexSize / 7 * 4);
     }
 
     //draw overlays
@@ -45,10 +45,20 @@ var Hex = {
       overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
     }
     if (overlayImg) {
-      var iconWidth = game.board.hexSize * 0.75;
+      var iconWidth = game.board.hexSize * 0.5625;
       var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
-      ctx.shadowColor = "transparent";
-      ctx.drawImage(overlayImg, -iconWidth / 2, -iconHeight / 2, iconWidth, iconHeight);
+      //ctx.shadowColor = "transparent";
+      var iconX = -iconWidth / 2;
+      var iconY = -iconHeight / 2;
+      ctx.drawImage(overlayImg, iconX, iconY, iconWidth, iconHeight);
+      if (this.ownerColour != -1) {
+        ctx.beginPath();
+        var pinSize = 2;
+        ctx.rect(iconX + pinSize, iconY + pinSize, iconWidth - pinSize*2, iconHeight - pinSize*2);
+        ctx.fillStyle = this.ownerColour;
+        ctx.fill();
+        ctx.stroke();
+      }
     }
     for (var i = 0; i < this.tokensOnHex.length; i++) {
       ctx.beginPath();
@@ -59,13 +69,6 @@ var Hex = {
       //console.log("y: " + y);
       //console.log("token: " + this.tokensOnHex[i]);
       ctx.fillStyle = this.tokensOnHex[i];
-      ctx.fill();
-      ctx.stroke();
-    }
-    if (this.ownerColour != -1) {
-      ctx.beginPath();
-      ctx.rect(-7, -7, 14, 14);
-      ctx.fillStyle = this.ownerColour;
       ctx.fill();
       ctx.stroke();
     }

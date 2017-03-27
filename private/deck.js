@@ -21,6 +21,7 @@ var Deck = {
     //Array.prototype.push.apply(target, this.cardPool.splice(index, 1));
     var poolCard = this.cardPool[index];
     if (poolCard) {
+			poolCard.newlyDrawn = true;
       target.push(poolCard);
       this.cardPool[index] = null;
       return true;
@@ -93,12 +94,12 @@ var Deck = {
       cardWidth: Deck.cardWidth,
       cardHeight: Deck.cardHeight,
       cardSpacing: Deck.cardSpacing,
-      cardPool: Deck.getCardsForClient.call(this.cardPool),
+      cardPool: Deck.getCardsForClient.call(this.cardPool, true),
       cardArray: Deck.getCardsForClient.call(this.cardArray),
       drawPoints: Deck.drawPoints
     };
   },
-  getCardsForClient: function() {
+  getCardsForClient: function(faceup) {
     out = [];
     for (var i = 0; i < this.length; i++) {
       if (this[i]) {
@@ -110,7 +111,8 @@ var Deck = {
           focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
           focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
           rotation: this[i].rotation,
-          hex: this[i].hex.getObjectForClient()
+					newlyDrawn: this[i].newlyDrawn ? true : false,
+          hex: faceup ? this[i].hex.getObjectForClient() : null
         });
       } else {
         out.push(this[i]);
