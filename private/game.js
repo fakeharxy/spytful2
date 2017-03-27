@@ -59,6 +59,7 @@ var Game = {
     player.uid = uid;
     player.name = name;
     player.number = this.players.length + 1;
+    this.turnsLeft = player.number;
     player.setup();
     this.players.push(player);
     return true;
@@ -372,7 +373,11 @@ var Game = {
       }
     }
     if ((poolIsEmpty && this.deck.cardArray.length === 0) || this.briefcaseCount === 0) {
-      this.state = 'finished';
+      if (this.turnsLeft <= 0) {
+        this.state = 'finished';
+      } else {
+        this.turnsLeft--;
+      }
     }
   },
 
