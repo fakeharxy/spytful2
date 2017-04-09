@@ -41,15 +41,18 @@ var Hex = {
 
     //draw overlays
     var overlayImg = null;
+    var overlaySize = 1;
     if (this.hasBriefcase) {
       if (this.hasSuperBriefcase) {
         overlayImg = ctx.imageCache["fancycastle"];
+        overlaySize = 0.6875;
       } else {
         overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
+        overlaySize = 0.5625;
       }
     }
     if (overlayImg) {
-      var iconWidth = game.board.hexSize * 0.5625;
+      var iconWidth = game.board.hexSize * overlaySize;
       var iconHeight = iconWidth / overlayImg.width * overlayImg.height;
       //ctx.shadowColor = "transparent";
       var iconX = -iconWidth / 2;
