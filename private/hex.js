@@ -160,6 +160,7 @@ var Hex = {
       waterRotate: this.waterRotate,
       regionName: this.regionName,
       hasBriefcase: this.hasBriefcase,
+      hasSuperBriefcase: this.hasSuperBriefcase,
       briefcaseValue: this.briefcaseValue,
       tokensOnHex: this.tokensOnHex,
       outposts: this.outposts,

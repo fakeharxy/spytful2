@@ -42,7 +42,11 @@ var Hex = {
     //draw overlays
     var overlayImg = null;
     if (this.hasBriefcase) {
-      overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
+      if (this.hasSuperBriefcase) {
+        overlayImg = ctx.imageCache["fancycastle"];
+      } else {
+        overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
+      }
     }
     if (overlayImg) {
       var iconWidth = game.board.hexSize * 0.5625;

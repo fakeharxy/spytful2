@@ -35,6 +35,9 @@ $(document).ready(function() {
     name: "briefcase3",
     file: "briefcase3.png"
   }, {
+    name: "fancycastle",
+    file: "fancycastle.gif"
+  }, {
     name: 'logo',
     file: "logo.png"
   }];
@@ -72,7 +75,6 @@ function loadImage(imgToLoad) {
 }
 
 function imagesReady() {
-  //only at this point can the client connect to the socket and request the 'game' object/data
   startSocket();
 }
 

@@ -84,7 +84,7 @@ var Game = {
       return false;
     }
 
-    //add briefcases
+    //add castles
     var validHexes = [];
     for (var j = 0; j < this.board.height; j++) {
       for (var i = 0; i < this.board.width; i++) {
@@ -115,6 +115,9 @@ var Game = {
         }
       }
       hex.hasBriefcase = true;
+      if (i == 0) {
+        hex.hasSuperBriefcase = true;
+      }
       hex.briefcaseValue = briefcaseValue;
       if (++briefcaseValue > this.rules.maxPointsPerBriefcase) {
         briefcaseValue = this.rules.minPointsPerBriefcase;
@@ -403,10 +406,12 @@ var Game = {
         topPlayer = this.players[i];
         var tieList = [];
       } else if (this.players[i].score == highest) {
-        if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
+        // if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
+         if (this.players[i].hasSuperBriefcase) {
           topPlayer = this.players[i];
           var tieList = [];
-        } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
+        // } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
+         } else {
           tieList.push(this.players[i]);
         }
       }
@@ -445,12 +450,20 @@ var Game = {
               var newPoints = 0;
               if (hex.owner) {
                 if (hex.owner != this.players[this.currentPlayer]) {
+                  if (hex.hasSuperBriefcase) {
+                    hex.owner.hasSuperBriefcase = false;
+                    this.players[this.currentPlayer] = true;
+                  }
                   hex.owner.score -= hex.briefcaseValue;
                   hex.owner = this.players[this.currentPlayer];
                   newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
                     .firstBriefcasePenalty : 0);
+
                 }
               } else {
+                  if (hex.hasSuperBriefcase) {
+                    this.players[this.currentPlayer] = true;
+                  }
                 hex.owner = this.players[this.currentPlayer];
                 newPoints += this.rules.markBonus;
                 newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
