@@ -452,22 +452,20 @@ var Game = {
                 if (hex.owner != this.players[this.currentPlayer]) {
                   if (hex.hasSuperBriefcase) {
                     hex.owner.hasSuperBriefcase = false;
-                    this.players[this.currentPlayer] = true;
+                    this.players[this.currentPlayer].hasSuperBriefcase = true;
                   }
                   hex.owner.score -= hex.briefcaseValue;
                   hex.owner = this.players[this.currentPlayer];
-                  newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
-                    .firstBriefcasePenalty : 0);
+                  newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules.firstBriefcasePenalty : 0);
 
                 }
               } else {
                   if (hex.hasSuperBriefcase) {
-                    this.players[this.currentPlayer] = true;
+                    this.players[this.currentPlayer].hasSuperBriefcase = true;
                   }
                 hex.owner = this.players[this.currentPlayer];
                 newPoints += this.rules.markBonus;
-                newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules
-                  .firstBriefcasePenalty : 0);
+                newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules.firstBriefcasePenalty : 0);
               }
               points += newPoints;
               scoreSummary += " // briefcase " + briefcases + " value: " + hex.briefcaseValue +
@@ -496,8 +494,7 @@ var Game = {
           alert(scoreSummary + " // total: " + points);
           this.players[this.currentPlayer].score += points; //add points to player's total
           this.players[this.currentPlayer].briefcaseCount += briefcases;
-          alert("you just collected " + points + " points, bringing your total to " + this.players[
-            this.currentPlayer].score);
+          alert("you just collected " + points + " points, bringing your total to " + this.players[this.currentPlayer].score);
           this.clearRoute();
           //this.draw();
           return true;
