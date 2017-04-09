@@ -36,7 +36,7 @@ $(document).ready(function() {
     file: "briefcase3.png"
   }, {
     name: "fancycastle",
-    file: "fancycastle.gif"
+    file: "fancycastle.png"
   }, {
     name: 'logo',
     file: "logo.png"
