@@ -405,7 +405,7 @@ var Game = {
         highest = this.players[i].score;
         topPlayer = this.players[i];
         var tieList = [];
-      } else if (this.players[i].score == highest) {
+      } else if (this.players[i].score == highest && !topPlayer.hasSuperBriefcase) {
         // if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
          if (this.players[i].hasSuperBriefcase) {
           topPlayer = this.players[i];
