@@ -31,12 +31,14 @@ var Hex = {
         3, game.board.hexSize * 3);
 
       //otherwise write the region name
+    /*
     } else {
       ctx.shadowColor = "transparent";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#000";
       ctx.fillText(this.regionName, 0, -game.board.hexSize / 7 * 4);
+    */  
     }
 
     //draw overlays
@@ -45,7 +47,7 @@ var Hex = {
     if (this.hasBriefcase) {
       if (this.hasSuperBriefcase) {
         overlayImg = ctx.imageCache["fancycastle"];
-        overlaySize = 0.6875;
+        overlaySize = 0.7875;
       } else {
         overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
         overlaySize = 0.5625;

@@ -28,13 +28,16 @@ var Card = {
 
     //write region name
     if (this.hex) {
-      ctx.fillStyle = "#000";
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.fillText(
-        this.hex.regionName,
-        game.deck.cardWidth / 2,
-        game.deck.cardHeight / 2);
+      //mark extraction cards
+      if (this.isExtraction) {
+        ctx.fillStyle = "#000";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          "extract!", //this.hex.regionName,
+          game.deck.cardWidth / 2,
+          game.deck.cardHeight / 2);
+      }
     } else {
       ctx.drawImage(
         ctx.imageCache.logo,
