@@ -36,7 +36,7 @@ module.exports = {
     }
     this.hexDrawPoints = this.getRoundedPoints(Hex.corners, this.hexRoundingRadius);
 
-    //build hex objects
+    //build hex objects.
     do {
       console.log("I tried!");
       for (var j = 0; j < this.height; j++) {
