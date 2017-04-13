@@ -166,7 +166,23 @@ var Game = {
   onclick: function(x, y, alert) {
     var loc = this.locateMouse(x, y);
     if (loc == "board") {
-      if (this.turnState == "extracting") {
+      if (this.turnState == "dropping") {
+        var clickedHex = this.board.determineClick(x, y);
+        if (clickedHex != undefined) {
+          if (!clickedHex.hasBriefcase) {
+            //check if the hex is the right colour
+            if (clickedHex.colourCode == this.players[this.currentPlayer].stack[0].hex.colourCode) {
+              this.players[this.currentPlayer].dropInToken(clickedHex);
+              this.turnState = "playing";
+              return true;
+            } else {
+              alert("you must drop in on a hex of the corresponding colour");
+            }
+          } else {
+            alert(clickedHex.hasSuperBriefcase ? "no way, you'd get caught in the fancy crenellations" : "you can't drop in there");
+          }
+        }
+      } else if (this.turnState == "extracting") {
         var clickedHex = this.board.determineClick(x, y);
         if (clickedHex != undefined) {
           //check if there is another card in the player's stack
@@ -297,8 +313,12 @@ var Game = {
           this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           this.updateFocus(null);
+          var stackWasEmpty = (this.players[this.currentPlayer].stack.length == 0);
           this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
           //this.draw();
+          if (stackWasEmpty && this.players[this.currentPlayer].stack.length == 1) { //dropping in
+            this.turnState = "dropping";
+          }
           return true;
         }
       } else if (this.turnState == "outposting") {
@@ -322,7 +342,7 @@ var Game = {
           }
         }
       } else {
-        if (this.turnState == "extracting") {
+        if (this.turnState == "extracting" || this.turnState == "dropping") {
           alert("you cannot do this now; you are " + this.turnState);
         } else {
           alert(
@@ -334,7 +354,8 @@ var Game = {
         if (this.players[this.currentPlayer].stack.length > 0) {
           //TODO confirm start of extraction with user?
           this.turnState = "extracting";
-          this.extractionRoute = [this.players[this.currentPlayer].stack[0].hex];
+          //this.extractionRoute = [this.players[this.currentPlayer].stack[0].hex];
+          this.extractionRoute = [this.players[this.currentPlayer].tokenHex];
           //this.draw();
           return true;
         } else {
@@ -347,6 +368,9 @@ var Game = {
         this.turnState = "playing";
         this.extractionRoute = [];
         return true;
+      } else if (this.turnState == "dropping") {
+        //TODO cancel dropping-in
+        alert("regrettably, this functionality remains to be implemented");
       } else {
         alert('you cannot do this now; perhaps you have already drawn cards');
       }
@@ -435,8 +459,8 @@ var Game = {
 
   completeExtraction: function(alert) {
     if (this.turnState == "extracting") {
-      if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1]
-        .hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
+      //if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1].hex.regionName == this.extractionRoute[this.extractionRoute.length - 1].regionName) {
+      if (this.players[this.currentPlayer].stack[this.extractionRoute.length - 1].isExtraction) {
         if (!this.extractionRoute[this.extractionRoute.length - 1].hasBriefcase || this.rules.extractOnBriefcase) {
           //go through extraction route and collect points, reset hexes
           var scoreSummary = "Scoring";
@@ -502,7 +526,8 @@ var Game = {
           alert("The rules clearly dictate that you cannot extract on a briefcase");
         }
       } else {
-        alert("the rules require the correct region card to extract");
+        //alert("the rules require the correct region card to extract");
+        alert("the rules require an extraction card to extract");
       }
     } else {
       alert("logic suggests that to finish extraction you must first start extraction");
@@ -571,8 +596,8 @@ var Game = {
 
   clearRoute: function() {
     this.players[this.currentPlayer].clearRoute();
-    if (this.turnState == "extracting") {
-      //cancel extraction
+    if (this.turnState == "extracting" || this.turnState == "dropping") {
+      //cancel extraction / dropping-in
       this.turnState = "playing";
     }
     return true;

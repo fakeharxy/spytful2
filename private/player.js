@@ -52,9 +52,9 @@ module.exports = {
     if (this.validHandClick(validCardCheck, alert)) {
       var card = this.hand.splice(index, 1);
       this.stack.push(card[0]);
-      if (this.stack.length == 1) {
-        this.dropInToken(this.stack[0].hex);
-      }
+      //if (this.stack.length == 1) {
+      //  this.dropInToken(this.stack[0].hex);
+      //}
     }
   },
 
@@ -62,7 +62,8 @@ module.exports = {
     if (card) {
       if (this.stack.length !== 0) {
         return true;
-      } else if (!card.hex.hasBriefcase) { //first card played to stack cannot be briefcase
+      //} else if (!card.hex.hasBriefcase) { //first card played to stack cannot be briefcase
+      } else if (!card.isExtraction) { //first card played to stack cannot be an extraction card
         return true;
       } else {
         alert("The rules dictate that this is not a valid card to play");
