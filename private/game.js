@@ -451,7 +451,7 @@ var Game = {
     } else {
       message = topPlayer.name + " has won. They";
     }
-    message += " got " + highest + " points (" + topPlayer.briefcaseCount + " briefcases).";
+    message += " got " + highest + " points.";
 
     return message;
 
