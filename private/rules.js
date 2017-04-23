@@ -23,8 +23,8 @@ module.exports = {
   //scoring
   markBonus: 1,
   pointsPerHex: 0,
-  minPointsPerBriefcase: 1,
-  maxPointsPerBriefcase: 1, //don't forget to provide images for the briefcase values
+  minPointsPerBriefcase: 2,
+  maxPointsPerBriefcase: 2, //don't forget to provide images for the briefcase values
   briefcaseBonusAccumulator: 0, //incrementor for bonus for every additional briefcase
   firstBriefcasePenalty: 0,
   briefcaseRespawn: true,
