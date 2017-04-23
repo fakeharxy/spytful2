@@ -326,7 +326,7 @@ var Game = {
           y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           var clickedCardColour = this.players[this.currentPlayer].hand[handCardIndex].hex.colourCode;
-          if (this.players[this.currentPlayer].hand[handCardIndex].hex.isOutpost) {
+          if (this.players[this.currentPlayer].hand[handCardIndex].isOutpost) {
             if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
               .neighbours[this.outpostSegment].colourCode) {
               this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
