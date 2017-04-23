@@ -301,7 +301,7 @@ var Game = {
           return this.drawCardFromDeck(alert);
         }
       } else {
-        if (this.turnState == "extracting") {
+        if (this.turnState == "extracting" || this.turnState == "dropping") {
           alert("you cannot do this now; you are " + this.turnState);
         } else {
           alert("The rules state that you can only draw cards once a turn");
