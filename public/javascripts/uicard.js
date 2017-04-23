@@ -29,14 +29,14 @@ var Card = {
     //write region name
     if (this.hex) {
       //mark extraction cards
-      if (this.isExtraction) {
+      if (this.isExtraction || this.isOutpost ) {
         ctx.fillStyle = "#000";
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.fillText(
-          "extract!", //this.hex.regionName,
+          this.isExtraction ? "extract!" : "outpost!", //this.hex.regionName,
           game.deck.cardWidth / 2,
-          game.deck.cardHeight / 2);
+          game.deck.cardHeight -20 );
       }
     } else {
       ctx.drawImage(

@@ -64,6 +64,7 @@ var Deck = {
             var card = Object.create(Card);
             card.hex = hexArray[j][i];
             card.isExtraction = (n == 0); //simple first attempt at extraction cards: first per hex is an extraction card
+            card.isOutpost = (n == 1); 
             card.rotation = Math.random() * Deck.cardRotationMax -
               Deck.cardRotationMax / 2;
             var wobble = {};
@@ -114,7 +115,8 @@ var Deck = {
           rotation: this[i].rotation,
 					newlyDrawn: this[i].newlyDrawn ? true : false,
           hex: faceup ? this[i].hex.getObjectForClient() : null,
-          isExtraction: this[i].isExtraction
+          isExtraction: this[i].isExtraction,
+          isOutpost: this[i].isOutpost
         });
       } else {
         out.push(this[i]);

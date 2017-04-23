@@ -42,7 +42,7 @@ module.exports = {
     this.stack = [];
     this.dropInToken(undefined);
   },
-  
+
   clearHand: function() {
     this.hand = [];
   },
@@ -60,14 +60,14 @@ module.exports = {
 
   validHandClick: function(card, alert) {
     if (card) {
-      if (this.stack.length !== 0) {
+      // if (this.stack.length !== 0) {
         return true;
-      //} else if (!card.hex.hasBriefcase) { //first card played to stack cannot be briefcase
-      } else if (!card.isExtraction) { //first card played to stack cannot be an extraction card
-        return true;
-      } else {
-        alert("The rules dictate that this is not a valid card to play");
-      }
+        //} else if (!card.hex.hasBriefcase) { //first card played to stack cannot be briefcase
+        // } else if (!card.isExtraction) { //first card played to stack cannot be an extraction card
+        // return true;
+      // } else {
+        // alert("The rules dictate that this is not a valid card to play");
+      // }
     }
     return false;
   },
@@ -84,15 +84,16 @@ module.exports = {
     game.deck.takePool(this.hand);
   },
   */
-  
+
   getObjectForClient: function() {
-    return { name: this.name,
-             colour: this.colour,
-             score: this.score,
-             briefcaseCount: this.briefcaseCount,
-             outposts: this.outposts,
-             hand: Deck.getCardsForClient.call(this.hand, true),
-             stack: Deck.getCardsForClient.call(this.stack, true)
+    return {
+      name: this.name,
+      colour: this.colour,
+      score: this.score,
+      briefcaseCount: this.briefcaseCount,
+      outposts: this.outposts,
+      hand: Deck.getCardsForClient.call(this.hand, true),
+      stack: Deck.getCardsForClient.call(this.stack, true)
     };
   }
 

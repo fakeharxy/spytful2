@@ -326,18 +326,24 @@ var Game = {
           y - this.handY);
         if (handCardIndex < this.players[this.currentPlayer].hand.length) {
           var clickedCardColour = this.players[this.currentPlayer].hand[handCardIndex].hex.colourCode;
-          if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
-            .neighbours[this.outpostSegment].colourCode) {
-            this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
-            this.outpostHex.setOutpostAt(this.outpostSegment, this.players[this.currentPlayer].colour); //finalise outpost
-            this.players[this.currentPlayer].outposts++;
-            this.turnOutpostsSet++;
-            this.turnState = "playing";
-            //this.draw();
-            return true;
+          if (this.players[this.currentPlayer].hand[handCardIndex].hex.isOutpost) {
+            if (clickedCardColour == this.outpostHex.colourCode || clickedCardColour == this.outpostHex
+              .neighbours[this.outpostSegment].colourCode) {
+              this.players[this.currentPlayer].hand.splice(handCardIndex, 1);
+              this.outpostHex.setOutpostAt(this.outpostSegment, this.players[this.currentPlayer].colour); //finalise outpost
+              this.players[this.currentPlayer].outposts++;
+              this.turnOutpostsSet++;
+              this.turnState = "playing";
+              //this.draw();
+              return true;
           } else {
             alert(
               "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
+            );
+          }
+          } else {
+            alert (
+              "It should be clear that you would require an outpost card to make an outpost."
             );
           }
         }
