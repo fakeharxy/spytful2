@@ -22,6 +22,7 @@
   <tr><td>Largest briefcase value</td><td><input id='maxbriefcasepoints' autocomplete='off' /></td></tr>
   <tr><td>Briefcase accumulator:</td><td><input id='briefcaseacc' autocomplete='off' /></td></tr>
   <tr><td>First briefcase penalty:</td><td><input id='briefcasepenalty' autocomplete='off' /></td></tr>
+  <tr><td>Outposts per Player:</td><td><input id='outposts' autocomplete='off' /></td></tr>
   </table>
   <br/>
   <div id="actionarea">
@@ -43,7 +44,8 @@ function create() {
       sbs: $('#minbriefcasepoints').val(),
       sbl: $('#maxriefcasepoints').val(),
       sba: $('#briefcaseacc').val(),
-      sbp: $('#briefcasepenalty').val()
+      sbp: $('#briefcasepenalty').val(),
+      opp: $('#outposts').val()
     }, function(data) {
       $("#actionarea").html(data);
     }

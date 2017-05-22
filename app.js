@@ -377,6 +377,10 @@ function createNewGame(params) {
     rules.firstBriefcasePenalty = parseInt(params.sbp);
     console.log("set firstBriefcasePenalty");
   } 
+  if (params.opp) {
+    rules.maxOutpostsPerPlayer = parseInt(params.opp);
+    console.log("set firstBriefcasePenalty");
+  } 
  
   game.rules = rules;
   game.setup();
