@@ -21,7 +21,7 @@ var Deck = {
     //Array.prototype.push.apply(target, this.cardPool.splice(index, 1));
     var poolCard = this.cardPool[index];
     if (poolCard) {
-			poolCard.newlyDrawn = true;
+      poolCard.newlyDrawn = true;
       target.push(poolCard);
       this.cardPool[index] = null;
       return true;
@@ -29,7 +29,7 @@ var Deck = {
       return false;
     }
   },
-  
+
   /*
   takePool: function(target) {
     var poolCard = this.cardPool.shift();
@@ -43,7 +43,7 @@ var Deck = {
     }
   },
   */
-  
+
   buildDeck: function(hexArray, cardsPerHex) {
     this.cardPool = [];
     this.cardPool.focusOffsetX = 0;
@@ -64,7 +64,7 @@ var Deck = {
             var card = Object.create(Card);
             card.hex = hexArray[j][i];
             card.isExtraction = (n == 0); //simple first attempt at extraction cards: first per hex is an extraction card
-            card.isOutpost = (n == 1); 
+            card.isOutpost = (n == 1);
             card.rotation = Math.random() * Deck.cardRotationMax -
               Deck.cardRotationMax / 2;
             var wobble = {};
@@ -113,7 +113,7 @@ var Deck = {
           focusOffsetX: this.focusOffsetX ? this.focusOffsetX : this[i].focusOffsetX,
           focusOffsetY: this.focusOffsetY ? this.focusOffsetY : this[i].focusOffsetY,
           rotation: this[i].rotation,
-					newlyDrawn: this[i].newlyDrawn ? true : false,
+          newlyDrawn: this[i].newlyDrawn ? true : false,
           hex: faceup ? this[i].hex.getObjectForClient() : null,
           isExtraction: this[i].isExtraction,
           isOutpost: this[i].isOutpost
