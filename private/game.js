@@ -176,10 +176,10 @@ var Game = {
               this.turnState = "playing";
               return true;
             } else {
-              alert("you must drop in on a hex of the corresponding colour");
+              alert("Drop-in hex must match colour of the card.");
             }
           } else {
-            alert(clickedHex.hasSuperBriefcase ? "no way, you'd get caught in the fancy crenellations" : "you can't drop in there");
+            alert(clickedHex.hasSuperBriefcase ? "no way, you'd get caught in the fancy crenellations" : "You cannot drop in on a castle. Pick an empty hex.");
           }
         }
       } else if (this.turnState == "extracting") {
@@ -205,24 +205,24 @@ var Game = {
                     return true;
                   } else {
                     alert(
-                      "It is not possible to cross your own route"
+                      "It is not possible to cross your own route."
                     );
                   }
                 } else {
                   alert(
-                    "the next hex must match the colour of the next card in your movement stack"
+                    "The next hex must match the colour of the next card in your movement stack"
                   );
                 }
               } else {
                 alert(
-                  "You cannot move through another player's outpost (the rules dictate this)"
+                  "You cannot move through another player's outpost."
                 );
               }
             } else {
-              alert("you can only continue movement to an adjacent hex");
+              alert("You can only continue movement to an adjacent hex");
             }
           } else {
-            alert("you don't have any more cards in your movement stack");
+            alert("You don't have any more cards in your movement stack");
           }
         }
       } else if (this.turnState == 'playing') {
@@ -256,7 +256,7 @@ var Game = {
                   "The rules insist that you cannot place an outpost adjacent to an existing outpost (of your own)"
                 );
               }
-            } else if (outpost == this.players[this.currentPlayer].colour) {
+            } else if (outpost == this.players[this.currentPlayer].colour && this.rules.removeOutposts == true) {
               //TODO: add confirmation mechanism
               //if (confirm("Are you sure you want to permanently remove this outpost?")) {
               clickedHex.removeOutpostAt(segmentClicked);
@@ -265,7 +265,7 @@ var Game = {
               return true;
               //}
             } else {
-              alert("The rules dictate that you cannot conquer existing outposts! ");
+              alert("The rules dictate that once an outpost has been placed, it cannot be removed.");
             }
           }
         }
@@ -529,7 +529,7 @@ var Game = {
           //this.draw();
           return true;
         } else {
-          alert("The rules clearly dictate that you cannot extract on a briefcase");
+          alert("The rules clearly dictate that you cannot extract on a castle");
         }
       } else {
         //alert("the rules require the correct region card to extract");
