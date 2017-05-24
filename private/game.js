@@ -173,7 +173,7 @@ var Game = {
             //check if the hex is the right colour
             if (clickedHex.colourCode == this.players[this.currentPlayer].stack[0].hex.colourCode) {
               this.players[this.currentPlayer].dropInToken(clickedHex);
-              this.turnState = "playing";
+              this.turnState = "drawing";
               return true;
             } else {
               alert("Drop-in hex must match colour of the card.");
@@ -352,7 +352,7 @@ var Game = {
           alert("you cannot do this now; you are " + this.turnState);
         } else {
           alert(
-            "The rules state that once you have drawn cards, you can no longer play actions");
+            "The rules state that once you have drawn cards or dropped in this turn, you can no longer play actions. You must now draw cards.");
         }
       }
     } else if (loc == "stack") {
