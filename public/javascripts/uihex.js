@@ -45,13 +45,13 @@ var Hex = {
     var overlayImg = null;
     var overlaySize = 1;
     if (this.hasBriefcase) {
-      if (this.hasSuperBriefcase) {
-        overlayImg = ctx.imageCache["fancycastle"];
-        overlaySize = 0.7875;
-      } else {
+      // if (this.hasSuperBriefcase) {
+        // overlayImg = ctx.imageCache["fancycastle"];
+        // overlaySize = 0.7875;
+      // } else {
         overlayImg = ctx.imageCache["briefcase" + this.briefcaseValue];
         overlaySize = 0.5625;
-      }
+      // }
     }
     if (overlayImg) {
       var iconWidth = game.board.hexSize * overlaySize;

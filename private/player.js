@@ -4,7 +4,7 @@ module.exports = {
   playerColours: {
     1: '#E80000',
     2: '#0000FF',
-    3: '#CCFF33',
+    3: '#FF80FF',
     4: '#006600',
     5: '#663300'
   },
@@ -93,7 +93,8 @@ module.exports = {
       briefcaseCount: this.briefcaseCount,
       outposts: this.outposts,
       hand: Deck.getCardsForClient.call(this.hand, true),
-      stack: Deck.getCardsForClient.call(this.stack, true)
+      stack: Deck.getCardsForClient.call(this.stack, true),
+      number: this.number
     };
   }
 

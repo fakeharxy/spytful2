@@ -336,13 +336,13 @@ var Game = {
               this.turnState = "playing";
               //this.draw();
               return true;
+            } else {
+              alert(
+                "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
+              );
+            }
           } else {
             alert(
-              "I'm afraid that card can't be used for this outpost. Either pick a card that can or cancel the outpost by clicking it again."
-            );
-          }
-          } else {
-            alert (
               "It should be clear that you would require an outpost card to make an outpost."
             );
           }
@@ -429,35 +429,30 @@ var Game = {
   determineWinner: function() {
     var highest = -1;
     var topPlayer;
-    var tieList = [];
+    // var tieList = [];
     for (var i = 0; i < this.players.length; i++) {
       if (this.players[i].score > highest) {
         highest = this.players[i].score;
         topPlayer = this.players[i];
-        var tieList = [];
-      } else if (this.players[i].score == highest && !topPlayer.hasSuperBriefcase) {
-        // if (this.players[i].briefcaseCount > topPlayer.briefcaseCount) {
-         if (this.players[i].hasSuperBriefcase) {
-          topPlayer = this.players[i];
-          var tieList = [];
+        console.log("player number: " + this.players[i].number)
+        // var tieList = [];
+      } else if (this.players[i].score == highest && topPlayer.number < this.players[i].number) {
+        topPlayer = this.players[i];
         // } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
-         } else {
-          tieList.push(this.players[i]);
-        }
       }
     }
 
     var message;
-    if (tieList.length > 0) {
-      message = "The game was a tie: " + topPlayer.name;
-      for (var i = 0; i < tieList.length; i++) {
-        message += ", " + tieList[i].name;
-      }
-      message += " all";
-    } else {
+    // if (tieList.length > 0) {
+      // message = "The game was a tie: " + topPlayer.name;
+      // for (var i = 0; i < tieList.length; i++) {
+        // message += ", " + tieList[i].name;
+      // }
+      // message += " all";
+    // } else {
       message = topPlayer.name + " has won. They";
-    }
-    message += " got " + highest + " points.";
+    // }
+    message += " got " + highest + " points. Ties are broken by turn order (furthest from start player).";
 
     return message;
 
@@ -490,9 +485,9 @@ var Game = {
 
                 }
               } else {
-                  if (hex.hasSuperBriefcase) {
-                    this.players[this.currentPlayer].hasSuperBriefcase = true;
-                  }
+                if (hex.hasSuperBriefcase) {
+                  this.players[this.currentPlayer].hasSuperBriefcase = true;
+                }
                 hex.owner = this.players[this.currentPlayer];
                 newPoints += this.rules.markBonus;
                 newPoints += hex.briefcaseValue + briefcaseBonus - (briefcases == 1 ? this.rules.firstBriefcasePenalty : 0);
