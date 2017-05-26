@@ -48,26 +48,26 @@ var Game = {
       ctx.fillText("Scores", scoreX, scoreY);
       scoreY += 5;
       ctx.font = '8pt Arial';
-      // playersInOrder = this.players;
-      // playersInOrder.sort(compare);
+      playersInOrder = this.players.slice();
+      playersInOrder.sort(compare);
 
-      // function compare(a, b) {
-      //   if (a.score < b.score)
-      //     return 1;
-      //   if (a.score > b.score)
-      //     return -1;
-      //   return 0;
-      // }
+      function compare(a, b) {
+        if (a.score < b.score)
+          return 1;
+        if (a.score > b.score)
+          return -1;
+        return 0;
+      }
 
-      for (var i = 0; i < this.players.length; i++) {
+      for (var i = 0; i < playersInOrder.length; i++) {
         scoreY += 15;
         //        ctx.beginPath();
         //       ctx.arc(scoreX, scoreY, 5, 0, 2 * Math.PI, false);
-        ctx.fillStyle = this.players[i].colour;
+        ctx.fillStyle = playersInOrder[i].colour;
         // ctx.fill();
         // ctx.stroke();
 
-        ctx.fillText(this.players[i].number + ". " + this.players[i].name + ": " + this.players[i].score, scoreX, scoreY);
+        ctx.fillText(playersInOrder[i].number + ". " + playersInOrder[i].name + ": " + playersInOrder[i].score, scoreX, scoreY);
       }
 
       ctx.fillStyle = "#000";
