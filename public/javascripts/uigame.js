@@ -22,7 +22,7 @@ var Game = {
 
       //draw extraction route
       ctx.lineWidth = 5;
-      ctx.strokeStyle = 'rgba(50,50,255,0.7)';
+      ctx.strokeStyle = this.players[this.currentPlayer].colour;
       if (this.turnState == "extracting") {
         if (this.extractionRoute.length > 1) {
           ctx.beginPath();
@@ -56,6 +56,14 @@ var Game = {
           return 1;
         if (a.score > b.score)
           return -1;
+        if (a.score == b.score) {
+          if (a.number < b.number) {
+            return 1;
+          }
+          if (a.number > b.number) {
+            return -1;
+          }
+        }
         return 0;
       }
 
@@ -67,7 +75,7 @@ var Game = {
         // ctx.fill();
         // ctx.stroke();
 
-        ctx.fillText(playersInOrder[i].number + ". " + playersInOrder[i].name + ": " + playersInOrder[i].score, scoreX, scoreY);
+        ctx.fillText(playersInOrder[i].name + ": " + playersInOrder[i].score + " (" + playersInOrder[i].number + ")", scoreX, scoreY);
       }
 
       ctx.fillStyle = "#000";
