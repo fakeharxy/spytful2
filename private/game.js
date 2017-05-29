@@ -161,6 +161,7 @@ var Game = {
     this.turnState = 'playing';
     this.deckCardDrawn = false;
     this.cardDrawnCount = 0;
+    this.hasDropped = false;
   },
 
   onclick: function(x, y, alert) {
@@ -173,7 +174,8 @@ var Game = {
             //check if the hex is the right colour
             if (clickedHex.colourCode == this.players[this.currentPlayer].stack[0].hex.colourCode) {
               this.players[this.currentPlayer].dropInToken(clickedHex);
-              this.turnState = "drawing";
+              this.turnState = "playing";
+              this.hasDropped = true;
               return true;
             } else {
               alert("Drop-in hex must match colour of the card.");
@@ -309,17 +311,23 @@ var Game = {
       }
     } else if (loc == "hand") {
       if (this.turnState == "playing") {
-        var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
-          this.handY);
-        if (handCardIndex < this.players[this.currentPlayer].hand.length) {
-          this.updateFocus(null);
-          var stackWasEmpty = (this.players[this.currentPlayer].stack.length == 0);
-          this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
-          //this.draw();
-          if (stackWasEmpty && this.players[this.currentPlayer].stack.length == 1) { //dropping in
-            this.turnState = "dropping";
+        if (this.hasDropped == false) {
+          var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX, y -
+            this.handY);
+          if (handCardIndex < this.players[this.currentPlayer].hand.length) {
+            this.updateFocus(null);
+            var stackWasEmpty = (this.players[this.currentPlayer].stack.length == 0);
+            this.players[this.currentPlayer].playCardToStack(handCardIndex, alert);
+            //this.draw();
+            if (stackWasEmpty && this.players[this.currentPlayer].stack.length == 1) { //dropping in
+              this.turnState = "dropping";
+            }
+            return true;
           }
-          return true;
+        } else {
+          alert(
+            "Once you have dropped, you cannot add more cards to your movement stack this turn. Sorry."
+          );
         }
       } else if (this.turnState == "outposting") {
         var handCardIndex = this.players[this.currentPlayer].determineClick(x - this.handX,
@@ -435,7 +443,7 @@ var Game = {
         highest = this.players[i].score;
         topPlayer = this.players[i];
         console.log("player number: " + this.players[i].number)
-        // var tieList = [];
+          // var tieList = [];
       } else if (this.players[i].score == highest && topPlayer.number < this.players[i].number) {
         topPlayer = this.players[i];
         // } else if (this.players[i].briefcaseCount == topPlayer.briefcaseCount) {
@@ -444,13 +452,13 @@ var Game = {
 
     var message;
     // if (tieList.length > 0) {
-      // message = "The game was a tie: " + topPlayer.name;
-      // for (var i = 0; i < tieList.length; i++) {
-        // message += ", " + tieList[i].name;
-      // }
-      // message += " all";
+    // message = "The game was a tie: " + topPlayer.name;
+    // for (var i = 0; i < tieList.length; i++) {
+    // message += ", " + tieList[i].name;
+    // }
+    // message += " all";
     // } else {
-      message = topPlayer.name + " has won. They";
+    message = topPlayer.name + " has won. They";
     // }
     message += " got " + highest + " points. Ties are broken by turn order (furthest from start player).";
 
