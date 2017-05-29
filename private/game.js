@@ -134,12 +134,11 @@ var Game = {
 
     //start first turn
     this.resetTurnVariables();
-
+    this.currentPlayer = 0;
     return true;
   },
 
   resetTurnVariables: function() {
-    this.currentPlayer = 0;
     this.turnState = "playing";
     this.turnOutpostsSet = 0;
     this.hasDropped = false;
