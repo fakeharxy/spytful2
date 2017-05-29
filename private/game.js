@@ -133,13 +133,21 @@ var Game = {
     }
 
     //start first turn
-    this.currentPlayer = 0;
-    this.turnState = "playing";
-    this.turnOutpostsSet = 0;
-    this.state = "started";
+    this.resetTurnVariables();
 
     return true;
   },
+
+  resetTurnVariables: function() {
+    this.currentPlayer = 0;
+    this.turnState = "playing";
+    this.turnOutpostsSet = 0;
+    this.hasDropped = false;
+    this.state = "started";
+    this.deckCardDrawn = false;
+    this.cardDrawnCount = 0;
+  },
+
 
   nextTurn: function() {
     if (++this.currentPlayer >= this.players.length) {
@@ -157,11 +165,7 @@ var Game = {
         this.deck.cardPool[i] = this.deck.cardArray.splice(0, 1)[0];
       }
     }
-    this.turnOutpostsSet = 0;
-    this.turnState = 'playing';
-    this.deckCardDrawn = false;
-    this.cardDrawnCount = 0;
-    this.hasDropped = false;
+    this.resetTurnVariables();
   },
 
   onclick: function(x, y, alert) {
