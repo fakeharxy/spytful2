@@ -3,10 +3,27 @@
 
 <head>
   <style>
-    .alertMessage {color:red; font-family:verdana; font-weight: bold; font-size:9pt}
-    .chatMessage {font-family:verdana; font-size:9pt}
-    .controlsContainer {width: 100%; overflow:hidden}
-    .controls {display: none; float: left}
+    .alertMessage {
+      color: red;
+      font-family: verdana;
+      font-weight: bold;
+      font-size: 9pt
+    }
+    
+    .chatMessage {
+      font-family: verdana;
+      font-size: 9pt
+    }
+    
+    .controlsContainer {
+      width: 100%;
+      overflow: hidden
+    }
+    
+    .controls {
+      display: none;
+      float: left
+    }
   </style>
   <!--script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script-->
   <script src="./javascripts/jquery.min.js" type="text/javascript"></script>
@@ -30,23 +47,45 @@
       <button id="butClearRoute">Clear your current route</button>
       <button id="butClearHand">Discard hand</button>
       <button id="butFinishRoute">Finish extraction</button>
+      <button id="showRules" onclick="showRules()">Show/hide rules</button>
     </div>
     <div id="prepareControls" class="controls">
       <button id="butReady">Ready</button>
       <button id="butStartGame">Start Game</button>
     </div>
     <div class="controls" style="display: block">
-      <span id="alertMessage" class="alertMessage"></span>  
+      <span id="alertMessage" class="alertMessage"></span>
     </div>
   </div>
-  <div id="chatarea" style="height: 150px; overflow: auto">
-    <ul id="messages" class="chatMessage"></ul>
+  <div style="width: 100%; margin: 0 auto;">
+    <div id="chatarea" style="float:left; height: 150px; overflow: auto; width: 47%">
+      <ul id="messages" class="chatMessage"></ul>
+      <form action="" id='message_form'>
+        <input id="m" autocomplete="off" />
+        <button>Send</button>
+      </form>
+      <a href="./">Back to lobby</a>
+    </div>
+    <div id="rules" style="display: none; padding: 0; float:left; height:150px; width: 47%">
+      <h5 style="margin:0px"> On your turn </h5>
+      <p> Click a card, then a matching hex to "drop in". This will begin your route and place you on the board. </p>
+      <p> Click a hex segment, then a matching outpost card to make an outpost. Your opponents cannot make routes through your outposts. </p>
+      <p> Click on cards in your hand to make your route longer. <b>Your route must end on an extract card.</b> </p>
+      <p> Once you have a valid route, click on your movement stack to start your route. Click the hexes on the board to draw your route. Once you are finished, click <b>Finish Extraction</b> to claim your points. </p>
+      <p> At the end of each turn, draw cards from the pool. You can draw up to 2, but only one from the face-down deck. </p>
+    </div>
   </div>
-  <form action="" id='message_form'>
-    <input id="m" autocomplete="off" />
-    <button>Send</button>
-  </form>
-  <a href="./">Back to lobby</a>
 </body>
+
+<script>
+  function showRules() {
+    var x = document.getElementById('rules');
+    if (x.style.display === 'none') {
+      x.style.display = 'block';
+    } else {
+      x.style.display = 'none';
+    }
+  }
+</script>
 
 </html>
