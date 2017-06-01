@@ -98,7 +98,22 @@ var Game = {
           Player.drawHand.call(this.players[i], ctx, oppX, oppY, false, oppScale);
           Player.drawStack.call(this.players[i], ctx, oppX, oppY + (this.deck.cardHeight *
             oppScale) + this.deck.cardSpacing * 1.5, false, oppScale);
-          oppY += ((this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 2) * 2;
+		  var newOppY = oppY + ((this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 2) * 2;
+		  if (i==this.currentPlayer) {
+			//turn marker
+			padding = 10;
+			ctx.strokeStyle = "rgba(255,96,96,1)";
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(oppX - padding, oppY);
+			ctx.lineTo(w - padding, oppY);
+			ctx.lineTo(w - padding, newOppY - padding);
+			ctx.lineTo(oppX - padding, newOppY - padding);
+			ctx.lineTo(oppX - padding, oppY);
+			ctx.closePath();
+			ctx.stroke();
+		  }
+			oppY = newOppY;
         }
       }
 	  
@@ -120,7 +135,7 @@ var Game = {
 		flashTimer = null;
 		
 		//draw slightly opaque overlay
-		ctx.globalAlpha = 0.2;
+		ctx.globalAlpha = 0.1;
 		ctx.fillRect(0,0,w,h);
 		ctx.globalAlpha = 1.0;
 	  }
