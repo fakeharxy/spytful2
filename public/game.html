@@ -23,8 +23,21 @@
     .controls {
       display: none;
       float: left;
-      width: 1200px;
+      width: 1200px
     }
+	
+	.flasher {
+		top: 38px;
+		left: 25px;
+		position: absolute;
+		padding: 10px;
+		background-color: rgba(255,255,255,0.75);
+		color: red;
+		font-family: verdana;
+		font-weight: bold;
+		font-size: 12pt
+	}
+	
     p {
       font-size: 10pt;
     }
@@ -43,6 +56,7 @@
 </head>
 
 <body>
+  <div id="flasher" class="flasher">It's your turn</div>
   <canvas id="canvas" width="1200" height="478"></canvas>
   <br/>
   <div class="controlsContainer">
