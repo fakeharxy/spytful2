@@ -123,7 +123,7 @@ function showControls() {
     $('#turnControls').hide();
   } else {
     $('#prepareControls').hide();
-    if (playerIndex == game.currentPlayer) {
+    if (game.state != "finished" && playerIndex == game.currentPlayer) {
       $('#turnControls').show();
     } else {
       $('#turnControls').hide();

@@ -409,8 +409,8 @@ var Game = {
   },
 
   endTurn: function(alert) {
-    if (this.turnState == 'finished' || this.turnState == 'drawing') {
-      this.checkIfGameEnd();
+    if (this.turnState == 'finished' || this.turnState == 'drawing' || this.noCardsLeft()) {
+      //this.checkIfGameEnd();
       return true;
 	/* 'final turn' replaced by endGame button
     } else if (this.finalTurn == true) {
@@ -436,6 +436,17 @@ var Game = {
 	this.state = 'finished';
   },
 
+  noCardsLeft: function() {
+    for (var i = 0; i < this.deck.cardPool.length; i++) {
+      if (this.deck.cardPool[i]) {
+        return false;
+      }
+    }
+	//nothing in pool; check deck
+	return this.deck.cardArray.length == 0;
+  },
+  
+  /*
   checkIfGameEnd: function() {
     var poolIsEmpty = true;
     for (var i = 0; i < this.deck.cardPool.length; i++) {
@@ -454,6 +465,7 @@ var Game = {
       }
     }
   },
+  */
 
   determineWinner: function() {
     var highest = -1;
