@@ -3,6 +3,8 @@ var ctx, w, h, canvasX, canvasY;
 var imagesToLoad;
 var game;
 var playerIndex;
+var flashTimer;
+var suppressTimer = 0;
 
 $(document).ready(function() {
 
@@ -170,6 +172,9 @@ function endTurn() {
 function onMouseMove(event) {
   //game.onmousemove(event.pageX - canvasX, event.pageY - canvasY);
   //TODO: send the calculated co-ords to the server instead?
+  if (flashTimer) {
+	suppressTimer = 30; // don't display flasher for 30 cycles
+  }
 }
 
 function onMouseDown(event) {

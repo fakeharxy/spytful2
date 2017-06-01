@@ -101,6 +101,29 @@ var Game = {
           oppY += ((this.deck.cardHeight * oppScale) + this.deck.cardSpacing * 2) * 2;
         }
       }
+	  
+	  if (this.currentPlayer==playerIndex) {
+		//activate flashing message
+		if (!flashTimer) {
+			flashTimer = setInterval(function() {
+				if (suppressTimer>1) {
+					$("#flasher").hide();
+					suppressTimer--;
+				} else {
+					$("#flasher").toggle();
+				}
+			}, 850);
+		}
+	  } else {
+		$("#flasher").hide();
+		clearInterval(flashTimer);
+		flashTimer = null;
+		
+		//draw slightly opaque overlay
+		ctx.globalAlpha = 0.2;
+		ctx.fillRect(0,0,w,h);
+		ctx.globalAlpha = 1.0;
+	  }
     }
   }
 };
