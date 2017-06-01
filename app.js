@@ -248,6 +248,27 @@ io.on('connection', function(socket) {
         }
       }
     });
+	
+    socket.on('endGame', function() {
+      var gameid = this.handshake.session.gameid;
+      var game = games[gameid];
+      if (checkTurn(socket, game)) {
+        game.endGame(function(alertMsg) {
+            socket.emit('alert', alertMsg);
+          });
+
+          if (game.state != 'finished') {
+            io.to(gameid).emit('game', { colour: '#000000', msg: game.players[game.currentPlayer].name + " submitted and eagerly awaits the outcome" });
+			game.nextTurn();
+            io.to(gameid).emit('game', { colour: '#000000', msg: "it's " + game.players[game.currentPlayer].name + "'s turn" });
+
+          } else {
+            io.to(gameid).emit('game', { colour: '#000000',  msg: game.determineWinner() });
+          }
+          data = game.getObjectForClient();
+          io.to(gameid).emit('gameState', data);
+      }
+    });
 
     socket.on('clearRoute', function() {
       var gameid = this.handshake.session.gameid;

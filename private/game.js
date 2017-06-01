@@ -149,9 +149,12 @@ var Game = {
 
 
   nextTurn: function() {
-    if (++this.currentPlayer >= this.players.length) {
-      this.currentPlayer = 0;
-    }
+	do {
+      if (++this.currentPlayer >= this.players.length) {
+        this.currentPlayer = 0;
+      }
+	} while (this.players[this.currentPlayer].finished); //TODO should really break out of possible endless loops here
+	
     //reset face-up cards in player's hand
     for (var i = 0; i < this.players[this.currentPlayer].hand.length; i++) {
       this.players[this.currentPlayer].hand[i].newlyDrawn = false;
@@ -409,13 +412,28 @@ var Game = {
     if (this.turnState == 'finished' || this.turnState == 'drawing') {
       this.checkIfGameEnd();
       return true;
+	/* 'final turn' replaced by endGame button
     } else if (this.finalTurn == true) {
       this.turnState = 'finished';
       this.checkIfGameEnd();
       return true;
+	*/
     } else {
       alert("The game rules dictate you must draw cards before ending your turn...");
     }
+  },
+  
+  endGame: function(alert) {
+    //mark player as finished
+	this.players[this.currentPlayer].finished = true;
+	
+	//check that there is a player left in the game
+	for (var i=0; i<this.players.length; i++) {
+		if (!this.players[i].finished) {
+			return;
+		}
+	}
+	this.state = 'finished';
   },
 
   checkIfGameEnd: function() {

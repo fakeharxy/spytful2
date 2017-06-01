@@ -51,6 +51,8 @@ $(document).ready(function() {
 
   var button = $("#butEndTurn")[0];
   button.onclick = endTurn;
+  button = $("#butEndGame")[0];
+  button.onclick = endGame;
   button = $("#butClearRoute")[0];
   button.onclick = clearRoute;
   button = $("#butClearHand")[0];
@@ -167,6 +169,12 @@ function finishRoute() {
 
 function endTurn() {
   socket.emit('endTurn', '');
+}
+
+function endGame() {
+  if (confirm("This will be your last action. No going back. You won't be given another turn. Points may be taken from you, and you won't be able to do anything about it. Are you sure?")) {
+    socket.emit('endGame', '');
+  }
 }
 
 function onMouseMove(event) {
