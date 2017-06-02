@@ -94,7 +94,7 @@ var Game = {
         }
       }
     }
-    this.briefcaseCount = 7;
+    this.briefcaseCount = this.rules.numberOfCastles;
     if (validHexes.length < this.briefcaseCount) {
       alert("too many players on too small a board; tests don't count");
       return false;

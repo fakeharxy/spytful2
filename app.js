@@ -400,7 +400,11 @@ function createNewGame(params) {
   } 
   if (params.opp) {
     rules.maxOutpostsPerPlayer = parseInt(params.opp);
-    console.log("set firstBriefcasePenalty");
+    console.log("set outpostsPerPlayer");
+  } 
+  if (params.cpp) {
+    rules.numberOfCastles = parseInt(params.cpp);
+    console.log("set castlesPerPlayer");
   } 
  
   game.rules = rules;

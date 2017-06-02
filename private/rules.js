@@ -15,7 +15,8 @@ module.exports = {
   removeOutposts: false,
 
   //setup
-  briefcasesPerPlayer: 3,
+  // briefcasesPerPlayer: 3,
+  numberOfCastles: 7,
   cardsPerHex: 2,
   startCardsPool: 3,
   startCardsPlayer: 2,
