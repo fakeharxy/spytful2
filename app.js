@@ -24,6 +24,7 @@ var games = {}; //map addressable games; key is game id
 
 app.use(session);
 
+
 app.use(express.static('public'));
 
 app.get('/', function(req, res) {
